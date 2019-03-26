@@ -1,0 +1,159 @@
+html , body
+{
+    height:100%;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    font-family: 'Slackey'; 
+}
+
+#avatar {
+    height: 160px;
+    width: 125px;
+    float: left;
+    margin-top: 20px
+}
+#name {
+    margin-left: -85px;
+    color: white;
+}
+
+#twitchname {
+    margin-left: 180px;
+    color: white;
+    font-size:36px;
+}
+
+#container2
+{
+    position:absolute;
+    width: 320px;
+    height: 340px;
+    left: 50%;
+    top: 50%;
+    margin-left: -1060px;
+    margin-top: -1060px;
+}
+
+#container {
+    position: absolute;
+    margin-left: 125px;
+}
+#container h1
+{
+    font-size: large;
+    text-align: center;
+    color: white;
+} 
+#container #header
+{
+    text-align: center;
+}
+#container #header h1
+{
+    text-align: center;
+    font: 26px Slackey;
+    text-shadow:#000 0px 0px 1px , #000 0px 0px 1px;
+}
+#container #header h3
+{
+    color: #555;
+    padding-bottom: 10px;
+    text-shadow:rgba(255,255,255,0.6) 0px 1px 0px;
+}
+
+#container #loading
+{
+    display:block;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    text-align: center;
+    background:#000;
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    padding-top: 50px;
+    color: white;
+}
+#loading #progressbar
+{
+    margin-top: 10px;
+    background: black;
+    border: 1px solid mediumaquamarine;
+    width: 80%;
+    height: 15px;
+    margin-left: auto;
+    margin-right: auto;
+}
+#loading #progressbar #progress
+{
+    height: 100%;
+    position: relative;
+    width: 0%;
+    left: 0;
+    background: #77e0fb;
+}
+
+#container #reels {
+    display: block;
+    height: 145px;
+    overflow: hidden;
+    margin-top: -35px;
+    /*padding-top: 0px;
+    padding-bottom: 0px;
+    position: relative;*/
+    /*text-align: center;*/
+    /*background: #000;
+    border: 15px solid;
+    background-image: url(../img/design/bronze.png);
+    border-color: #777 #999 #666 #999;
+    border-radius: 3px;
+    -moz-box-shadow: #fff 0px 1px 0px;*/
+}
+    #container #reels canvas {
+        /*width: 87px;
+        height: 300px;*/
+        position: relative;
+        background: white;
+        border: 3px solid gold;
+    }
+
+#container #overlay 
+{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0px;
+    opacity: 0.3;
+    background-image: -moz-linear-gradient(#555,#fff,#fff,#555);
+    background-image: -webkit-gradient(linear, 0 25%, 0 100%, from(grey), color-stop(0.5, white), to(grey));
+    display: none;
+}
+#container #overlay #winline 
+{	
+    width: 100%;
+    height: 5px;
+    background: red;	
+    position: relative;
+    top: 50%;
+}
+#reels #results
+{
+    display: none;
+    background: white;
+    border: 3px solid gold;
+    height: 120px;
+    width: 250px;
+    left: 20px;
+    top: 15px;
+    position: absolute;
+    font-size: x-large;
+}
+
+#results #score {
+    margin: 5px;
+}
+
+#results #score img {
+    vertical-align: middle;
+}
+

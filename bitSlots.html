@@ -1,0 +1,127 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+
+    <meta charset="UTF-8">
+    <title>Slot machine</title>
+
+    <script src="API_Key.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="slot.css" />
+    <script src="client.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/slot.js"></script>
+
+</head>
+
+<body>
+
+    <audio id="startSoundAndMusic">
+        <source src="audio/newSlotStartMusic.mp3" type="audio/mpeg">
+    </audio>
+
+    <audio id="stopSound">
+        <source src="audio/stopSound.mp3" type="audio/mpeg">
+    </audio>
+
+    <audio id="newWinSound">
+        <source src="audio/newWinSound.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="jackpotSound">
+        <source src="audio/SlotJackpotSound.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="gameOverSound">
+        <source src="audio/newSlotGameOver.mp3" type="audio/mpeg">
+    </audio>
+
+    <span id="twitchname"></span><br />
+
+    <!--<div id="output"></div>-->
+    <span id="name"></span>
+    <span id="avatar"></span>
+    <span id="container" style="display:none">
+
+
+        <span id="header">
+            <!--<h1>Slots Machine</h1>
+                <h3>Viel Gl&uuml;ck</h3>-->
+        </span><br /><br />
+
+        <span id="reels">
+            <canvas id="canvas1" width="70" height="300"></canvas>
+            <canvas id="canvas2" width="70" height="300"></canvas>
+            <canvas id="canvas3" width="70" height="300"></canvas>
+            <span id="overlay">
+                <span id="winline"></span>
+            </span>
+
+            <!-- Loading overlay -->
+            <span id="loading">
+                <p>L&auml;dt..</p>
+                <span id="progressbar">
+                    <span id="progress"></span>
+                </span>
+            </span>
+        </span>
+        <span id="results">
+            <span id="score">
+                <span id="finalresult"><span id="multiplier">0</span> x <img src="img/gold-64.png" /></span>
+            </span>
+            <span id="status"></span>
+        </span>
+
+
+
+    </span>
+
+    <script>
+
+        function startslot(bitName, bitAmount) {
+
+
+            function sleep(time) {
+                return new Promise((resolve) => setTimeout(resolve, time));
+            }
+
+            var bitName = bitName;
+            var bitAmount = bitAmount;
+
+            //console.log(number);
+
+            //start game
+            game = SlotGame(bitAmount);
+            //console.log(game);
+
+
+            sleep(250).then(() => {
+                document.getElementById('container').style.display = 'block';
+                //document.getElementById('avatar').style.display = 'block';
+                //document.getElementById('name').style.display = 'block';
+                document.getElementById("canvas1").style.zIndex = "-1";
+                document.getElementById("canvas2").style.zIndex = "-1";
+                document.getElementById("canvas3").style.zIndex = "-1";
+                document.getElementById("reels").style.backgroundImage = "url(img/design/Diamond.png)";
+
+            });
+
+            //load avatar
+            //document.getElementById('avatar').style = 'max-width:125px;max-height:160px;background-image: url(../Avatar/Avatare/' + picture + '.' + picformat + ');background-size: contain;background-repeat:no-repeat;';
+
+            //load the name
+            document.getElementById('twitchname').innerHTML = bitName;
+
+            // Usage!
+            sleep(25000).then(() => {
+                document.getElementById('container').style.display = 'none';
+                document.getElementById('avatar').style.display = 'none';
+                document.getElementById('name').style.display = 'none';
+                document.getElementById('twitchname').style.display = 'none';
+            });
+        }
+
+    </script>
+
+
+</body>
+</html >

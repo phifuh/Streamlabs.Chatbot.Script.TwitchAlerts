@@ -67,14 +67,18 @@ def EventReceiverEvent(sender, args):
     if evntdata and evntdata.For == "twitch_account":
         if evntdata.Type == "follow":
             for message in evntdata.Message:
-                Parent.Log("follow", message.Name)
+                #Parent.Log("follow", message.Name)
+                Parent.SendStreamMessage ("" + message.Name + " Danke für den Follow kobiqqLove !")
 
         elif evntdata.Type == "subscription":
             for message in evntdata.Message:
                 if message.SubType == "resub":
-                    Parent.Log("subscription", "{0} resubscribed for {1} months total!".format(message.Name, message.Months))
+                    Parent.SendStreamMessage ("" + message.Name + " hat heute Geburtstag und ist" + message.Months + " Jahre alt geworden! kobiqqLove kobiqqLove")
+                    #Parent.Log("subscription", "{0} resubscribed for {1} months total!".format(message.Name, message.Months))
                 else:
-                    Parent.Log("subscription", "{0} subscribed!".format(message.Name))
+                    Parent.SendStreamMessage ("" + message.Name + " Thank You! kobiqqLove")
+                    Parent.SendStreamWhisper(message.Name,"Hey, Willkommen im Sub-Club. Ich hoffe, du wirst Freude an deinen neuen Emotes haben! kobiqqLove kobiqqSD kobiqqGG. Ab sofort kannst du 1x pro Stream !rematch nutzen, um nach einer Niederlage direkt wieder zu fighten. Zudem kannst du dir einen Skin wuenschen welchen ich zum Bot hinzufuege. Fluestere mich dafuer einfach an. Vergiss nicht das Sub Turnier am 14.04 und auch nicht dein Discord mit Twitch zu verknuepfen, um alle Sub-perks nutzen zu koennen. Have fun! Kobi")
+                    #Parent.Log("subscription", "{0} subscribed!".format(message.Name))
 
         elif evntdata.Type == "bits":
 

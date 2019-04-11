@@ -84,9 +84,11 @@ def EventReceiverEvent(sender, args):
 
             for message in evntdata.Message:
                 bitName   = message.Name
-                bitAmount = message.Amount 
-                dict = {"name":bitName,"bitAmount":bitAmount}
-
+                bitAmount = message.Amount
+                #bitMessage = message.Message 
+                bitMessage = "Link"
+                #Parent.Log("subscription",str(message.Message))
+                dict = {"name":bitName,"bitAmount":bitAmount,"bitMessage":bitMessage}
                 Parent.BroadcastWsEvent("EVENT_CURRENCY_SHOW_BIT_SLOTS", json.dumps(dict))
 
         elif evntdata.Type == "host":

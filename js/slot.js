@@ -92,16 +92,35 @@ function shuffleArray(array) {
     }
 }
 
-function SlotGame(bitAmount) {
+function SlotGame(winningIcon) {
     $('#finalresult').hide();
 
     delete game;
 
 
-    var bitAmount = bitAmount;
+    var winningIcon = winningIcon;
     //console.log(getWinNumber);
 
-    if (bitAmount <= 300 && bitAmount > 100) {
+    if (winningIcon == "Link") {
+
+        var items = [
+            { id: 'bit1-1' },
+            { id: 'bit1-2' },
+            { id: 'bit1-3' },
+            { id: 'Link-1' },
+            { id: 'bit100-2' },
+            { id: 'bit100-3' },
+            { id: 'bit1000-1' },
+            { id: 'bit1000-2' },
+            { id: 'bit1000-3' },
+            { id: 'bit2.5mil-1' },
+            { id: 'bit5mil-1' }
+        ];
+
+        bitMode = 4;
+    }
+
+    else if (winningIcon <= 300 && winningIcon > 100) {
 
         var items = [
             { id: 'bit1-1' },
@@ -120,7 +139,7 @@ function SlotGame(bitAmount) {
         bitMode = 1;
     }
 
-    else if (bitAmount <= 500 && bitAmount > 300) {
+    else if (winningIcon <= 500 && winningIcon > 300) {
 
         var items = [
             { id: 'bit1-1' },
@@ -140,7 +159,7 @@ function SlotGame(bitAmount) {
 
     }
 
-    else if (bitAmount <= 1000 && bitAmount > 500) {
+    else if (winningIcon <= 1000 && winningIcon > 500) {
 
         var items = [
             { id: 'bit1-1' },
@@ -365,11 +384,18 @@ Game.prototype.restart = function (ITEM_COUNT, bitMode) {
         this.result3 = _find(this.items3, 'bit1000-1');
     }
 
-    else if (bitMode == 2) {
+    else if (bitMode == 3) {
 
         this.result1 = _find(this.items1, 'bit10000-1');
         this.result2 = _find(this.items2, 'bit10000-1');
         this.result3 = _find(this.items3, 'bit10000-1');
+    }
+
+    else if (bitMode == 4) {
+
+        this.result1 = _find(this.items1, 'Link-1');
+        this.result2 = _find(this.items2, 'Link-1');
+        this.result3 = _find(this.items3, 'Link-1');
     }
 
     else {

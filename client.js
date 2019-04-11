@@ -42,10 +42,12 @@ if (window.WebSocket) {
             var arr = JSON.parse(jsonObject.data);
 
 
-            var bitName = arr.bitName;
-            var bitAmount = arr.bitAmount;
+            bitName = arr.bitName;
+            bitAmount = arr.bitAmount;
+            bitMessage = arr.bitMessage;
 
-            startslot(bitName, bitAmount);
+
+            startslot(bitName, bitAmount, bitMessage);
             
 		}
         else if(jsonObject.event == "EVENT_CURRENCY_RELOAD")

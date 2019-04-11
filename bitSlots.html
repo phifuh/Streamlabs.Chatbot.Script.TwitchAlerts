@@ -77,7 +77,7 @@
 
     <script>
 
-        function startslot(bitName, bitAmount) {
+        function startslot(bitName, bitAmount, bitMessage) {
 
 
             function sleep(time) {
@@ -85,12 +85,21 @@
             }
 
             var bitName = bitName;
-            var bitAmount = bitAmount;
+            
+            var bitMessage = bitMessage;
 
-            //console.log(number);
+            console.log(bitMessage);
+
+            if (bitMessage == "Link") {
+
+                var Icon = "Link"
+            }
+            else {
+                var Icon = bitAmount
+            }
 
             //start game
-            game = SlotGame(bitAmount);
+            game = SlotGame(Icon);
             //console.log(game);
 
 

@@ -77,7 +77,7 @@
 
     <script>
 
-        function startslot(bitName, bitAmount, bitMessage) {
+        function startslot(bitName, bitAmount, BanWord1, BanWord2) {
 
 
             function sleep(time) {
@@ -85,14 +85,235 @@
             }
 
             var bitName = bitName;
-            
-            var bitMessage = bitMessage;
+            var BanWord1 = BanWord1;
+            var BanWord2 = BanWord2;
 
             console.log(bitMessage);
 
-            if (bitMessage == "Link") {
-
+            if (BanWord1 == "mario"){
+                var Icon = "Mario"
+            }
+            else if (BanWord1 == "donkey" && BanWord2 == "kong") {
+                var Icon = "Donkey Kong"
+            }
+            else if (BanWord1 == "link") {
                 var Icon = "Link"
+            }
+            else if (BanWord1 == "samus") {
+                var Icon = "Samus"
+            }
+            else if (BanWord1 == "dark" && BanWord2 == "samus") {
+                var Icon = "DarkSamus"
+            }
+            else if (BanWord1 == "yoshi") {
+                var Icon = "Yoshi"
+            }
+            else if (BanWord1 == "kirby") {
+                var Icon = "Kirby"
+            }
+            else if (BanWord1 == "fox") {
+                var Icon = "Fox"
+            }
+            else if (BanWord1 == "pikachu") {
+                var Icon = "Pikachu"
+            }
+            else if (BanWord1 == "luigi") {
+                var Icon = "Luigi"
+            }
+            else if (BanWord1 == "ness") {
+                var Icon = "Ness"
+            }
+            else if (BanWord1 == "captain" && BanWord2 == "falcon") {
+                var Icon = "CaptainFalcon"
+            }
+            else if (BanWord1 == "jigglypuff") {
+                var Icon = "Jigglypuff"
+            }
+            else if (BanWord1 == "peach") {
+                var Icon = "Peach"
+            }
+            else if (BanWord1 == "daisy") {
+                var Icon = "Daisy"
+            }
+            else if (BanWord1 == "bowser") {
+                var Icon = "Bowser"
+            }
+            else if (BanWord1 == "ice" && BanWord2 == "climbers") {
+                var Icon = "IceClimbers"
+            }
+            else if (BanWord1 == "sheik") {
+                var Icon = "Sheik"
+            }
+            else if (BanWord1 == "zelda") {
+                var Icon = "Zelda"
+            }
+            else if (BanWord1 == "dr" && BanWord2 == "mario") {
+                var Icon = "DrMario"
+            }
+            else if (BanWord1 == "pichu") {
+                var Icon = "Pichu"
+            }
+            else if (BanWord1 == "falco") {
+                var Icon = "Falco"
+            }
+            else if (BanWord1 == "marth") {
+                var Icon = "Marth"
+            }
+            else if (BanWord1 == "lucina") {
+                var Icon = "Lucina"
+            }
+            else if (BanWord1 == "young" && BanWord2 == "link") {
+                var Icon = "YoungLink"
+            }
+            else if (BanWord1 == "ganondorf") {
+                var Icon = "Ganondorf"
+            }
+            else if (BanWord1 == "mewto") {
+                var Icon = "Mewto"
+            }
+            else if (BanWord1 == "roy") {
+                var Icon = "Roy"
+            }
+            else if (BanWord1 == "chrom") {
+                var Icon = "Chrom"
+            }
+            else if (BanWord1 == "mr" && BanWord2 == "game") {
+                var Icon = "MrGameAndWatch"
+            }
+            else if (BanWord1 == "meta" && BanWord2 == "knight") {
+                var Icon = "MetaKnight"
+            }
+            else if (BanWord1 == "pit") {
+                var Icon = "Pit"
+            }
+            else if (BanWord1 == "dark" && BanWord2 == "pit") {
+                var Icon = "DarkPit"
+            }
+            else if (BanWord1 == "zero" && BanWord2 == "suit") {
+                var Icon = "ZeroSuitSamus"
+            }
+            else if (BanWord1 == "wario") {
+                var Icon = "Wario"
+            }
+            else if (BanWord1 == "snake") {
+                var Icon = "Snake"
+            }
+            else if (BanWord1 == "ike") {
+                var Icon = "Ike"
+            }
+            else if (BanWord1 == "pokemon" && BanWord2 == "trainer") {
+                var Icon = "PokemonTrainer"
+            }
+            else if (BanWord1 == "diddy" && BanWord2 == "kong") {
+                var Icon = "DiddyKong"
+            }
+            else if (BanWord1 == "lucas") {
+                var Icon = "Lucas"
+            }
+            else if (BanWord1 == "sonic") {
+                var Icon = "Sonic"
+            }
+            else if (BanWord1 == "king" && BanWord2 == "dedede") {
+                var Icon = "KingDedede"
+            }
+            else if (BanWord1 == "olimar") {
+                var Icon = "Olimar"
+            }
+            else if (BanWord1 == "lucario") {
+                var Icon = "Lucario"
+            }
+            else if (BanWord1 == "rob" || BanWord1 == "r.o.b") {
+                var Icon = "Rob"
+            }
+            else if (BanWord1 == "toon" && BanWord2 == "link") {
+                var Icon = "ToonLink"
+            }
+            else if (BanWord1 == "wolf") {
+                var Icon = "Wolf"
+            }
+            else if (BanWord1 == "villager") {
+                var Icon = "Villager"
+            }
+            else if (BanWord1 == "mega" && BanWord2 == "man") {
+                var Icon = "MegaMan"
+            }
+            else if (BanWord1 == "wii" && BanWord2 == "fit") {
+                var Icon = "WiiFit"
+            }
+            else if (BanWord1 == "rosalina" && BanWord2 == "luma") {
+                var Icon = "RosalinaAndLuma"
+            }
+            else if (BanWord1 == "little" && BanWord2 == "mac") {
+                var Icon = "LittleMac"
+            }
+            else if (BanWord1 == "greninja") {
+                var Icon = "Greninja"
+            }
+            else if (BanWord1 == "palutena") {
+                var Icon = "Palutena"
+            }
+            else if (BanWord1 == "pac" && BanWord2 == "man") {
+                var Icon = "PacMan"
+            }
+            else if (BanWord1 == "robin") {
+                var Icon = "Robin"
+            }
+            else if (BanWord1 == "shulk") {
+                var Icon = "Shulk"
+            }
+            else if (BanWord1 == "bowser" && BanWord2 == "jr") {
+                var Icon = "BowserJR"
+            }
+            else if (BanWord1 == "duck" && BanWord2 == "hunt") {
+                var Icon = "DuckHunt"
+            }
+            else if (BanWord1 == "ryu") {
+                var Icon = "Ryu"
+            }
+            else if (BanWord1 == "ken") {
+                var Icon = "Ken"
+            }
+            else if (BanWord1 == "cloud") {
+                var Icon = "Cloud"
+            }
+            else if (BanWord1 == "corrin") {
+                var Icon = "Corrin"
+            }
+            else if (BanWord1 == "bayonetta") {
+                var Icon = "Bayonetta"
+            }
+            else if (BanWord1 == "inkling") {
+                var Icon = "Inkling"
+            }
+            else if (BanWord1 == "ridley") {
+                var Icon = "Ridley"
+            }
+            else if (BanWord1 == "simon") {
+                var Icon = "Simon"
+            }
+            else if (BanWord1 == "richter") {
+                var Icon = "Richter"
+            }
+            else if (BanWord1 == "king" && BanWord2 == "k") {
+                var Icon = "KingKRool"
+            }
+            else if (BanWord1 == "isabelle") {
+                var Icon = "Isabelle"
+            }
+            else if (BanWord1 == "incineroar") {
+                var Icon = "Incineroar"
+            }
+            else if (BanWord1 == "mii" && BanWord2 == "brawler") {
+                var Icon = "MiiBrawler"
+            }
+            else if (BanWord1 == "mii" && BanWord2 == "gunner") {
+                var Icon = "MiiGunner"
+            }
+            else if (BanWord1 == "mii" && BanWord2 == "swordfighter") {
+                var Icon = "MiiSwordfighter"
+            }
+            else if (BanWord1 == "Piranha" && BanWord2 == "Plant") {
+                var Icon = "PiranhaPlant"
             }
             else {
                 var Icon = bitAmount

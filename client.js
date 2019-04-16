@@ -44,10 +44,10 @@ if (window.WebSocket) {
 
             bitName = arr.bitName;
             bitAmount = arr.bitAmount;
-            bitMessage = arr.bitMessage;
+            BanWord1 = arr.banword1;
+            BanWord2 = arr.banword2;
 
-
-            startslot(bitName, bitAmount, bitMessage);
+            startslot(bitName, bitAmount, BanWord1, BanWord2);
             
 		}
         else if(jsonObject.event == "EVENT_CURRENCY_RELOAD")

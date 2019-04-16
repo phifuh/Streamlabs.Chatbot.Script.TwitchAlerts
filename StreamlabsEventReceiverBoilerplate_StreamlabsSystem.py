@@ -12,7 +12,6 @@ import codecs
 import clr
 
 
-
 #---------------------------------------
 # Script Import Libraries
 #---------------------------------------
@@ -26,7 +25,7 @@ from StreamlabsEventReceiver import StreamlabsEventClient
 #---------------------------------------
 ScriptName = "Streamlabs Event Receiver"
 Website = "kobiqq"
-Description = "Streamlabs Event Receiver Boilerplate example script for developers"
+Description = "Streamlabs Event Receiver Boilerplate orginal from Ocgineer"
 Creator = "Kobiqq"
 Version = "1.1"
 
@@ -77,7 +76,7 @@ def EventReceiverEvent(sender, args):
                     #Parent.Log("subscription", "{0} resubscribed for {1} months total!".format(message.Name, message.Months))
                 else:
                     Parent.SendStreamMessage ("" + message.Name + " Thank You! kobiqqLove")
-                    Parent.SendStreamWhisper(message.Name,"Hey, Willkommen im Sub-Club. Ich hoffe, du wirst Freude an deinen neuen Emotes haben! kobiqqLove kobiqqSD kobiqqGG. Ab sofort kannst du 1x pro Stream !rematch nutzen, um nach einer Niederlage direkt wieder zu fighten. Zudem kannst du dir einen Skin wuenschen welchen ich zum Bot hinzufuege. Fluestere mich dafuer einfach an. Vergiss nicht das Sub Turnier am 14.04 und auch nicht dein Discord mit Twitch zu verknuepfen, um alle Sub-perks nutzen zu koennen. Have fun! Kobi")
+                    Parent.SendStreamWhisper(message.Name,"Hey, Willkommen im Sub-Club. Ich hoffe, du wirst Freude an deinen neuen Emotes haben! kobiqqLove kobiqqSD kobiqqGG. Ab sofort kannst du 1x pro Stream !rematch nutzen, um nach einer Niederlage direkt wieder zu fighten. Zudem kannst du dir einen Skin wuenschen welchen ich zum Bot hinzufuege. Fluestere mich dafuer einfach an. Vergiss nicht dein Discord mit Twitch zu verknuepfen, um alle Sub-perks nutzen zu koennen. Kobi!")
                     #Parent.Log("subscription", "{0} subscribed!".format(message.Name))
 
         elif evntdata.Type == "bits":
@@ -85,10 +84,12 @@ def EventReceiverEvent(sender, args):
             for message in evntdata.Message:
                 bitName   = message.Name
                 bitAmount = message.Amount
-                #bitMessage = message.Message 
-                bitMessage = "Link"
-                #Parent.Log("subscription",str(message.Message))
-                dict = {"name":bitName,"bitAmount":bitAmount,"bitMessage":bitMessage}
+                bitMessage = message.Message 
+                splitted = bitMessage.split()
+                BanWord = splitted[1].tolower()
+                BanWord2 = splitted[2].tolower()
+                #Parent.Log("subscription",str(bitName))
+                dict = {"name":bitName,"bitAmount":bitAmount,"banword1":BanWord,"banword2":BanWord}
                 Parent.BroadcastWsEvent("EVENT_CURRENCY_SHOW_BIT_SLOTS", json.dumps(dict))
 
         elif evntdata.Type == "host":

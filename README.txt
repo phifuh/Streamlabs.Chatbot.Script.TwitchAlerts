@@ -2,9 +2,14 @@ This is a boilerplate script how to use the StreamlabsEventReceiver.dll created 
 in Chatbot Python scripts to receive real time Streamlabs events. This script is intended for 
 script developers only!
 
+The SocketKey users need to enter to connect to Streamlabs Socket API can be found on the API Settings
+page; https://streamlabs.com/dashboard/#/settings/api-settings > API Tokens and enter that as a setting
+as done in this boilerplate as an example.
+
+
 The following describes the objects that can be contained within the Data object;
 
-#######################
+##############################################
 
 Data.For (string)
 
@@ -13,43 +18,51 @@ Data.For (string)
     "youtube_account"
     "streamlabs"
 
+##############################################
 
-Data.Type (string) for twitch_account
+Data.Type (string) for *twitch_account*
 
     "follow"
     "subMisteryGift"
     "subscription"
+    "resub" 		-- seems to be used only for testing resub alert?
     "bits"
     "host"
     "raid"
 
-#######################
+--------------------------------------------
 
-Data.Type (string) for mixer_account
+Data.Type (string) for *mixer_account*
 
     "follow"
     "subscription"
     "host"
 
+--------------------------------------------
 
-Data.Type (string) for youtube_account
+Data.Type (string) for *youtube_account*
 
     "follow" (actual subscription)
     "subscription" (sponsor)
     "superchat"
 
+--------------------------------------------
 
-Data.Type (string) for streamlabs
+Data.Type (string) for *streamlabs*
 
-    "donation"
+Message object "donation"
 
-#######################
+    Name (string)
+    Amount (int)
+
+##############################################
 
 Data.Message (list)
 
     contains objects specific for the platform and event
+    ** THIS IS A LIST AND MULTIPLE EVENTS CAN BE IN IT **
 
------------------------
+----------------------
 
 Message object Twitch follow
 
@@ -61,7 +74,7 @@ Message object Twitch follow
     CreatedAt (DateTime)
 
 
-Message object Twitch subscriber
+Message object Twitch subscriber or resub
 
     Name (string)
     IsTest (bool)
@@ -71,9 +84,10 @@ Message object Twitch subscriber
     Message (string)
     Gifter (string)
     Months  (int)
+    StreakMonths (nullable int)  	-- investigating when exactly holds value (resub type)
     SubPlan (string)
     SubPlanName (string)
-    SubType (string) => "sub" or "resub"
+    SubType (string) 			-- "sub" | "resub" investigating if twitch & SL changes did something to this.
 
 
 Message object Twitch subMisteryGift

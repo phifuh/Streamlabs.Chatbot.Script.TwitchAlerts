@@ -34,67 +34,91 @@
     <audio id="gameOverSound">
         <source src="audio/newSlotGameOver.mp3" type="audio/mpeg">
     </audio>
+    <audio id="coinDrops">
+        <source src="audio/CoinDrop.wav" type="audio/mpeg">
+    </audio>
+    <audio id="slotDrop">
+        <source src="audio/slotDrop.wav" type="audio/mpeg">
+    </audio>
+    
 
-    <span id="twitchname"></span><br />
 
-    <!--<div id="output"></div>-->
-    <span id="name"></span>
-    <span id="avatar"></span>
-    <span id="container" style="display:none">
+    <div id="MainFrame" style="width:1920px;height:1080px;">
+
+        <span style="z-index:-1">
+
+            <video id="donationVideo" muted width="1920" height="1080">
+
+                <source src="video/donation.webm" type="video/webm">
 
 
-        <span id="header">
-            <!--<h1>Slots Machine</h1>
-                <h3>Viel Gl&uuml;ck</h3>-->
-        </span><br /><br />
+            </video>
+        </span>
 
-        <span id="reels">
-            <canvas id="canvas1" width="70" height="300"></canvas>
-            <canvas id="canvas2" width="70" height="300"></canvas>
-            <canvas id="canvas3" width="70" height="300"></canvas>
-            <span id="overlay">
-                <span id="winline"></span>
-            </span>
+        <span id="slot" style="display:block;position:absolute;bottom:1px;width:500px;">
+            <span id="twitchname"></span><br />
 
-            <!-- Loading overlay -->
-            <span id="loading">
-                <p>L&auml;dt..</p>
-                <span id="progressbar">
-                    <span id="progress"></span>
+            <!--<div id="output"></div>-->
+            <span id="name"></span>
+            <span id="avatar"></span>
+            <span id="container" style="display:none">
+
+
+                <span id="header">
+                    <!--<h1>Slots Machine</h1>
+                    <h3>Viel Gl&uuml;ck</h3>-->
+                </span><br /><br />
+
+                <span id="reels">
+                    <canvas id="canvas1" width="70" height="300"></canvas>
+                    <canvas id="canvas2" width="70" height="300"></canvas>
+                    <canvas id="canvas3" width="70" height="300"></canvas>
+                    <span id="overlay">
+                        <span id="winline"></span>
+                    </span>
+                    <!-- Old stuff-->
+                    <!-- Loading overlay -->
+                    <!--<span id="loading">
+                            <p>L&auml;dt..</p>
+                            <span id="progressbar">
+                                <span id="progress"></span>
+                            </span>
+                        </span>
+                    </span>
+                    <span id="results">
+                        <span id="score">
+                            <span id="finalresult"><span id="multiplier">0</span> x <img src="img/gold-64.png" /></span>
+                        </span>
+                        <span id="status"></span>
+                    </span>-->
                 </span>
             </span>
         </span>
-        <span id="results">
-            <span id="score">
-                <span id="finalresult"><span id="multiplier">0</span> x <img src="img/gold-64.png" /></span>
-            </span>
-            <span id="status"></span>
-        </span>
-
-
-
-    </span>
+    </div>
 
     <script>
+        function sleep(time) {
+            return new Promise((resolve) => setTimeout(resolve, time));
+        }
 
         function startslot(bitName, bitAmount, BanWord1, BanWord2) {
 
-
-            function sleep(time) {
-                return new Promise((resolve) => setTimeout(resolve, time));
-            }
 
             var bitName = bitName;
             var BanWord1 = BanWord1;
             var BanWord2 = BanWord2;
 
-            console.log(bitMessage);
 
-            if (BanWord1 == "mario"){
+            //console.log(bitName);
+            //console.log(BanWord1);
+            //console.log(BanWord2);
+
+            // Fighter names
+            if (BanWord1 == "mario") {
                 var Icon = "Mario"
             }
-            else if (BanWord1 == "donkey" && BanWord2 == "kong") {
-                var Icon = "Donkey Kong"
+            else if ((BanWord1 == "donkey" && BanWord2 == "kong") || BanWord1 == "donkeykong") {
+                var Icon = "DonkeyKong"
             }
             else if (BanWord1 == "link") {
                 var Icon = "Link"
@@ -102,16 +126,16 @@
             else if (BanWord1 == "samus") {
                 var Icon = "Samus"
             }
-            else if (BanWord1 == "dark" && BanWord2 == "samus") {
+            else if ((BanWord1 == "dark" && BanWord2 == "samus") || BanWord1 == "darksamus") {
                 var Icon = "DarkSamus"
             }
-            else if (BanWord1 == "yoshi") {
+            else if (BanWord1 == "yoshi" || BanWord1 == "yoschi") {
                 var Icon = "Yoshi"
             }
             else if (BanWord1 == "kirby") {
                 var Icon = "Kirby"
             }
-            else if (BanWord1 == "fox") {
+            else if (BanWord1 == "fox" || BanWord1 == "foks") {
                 var Icon = "Fox"
             }
             else if (BanWord1 == "pikachu") {
@@ -120,13 +144,13 @@
             else if (BanWord1 == "luigi") {
                 var Icon = "Luigi"
             }
-            else if (BanWord1 == "ness") {
+            else if (BanWord1 == "ness" || BanWord1 == "nes") {
                 var Icon = "Ness"
             }
-            else if (BanWord1 == "captain" && BanWord2 == "falcon") {
+            else if ((BanWord1 == "captain" && BanWord2 == "falcon") || (BanWord1 == "kaptain" && BanWord2 == "falcon") || BanWord1 == "captainfalcon") {
                 var Icon = "CaptainFalcon"
             }
-            else if (BanWord1 == "jigglypuff") {
+            else if (BanWord1 == "jigglypuff" || BanWord1 == "pummelluff" || BanWord1 == "pummeluff") {
                 var Icon = "Jigglypuff"
             }
             else if (BanWord1 == "peach") {
@@ -135,25 +159,25 @@
             else if (BanWord1 == "daisy") {
                 var Icon = "Daisy"
             }
-            else if (BanWord1 == "bowser") {
+            else if (BanWord1 == "bowser" || BanWord1 == "bauser" || BanWord1 == "browser") {
                 var Icon = "Bowser"
             }
-            else if (BanWord1 == "ice" && BanWord2 == "climbers") {
+            else if ((BanWord1 == "ice" && BanWord2 == "climbers") || BanWord1 == "iceclimbers") {
                 var Icon = "IceClimbers"
             }
-            else if (BanWord1 == "sheik") {
+            else if (BanWord1 == "sheik" || BanWord1 == "shiek" || BanWord1 == "schiek") {
                 var Icon = "Sheik"
             }
             else if (BanWord1 == "zelda") {
                 var Icon = "Zelda"
             }
-            else if (BanWord1 == "dr" && BanWord2 == "mario") {
+            else if ((BanWord1 == "dr" && BanWord2 == "mario") || BanWord1 == "drmario") {
                 var Icon = "DrMario"
             }
             else if (BanWord1 == "pichu") {
                 var Icon = "Pichu"
             }
-            else if (BanWord1 == "falco") {
+            else if (BanWord1 == "falco" || BanWord1 == "falko") {
                 var Icon = "Falco"
             }
             else if (BanWord1 == "marth") {
@@ -265,7 +289,7 @@
                 var Icon = "BowserJR"
             }
             else if (BanWord1 == "duck" && BanWord2 == "hunt") {
-                var Icon = "DuckHunt"
+                var Icon = "DuckHuntDuo"
             }
             else if (BanWord1 == "ryu") {
                 var Icon = "Ryu"
@@ -340,6 +364,7 @@
 
             //load the name
             document.getElementById('twitchname').innerHTML = bitName;
+            document.getElementById('twitchname').style = "color:white;";
 
             // Usage!
             sleep(25000).then(() => {
@@ -348,6 +373,28 @@
                 document.getElementById('name').style.display = 'none';
                 document.getElementById('twitchname').style.display = 'none';
             });
+        }
+
+
+        function showDonation(donationName, donationAmount, ) {
+
+            var video = document.getElementById("donationVideo");
+            video.playbackRate = 0.4;
+            video.play();
+
+            var AudioCoin = document.getElementById("slotDrop");
+            sleep(4000).then(() => {
+
+                AudioCoin.playbackRate = 0.8;
+                AudioCoin.play();
+                //AudioCoin.loop = true;
+            });
+
+            //sleep(8000).then(() => {
+
+            //    AudioCoin.loop = false;
+            //});
+
         }
 
     </script>

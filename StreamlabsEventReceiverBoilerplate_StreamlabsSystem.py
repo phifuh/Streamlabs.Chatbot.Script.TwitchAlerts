@@ -86,10 +86,11 @@ def EventReceiverEvent(sender, args):
                 bitAmount = message.Amount
                 bitMessage = message.Message 
                 splitted = bitMessage.split()
-                BanWord = splitted[1].tolower()
-                BanWord2 = splitted[2].tolower()
-                #Parent.Log("subscription",str(bitName))
-                dict = {"name":bitName,"bitAmount":bitAmount,"banword1":BanWord,"banword2":BanWord}
+                BanWord1 = splitted[1].lower()
+                BanWord2 = splitted[2].lower()
+                BanWord1 ="Link"
+                Parent.Log("bits",str(bitName))
+                dict = {"bitName":bitName,"bitAmount":bitAmount,"BanWord1":BanWord1,"BanWord2":BanWord2}
                 Parent.BroadcastWsEvent("EVENT_CURRENCY_SHOW_BIT_SLOTS", json.dumps(dict))
 
         elif evntdata.Type == "host":
@@ -97,6 +98,28 @@ def EventReceiverEvent(sender, args):
             for message in evntdata.Message:
                 hostName     = message.Name
                 hostViewers  = message.Viewers  
+                #Parent.Log("host","testRaid")
+
+        elif evntdata.Type == "raid":
+
+            for message in evntdata.Message:
+                raidName     = message.Name
+                raidViewers  = message.Raiders  
+                Parent.SendStreamMessage ("Uii ein Raid mit " + str(raidViewers) + " von " + str(message.Name) + ", Vielen dank!! Wo bleibt das !hype?!" )
+                #Parent.Log("raid","testRaid")
+
+
+    elif evntdata and evntdata.For == "streamlabs":
+
+        if evntdata.Type == "donation":
+
+            for message in evntdata.Message:
+                donationName     = message.Name
+                donationAmount = message.Amount
+                Parent.Log("donate2",str(donationName))
+                Parent.Log("donate2",str(donationAmount))
+                dict = {"donationName":donationName,"donationAmount":donationAmount}
+                Parent.BroadcastWsEvent("EVENT_SHOW_DONATION", json.dumps(dict))
 
 
     return

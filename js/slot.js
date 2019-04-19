@@ -8,10 +8,10 @@ function preloader(items, preloadFunction, callback) {
 
     // called by preloadFunction to notify result
     function _check(err, id) {
-        updateProgress(1);
-        if (err) {
-            alert('Failed to load ' + id + ': ' + err);
-        }
+        //updateProgress(1);
+        //if (err) {
+        //    alert('Failed to load ' + id + ': ' + err);
+        //}
         loadc++;
         if (itemc == loadc) callback();
     }
@@ -45,18 +45,18 @@ function preloadImages(images, callback) {
 
 var progressCount = 0; // current progress count
 var progressTotalCount = 0; // total count
-function updateProgress(inc) {
-    progressCount += (inc || 1);
+//function updateProgress(inc) {
+//    progressCount += (inc || 1);
 
-    if (progressCount >= progressTotalCount) {
-        // done, complete progress bar and hide loading screen
-        $('#progress').css('width', '100%');
-        $('#loading').slideUp(600);
-    } else {
-        // Update progress bar
-        $('#progress').css('width', parseInt(100 * progressCount / progressTotalCount) + '%');
-    }
-}
+//    if (progressCount >= progressTotalCount) {
+//        // done, complete progress bar and hide loading screen
+//        $('#progress').css('width', '100%');
+//        $('#loading').slideUp(600);
+//    } else {
+//        // Update progress bar
+//        $('#progress').css('width', parseInt(100 * progressCount / progressTotalCount) + '%');
+//    }
+//}
 
 
 
@@ -93,7 +93,7 @@ function shuffleArray(array) {
 }
 
 function SlotGame(winningIcon) {
-    $('#finalresult').hide();
+    //$('#finalresult').hide();
 
     delete game;
 
@@ -101,20 +101,86 @@ function SlotGame(winningIcon) {
     var winningIcon = winningIcon;
     //console.log(getWinNumber);
 
-    if (winningIcon == "Link") {
+    if (typeof num1 == 'string') {
 
         var items = [
-            { id: 'bit1-1' },
-            { id: 'bit1-2' },
-            { id: 'bit1-3' },
-            { id: 'Link-1' },
-            { id: 'bit100-2' },
-            { id: 'bit100-3' },
-            { id: 'bit1000-1' },
-            { id: 'bit1000-2' },
-            { id: 'bit1000-3' },
-            { id: 'bit2.5mil-1' },
-            { id: 'bit5mil-1' }
+
+            { id: 'Mario' },
+            { id: 'DonkeyKong' },
+            { id: 'Link' },
+            { id: 'Samus' },
+            { id: 'DarkSamus' },
+            { id: 'Yoshi' },
+            { id: 'Kirby' },
+            { id: 'Fox' },
+            { id: 'Pikachu' },
+            { id: 'Luigi' },
+            { id: 'Ness' },
+            { id: 'CaptainFalcon' },
+            { id: 'Jigglypuff' },
+            { id: 'Peach' },
+            { id: 'Daisy' },
+            { id: 'Bowser' },
+            { id: 'IceClimbers' },
+            { id: 'Sheik' },
+            { id: 'Zelda' },
+            { id: 'DrMario' },
+            { id: 'Pichu' },
+            { id: 'Falco' },
+            { id: 'Marth' },
+            { id: 'Lucina' },
+            { id: 'YoungLink' },
+            { id: 'Ganondorf' },
+            { id: 'Mewto' },
+            { id: 'Roy' },
+            { id: 'Chrom' },
+            { id: 'MrGameAndWatch' },
+            { id: 'MetaKnight' },
+            { id: 'Pit' },
+            { id: 'DarkPit' },
+            { id: 'ZeroSuitSamus' },
+            { id: 'Wario' },
+            { id: 'Snake' },
+            { id: 'Ike' },
+            { id: 'PokemonTrainer' },
+            { id: 'DiddyKong' },
+            { id: 'Lucas' },
+            { id: 'Sonic' },
+            { id: 'KingDedede' },
+            { id: 'Olimar' },
+            { id: 'Lucario' },
+            { id: 'Rob' },
+            { id: 'ToonLink' },
+            { id: 'Wolf' },
+            { id: 'Villager' },
+            { id: 'MegaMan' },
+            { id: 'WiiFit' },
+            { id: 'RosalinaAndLuma' },
+            { id: 'LittleMac' },
+            { id: 'Greninja' },
+            { id: 'Palutena' },
+            { id: 'PacMan' },
+            { id: 'Robin' },
+            { id: 'Shulk' },
+            { id: 'BowserJR' },
+            { id: 'DuckHuntDuo' },
+            { id: 'Ryu' },
+            { id: 'Ken' },
+            { id: 'Cloud' },
+            { id: 'Corrin' },
+            { id: 'Bayonetta' },
+            { id: 'Inkling' },
+            { id: 'Ridley' },
+            { id: 'Simon' },
+            { id: 'Richter' },
+            { id: 'KingKRool' },
+            { id: 'Isabelle' },
+            { id: 'Incineroar' },
+            { id: 'MiiBrawler' },
+            { id: 'MiiGunner' },
+            { id: 'MiiSwordfighter' },
+            { id: 'PiranhaPlant' }
+
         ];
 
         bitMode = 4;
@@ -301,7 +367,7 @@ function startSlot(ITEM_COUNT,  bitMode) {
 
     game.restart(ITEM_COUNT,  bitMode);
     $('#play').hide();
-    $('#finalresult').show();
+    //$('#finalresult').show();
 
 }
 
@@ -426,7 +492,7 @@ Game.prototype.restart = function (ITEM_COUNT, bitMode) {
     this.offset2 = -parseInt(Math.random(ITEM_COUNT)) * SLOT_HEIGHT;
     this.offset3 = -parseInt(Math.random(ITEM_COUNT)) * SLOT_HEIGHT;
 
-    $('#results').hide();
+    //$('#results').hide();
 
     this.state = 1;
 }

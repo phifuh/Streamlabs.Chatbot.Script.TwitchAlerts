@@ -17,6 +17,7 @@ if (window.WebSocket) {
             events: [
                 "EVENT_CURRENCY_SHOW_BIT_SLOTS",
                 "EVENT_CURRENCY_RELOAD",
+                "EVENT_SHOW_DONATION",
             ]
         }
         
@@ -41,21 +42,29 @@ if (window.WebSocket) {
         {
             var arr = JSON.parse(jsonObject.data);
 
+            //console.log(arr.banword1);
+            //console.log(arr.banword2);
 
-            bitName = arr.bitName;
-            bitAmount = arr.bitAmount;
-            BanWord1 = arr.banword1;
-            BanWord2 = arr.banword2;
-
-            startslot(bitName, bitAmount, BanWord1, BanWord2);
+            startslot(arr.bitName, arr.bitAmount, arr.BanWord1, arr.BanWord2);
             
-		}
+        }
+
+        else if (jsonObject.event == "EVENT_SHOW_DONATION") {
+            var arr = JSON.parse(jsonObject.data);
+
+
+            //donationName = arr.donationName;
+            //donationAmount = arr.donationAmount;
+
+            showDonation(arr.donationName, arr.donationAmount);
+        }
         else if(jsonObject.event == "EVENT_CURRENCY_RELOAD")
         {
             //  Pass Data Along
             var jsonData = JSON.parse(jsonObject.data);
             loadSettings(jsonData);
         }
+
 
     }
 

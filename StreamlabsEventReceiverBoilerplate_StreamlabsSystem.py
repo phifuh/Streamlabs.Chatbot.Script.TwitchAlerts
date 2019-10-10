@@ -67,17 +67,24 @@ def EventReceiverEvent(sender, args):
         if evntdata.Type == "follow":
             for message in evntdata.Message:
                 #Parent.Log("follow", message.Name)
-                Parent.SendStreamMessage ("" + message.Name + " Danke für den Follow kobiqqLove !")
+                Parent.SendStreamMessage ("" + message.Name + " Thank you for the Follow! kobiqqChampion")
 
         elif evntdata.Type == "subscription":
             for message in evntdata.Message:
                 if message.SubType == "resub":
-                    Parent.SendStreamMessage ("" + message.Name + " hat heute Geburtstag und ist" + message.Months + " Jahre alt geworden! kobiqqLove kobiqqLove")
-                    #Parent.Log("subscription", "{0} resubscribed for {1} months total!".format(message.Name, message.Months))
+                    Parent.Log("subscription", "{0} resubscribed for {1} months total!".format(message.Name, message.Months))
+                    #message.Months
+                    Parent.SendStreamMessage ("" + str(message.Name) + " kobiqqChampion. Thank you for your continious support!")
+                elif message.SubType == "subscriber" and message.Months >= 1:
+                    Parent.Log("subscription", "{0} resubscribed for {1} months total!".format(message.Name, message.Months))
+                    Parent.SendStreamWhisper("kobiqq","sub test!")
                 else:
-                    Parent.SendStreamMessage ("" + message.Name + " Thank You! kobiqqLove")
-                    Parent.SendStreamWhisper(message.Name,"Hey, Willkommen im Sub-Club. Ich hoffe, du wirst Freude an deinen neuen Emotes haben! kobiqqLove kobiqqSD kobiqqGG. Ab sofort kannst du 1x pro Stream !rematch nutzen, um nach einer Niederlage direkt wieder zu fighten. Zudem kannst du dir einen Skin wuenschen welchen ich zum Bot hinzufuege. Fluestere mich dafuer einfach an. Vergiss nicht dein Discord mit Twitch zu verknuepfen, um alle Sub-perks nutzen zu koennen. Kobi!")
-                    #Parent.Log("subscription", "{0} subscribed!".format(message.Name))
+                    Parent.Log("subscription", "{0} subscribed!".format(message.Name))
+                    Parent.SendStreamMessage ("We got a new Squirrel in the Family. Thank You " + str(message.Name) + " for your support! kobiqqLove")
+                    #deutsch + englisch message
+                    #alle sub perks auf meiner website + link
+                    Parent.SendStreamWhisper(message.Name,"Hey, Willkommen im Sub-Club. Ich hoffe, du wirst Freude an deinen neuen Emotes haben! kobiqqLove kobiqqSD kobiqqGG. Vergiss nicht dein Discord mit Twitch zu verknuepfen, um alle Sub-perks nutzen zu koennen. Kobi!")
+                    
 
         elif evntdata.Type == "bits":
 
@@ -88,7 +95,6 @@ def EventReceiverEvent(sender, args):
                 splitted = bitMessage.split()
                 BanWord1 = splitted[1].lower()
                 BanWord2 = splitted[2].lower()
-                BanWord1 ="Link"
                 Parent.Log("bits",str(bitName))
                 dict = {"bitName":bitName,"bitAmount":bitAmount,"BanWord1":BanWord1,"BanWord2":BanWord2}
                 Parent.BroadcastWsEvent("EVENT_CURRENCY_SHOW_BIT_SLOTS", json.dumps(dict))

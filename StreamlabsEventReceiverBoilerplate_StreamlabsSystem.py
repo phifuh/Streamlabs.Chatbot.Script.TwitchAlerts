@@ -67,14 +67,14 @@ def EventReceiverEvent(sender, args):
         if evntdata.Type == "follow":
             for message in evntdata.Message:
                 #Parent.Log("follow", message.Name)
-                Parent.SendStreamMessage ("" + message.Name + " Thank you for the Follow! kobiqqChampion")
+                Parent.SendStreamMessage ("" + message.Name + " Thank you for the Follow! kobiqqLove")
 
         elif evntdata.Type == "subscription":
             for message in evntdata.Message:
                 if message.SubType == "resub":
                     Parent.Log("subscription", "{0} resubscribed for {1} months total!".format(message.Name, message.Months))
                     #message.Months
-                    Parent.SendStreamMessage ("" + str(message.Name) + " kobiqqChampion. Thank you for your continious support!")
+                    Parent.SendStreamMessage ("" + str(message.Name) + " kobiqqLove. Thank you for your continious support!")
                 elif message.SubType == "subscriber" and message.Months >= 1:
                     Parent.Log("subscription", "{0} resubscribed for {1} months total!".format(message.Name, message.Months))
                     Parent.SendStreamWhisper("kobiqq","sub test!")

@@ -68,23 +68,28 @@ def EventReceiverEvent(sender, args):
             for message in evntdata.Message:
                 #Parent.Log("follow", message.Name)
                 Parent.SendStreamMessage ("" + message.Name + " Thank you for the Follow! kobiqqLove")
+                updateLatestNotification("follow",message.Name,"0")
 
         elif evntdata.Type == "subscription":
             for message in evntdata.Message:
+
                 if message.SubType == "resub":
                     Parent.Log("subscription", "{0} resubscribed for {1} months total!".format(message.Name, message.Months))
+                    Parent.SendStreamWhisper("kobiqq","sub test!2" + str(message.Name))
+                    updateLatestNotification("sub",message.Name,message.Months)
                     #message.Months
-                    Parent.SendStreamMessage ("" + str(message.Name) + " kobiqqLove. Thank you for your continious support!")
+                    Parent.SendStreamMessage ("" + str(message.Name) + " kobiqqChampion. Thank you for your continious support!")
                 elif message.SubType == "subscriber" and message.Months >= 1:
                     Parent.Log("subscription", "{0} resubscribed for {1} months total!".format(message.Name, message.Months))
-                    Parent.SendStreamWhisper("kobiqq","sub test!")
+                    Parent.SendStreamWhisper("kobiqq","sub test!" + str(message.Name))
+                    updateLatestNotification("sub",message.Name,message.Months)
                 else:
                     Parent.Log("subscription", "{0} subscribed!".format(message.Name))
-                    Parent.SendStreamMessage ("We got a new Squirrel in the Family. Thank You " + str(message.Name) + " for your support! kobiqqLove")
+                    Parent.SendStreamMessage ("We got a new Squirrel in the Family. Thank You " + str(message.Name) + " for your support! kobiqqChampion")
                     #deutsch + englisch message
                     #alle sub perks auf meiner website + link
-                    Parent.SendStreamWhisper(message.Name,"Hey, Willkommen im Sub-Club. Ich hoffe, du wirst Freude an deinen neuen Emotes haben! kobiqqLove kobiqqSD kobiqqGG. Vergiss nicht dein Discord mit Twitch zu verknuepfen, um alle Sub-perks nutzen zu koennen. Kobi!")
-                    
+                    Parent.SendStreamWhisper(message.Name,"Hey, Willkommen im Sub-Club. Ich hoffe, du wirst Freude an deinen neuen Emotes haben! kobiqqLove kobiqqChampion kobiqqGG. Vergiss nicht dein Discord mit Twitch zu verknuepfen, um alle Sub-perks nutzen zu koennen. Kobi!")
+                    updateLatestNotification("sub",message.Name,"0")
 
         elif evntdata.Type == "bits":
 
@@ -98,6 +103,8 @@ def EventReceiverEvent(sender, args):
                 Parent.Log("bits",str(bitName))
                 dict = {"bitName":bitName,"bitAmount":bitAmount,"BanWord1":BanWord1,"BanWord2":BanWord2}
                 Parent.BroadcastWsEvent("EVENT_CURRENCY_SHOW_BIT_SLOTS", json.dumps(dict))
+                Parent.SendStreamWhisper("kobiqq","bit test!" + str(message.Name))
+                updateLatestNotification("bits",bitName,bitAmount)
 
         elif evntdata.Type == "host":
 
@@ -105,6 +112,8 @@ def EventReceiverEvent(sender, args):
                 hostName     = message.Name
                 hostViewers  = message.Viewers  
                 #Parent.Log("host","testRaid")
+                Parent.SendStreamWhisper("kobiqq","host test!" + str(message.Name))
+                updateLatestNotification("host",hostName,hostViewers)
 
         elif evntdata.Type == "raid":
 
@@ -113,6 +122,8 @@ def EventReceiverEvent(sender, args):
                 raidViewers  = message.Raiders  
                 Parent.SendStreamMessage ("Uii ein Raid mit " + str(raidViewers) + " von " + str(message.Name) + ", Vielen dank!! Wo bleibt das !hype?!" )
                 #Parent.Log("raid","testRaid")
+                Parent.SendStreamWhisper("kobiqq","raid test!" + str(message.Name))
+                updateLatestNotification("raid",raidName,raidViewers)
 
 
     elif evntdata and evntdata.For == "streamlabs":
@@ -126,6 +137,8 @@ def EventReceiverEvent(sender, args):
                 Parent.Log("donate2",str(donationAmount))
                 dict = {"donationName":donationName,"donationAmount":donationAmount}
                 Parent.BroadcastWsEvent("EVENT_SHOW_DONATION", json.dumps(dict))
+                Parent.SendStreamWhisper("kobiqq","donation test!")
+                updateLatestNotification("donation",donationName,donationAmount)
 
 
     return
@@ -195,3 +208,28 @@ def Execute(data):
 #---------------------------------------
 def Tick():
 	return
+
+
+def updateLatestNotification(type,fromName,amount):
+
+    conn = sqlite3.connect(os.path.dirname(__file__) + "/../Datenbanken/streamMetaData.db")
+    c = conn.cursor()
+
+    try:
+        c.execute("UPDATE latestNotifications SET byName ='" + str(fromName) + "',amount ='" + str(amount) + "' WHERE type='" + str(type) + "'")
+        conn.commit()
+
+    except:
+        c.execute("INSERT INTO latestNotifications ('type','byName','amount') values ('" + str(type) + "','" + str(fromName) + "','" + str(amount) + "') ")
+        conn.commit()
+
+    finally:
+        conn.close()
+    
+
+    return
+
+
+#c.execute("DELETE FROM whisperuser WHERE id='" + str(userID) + "'")
+#c.execute("INSERT INTO whisperuser ('name','whisperAttempts') values ('" + viewers + "','" + str(case) + "') ")
+#c.execute("UPDATE viptracking SET VIPPoints ='" + str(VIPPoints) + "' WHERE name='" + str(viewers) + "'")

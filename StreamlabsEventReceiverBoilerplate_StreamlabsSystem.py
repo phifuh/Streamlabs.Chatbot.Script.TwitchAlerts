@@ -216,6 +216,11 @@ def updateLatestNotification(type,fromName,amount):
     c = conn.cursor()
 
     try:
+        c.execute("SELECT byName FROM latestNotifications WHERE type='" + str(type) + "'")
+        row = c.fetchone()
+
+        xoxo = row[0]
+
         c.execute("UPDATE latestNotifications SET byName ='" + str(fromName) + "',amount ='" + str(amount) + "' WHERE type='" + str(type) + "'")
         conn.commit()
 

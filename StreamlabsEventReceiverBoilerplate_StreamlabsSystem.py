@@ -1,21 +1,20 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-""" Streamlabs Event Receiver Boilerplate
 
-    original creator Ocgineer
-
-"""
+#---------------------------------------
+# Script Import Libraries
+#---------------------------------------
 import os
 import json
 import codecs
 import clr
 
-
-#---------------------------------------
-# Script Import Libraries
-#---------------------------------------
+clr.AddReference("IronPython.SQLite.dll")
 clr.AddReference("IronPython.Modules.dll")
+
+import sqlite3
+
 clr.AddReferenceToFileAndPath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "StreamlabsEventReceiver.dll"))
 from StreamlabsEventReceiver import StreamlabsEventClient
 
@@ -23,33 +22,101 @@ from StreamlabsEventReceiver import StreamlabsEventClient
 #---------------------------------------
 # Script Information
 #---------------------------------------
-ScriptName = "Streamlabs Event Receiver"
-Website = "kobiqq"
-Description = "Streamlabs Event Receiver Boilerplate orginal from Ocgineer"
-Creator = "Kobiqq"
-Version = "1.1"
+ScriptName = "Notifications"
+Website = "twitch.tv/kobiqq"
+Description = "Alert Notifications"
+Creator = "KobiQQ"
+Version = "1.2"
 
 #---------------------------------------
-# Script Variables
+# Variables
 #---------------------------------------
-SettingsFile = os.path.join(os.path.dirname(__file__), "settings.json")
-EventReceiver = None
+
+m_ConfigFile = os.path.join(os.path.dirname(__file__), "Settings/settings.json")
+m_ConfigFileJs = os.path.join(os.path.dirname(__file__), "Settings/settings.js")
 
 #---------------------------------------
-# Script Classes
+# Classes Tries to load settings from file if given The 'default' variable names need to match UI_Config
 #---------------------------------------
-class Settings(object):
-	""" Load in saved settings file if available else set default values. """
-	def __init__(self, settingsfile=None):
-		try:
-			with codecs.open(settingsfile, encoding="utf-8-sig", mode="r") as f:
-				self.__dict__ = json.load(f, encoding="utf-8")
-		except:
-			self.socket_token = None
+class Settings:
+    """" Loads settings from file if file is found if not uses default values"""
 
-	def Reload(self, jsondata):
-		""" Reload settings from AnkhBot uEventReceiver interface by given json data. """
-		self.__dict__ = json.loads(jsondata, encoding="utf-8")
+    # The 'default' variable names need to match UI_Config
+    def __init__(self, settingsFile=None):
+        if settingsFile and os.path.isfile(settingsFile):
+            with codecs.open(settingsFile, encoding='utf-8-sig', mode='r') as f:
+                self.__dict__ = json.load(f, encoding='utf-8-sig')
+         
+        else: #set variables if no settings file
+            self.OnlyLive = True
+            self.self.socket_token = None
+
+
+    # Reload settings on save through UI
+    def ReloadSettings(self, data):
+        """Reload settings on save through UI"""
+        self.__dict__ = json.loads(data, encoding='utf-8-sig')
+        return
+
+    # Save settings to files (json and js)
+    def SaveSettings(self, settingsFile):
+        """Save settings to files (json and js)"""
+        with codecs.open(settingsFile, encoding='utf-8-sig', mode='w+') as f:
+            json.dump(self.__dict__, f, encoding='utf-8-sig')
+        with codecs.open(settingsFile.replace("json", "js"), encoding='utf-8-sig', mode='w+') as f:
+            f.write("var settings = {0};".format(json.dumps(self.__dict__, encoding='utf-8-sig', ensure_ascii=False)))
+        return
+
+MySettings = Settings()
+
+
+#---------------------------------------
+# Chatbot Initialize Function
+#---------------------------------------
+def Init():
+	
+    """Required tick function"""
+    # Globals
+    global MySettings
+    MySettings = Settings()
+
+
+    if not os.path.isfile(m_ConfigFile):
+        text_file = codecs.open(m_ConfigFile, encoding='utf-8-sig', mode='w')
+        out = json.dumps(MySettings.__dict__, encoding="utf-8-sig")
+        text_file.write(out)
+        text_file.close()
+    else:
+        with codecs.open(m_ConfigFile,encoding='utf-8-sig', mode='r') as ConfigFile:
+            MySettings.__dict__ = json.load(ConfigFile)
+
+    if not os.path.isfile(m_ConfigFileJs):
+        text_file = codecs.open(m_ConfigFileJs, encoding='utf-8-sig', mode='w')
+        jsFile = "var settings =" + json.dumps(MySettings.__dict__, encoding="utf-8-sig") + ";"
+        text_file.write(jsFile)
+        text_file.close()
+
+
+    ## Init the Streamlabs Event Receiver
+    global EventReceiver
+    EventReceiver = StreamlabsEventClient()
+    EventReceiver.StreamlabsSocketConnected += EventReceiverConnected
+    EventReceiver.StreamlabsSocketDisconnected += EventReceiverDisconnected
+    EventReceiver.StreamlabsSocketEvent += EventReceiverEvent
+
+    ## Auto Connect if key is given in settings
+    if ScriptSettings.socket_token:
+        EventReceiver.Connect(ScriptSettings.socket_token)
+
+    # End of Init
+    return
+
+
+def Execute(data):
+	return
+
+def Tick():
+	return
 
 #---------------------------------------
 # Script Functions
@@ -66,7 +133,6 @@ def EventReceiverEvent(sender, args):
     if evntdata and evntdata.For == "twitch_account":
         if evntdata.Type == "follow":
             for message in evntdata.Message:
-                #Parent.Log("follow", message.Name)
                 Parent.SendStreamMessage ("" + message.Name + " Thank you for the Follow! kobiqqLove")
                 updateLatestNotification("follow",message.Name,"0")
 
@@ -143,89 +209,23 @@ def EventReceiverEvent(sender, args):
 
     return
 
-#---------------------------------------
-# Chatbot Initialize Function
-#---------------------------------------
-def Init():
-	
-	# Load settings from settings file
-    global ScriptSettings
-    ScriptSettings = Settings(SettingsFile)
 
-    ## Init the Streamlabs Event Receiver
-    global EventReceiver
-    EventReceiver = StreamlabsEventClient()
-    EventReceiver.StreamlabsSocketConnected += EventReceiverConnected
-    EventReceiver.StreamlabsSocketDisconnected += EventReceiverDisconnected
-    EventReceiver.StreamlabsSocketEvent += EventReceiverEvent
-
-    ## Auto Connect if key is given in settings
-    if ScriptSettings.socket_token:
-        EventReceiver.Connect(ScriptSettings.socket_token)
-
-    # End of Init
-    return
-
-#---------------------------------------
-# Chatbot Save Settings Function
-#---------------------------------------
-def ReloadSettings(jsondata):
-	
-	# Reload newly saved settings and verify
-	ScriptSettings.Reload(jsondata)
-
-	# Connect if token has been entered and EventReceiver is not connected
-	# This can then connect without having to reload the script
-	if EventReceiver and not EventReceiver.IsConnected:
-		if ScriptSettings.socket_token:
-			EventReceiver.Connect(ScriptSettings.socket_token)
-
-	# End of ReloadSettings
-	return
-
-#---------------------------------------
-#	Chatbot Script Unload Function
-#---------------------------------------
-def Unload():
-
-	# Disconnect EventReceiver cleanly
-	global EventReceiver
-	if EventReceiver and EventReceiver.IsConnected:
-		EventReceiver.Disconnect()
-	EventReceiver = None
-
-	# End of Unload
-	return
-
-#---------------------------------------
-# Chatbot Execute Function
-#---------------------------------------
-def Execute(data):
-	return
-
-#---------------------------------------
-# Chatbot Tick Function
-#---------------------------------------
-def Tick():
-	return
-
-
-def updateLatestNotification(type,fromName,amount):
+def updateLatestNotification(eventType,fromName,amount):
 
     conn = sqlite3.connect(os.path.dirname(__file__) + "/../Datenbanken/streamMetaData.db")
     c = conn.cursor()
 
     try:
-        c.execute("SELECT byName FROM latestNotifications WHERE type='" + str(type) + "'")
+        c.execute("SELECT fromViewer FROM latestNotifications WHERE alertType='" + str(eventType) + "'")
         row = c.fetchone()
 
         xoxo = row[0]
 
-        c.execute("UPDATE latestNotifications SET byName ='" + str(fromName) + "',amount ='" + str(amount) + "' WHERE type='" + str(type) + "'")
+        c.execute("UPDATE latestNotifications SET fromViewer ='" + str(fromName) + "',amount ='" + str(amount) + "' WHERE alertType='" + str(eventType) + "'")
         conn.commit()
 
     except:
-        c.execute("INSERT INTO latestNotifications ('type','byName','amount') values ('" + str(type) + "','" + str(fromName) + "','" + str(amount) + "') ")
+        c.execute("INSERT INTO latestNotifications ('alertType','fromViewer','amount') values ('" + str(eventType) + "','" + str(fromName) + "','" + str(amount) + "') ")
         conn.commit()
 
     finally:
@@ -238,3 +238,43 @@ def updateLatestNotification(type,fromName,amount):
 #c.execute("DELETE FROM whisperuser WHERE id='" + str(userID) + "'")
 #c.execute("INSERT INTO whisperuser ('name','whisperAttempts') values ('" + viewers + "','" + str(case) + "') ")
 #c.execute("UPDATE viptracking SET VIPPoints ='" + str(VIPPoints) + "' WHERE name='" + str(viewers) + "'")
+
+#Reload Settings
+def ReloadSettings(jsonData):
+    MySettings.__dict__ = json.loads(jsonData)
+    Parent.BroadcastWsEvent("EVENT_CURRENCY_RELOAD", jsonData)
+    return
+
+#---------------------------------------
+# Reload Settings on Save
+#---------------------------------------
+def ReloadSettings(jsonData):
+    # Globals
+    global MySettings
+
+    # Reload saved settings
+    MySettings.ReloadSettings(jsonData)
+
+    if EventReceiver and not EventReceiver.IsConnected:
+        if ScriptSettings.socket_token:
+            EventReceiver.Connect(ScriptSettings.socket_token)
+
+    # End of ReloadSettings
+    return
+
+def UpdateSettings():
+    with open(m_ConfigFile) as ConfigFile:
+        MySettings.__dict__ = json.load(ConfigFile)
+    return
+
+
+def Unload():
+
+	# Disconnect EventReceiver cleanly
+	global EventReceiver
+	if EventReceiver and EventReceiver.IsConnected:
+		EventReceiver.Disconnect()
+	EventReceiver = None
+
+	# End of Unload
+	return

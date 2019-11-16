@@ -1,10 +1,18 @@
 ﻿{
-	"output_file": "settings.json",
-	"socket_token": {
-		"type": "textbox",
-		"label": "Streamlabs Socket Token",
-		"value": "",
-		"tooltip": "The Streamlabs Socket Token. This can be found on the website via the left-hand side menu -> API Settings -> API Tokens.",		
-		"group": ""
-	}	
+  "output_file": "Settings/settings.json",
+  "socket_token": {
+    "type": "textbox",
+    "label": "Streamlabs Socket Token",
+    "value": "",
+    "tooltip": "The Streamlabs Socket Token. This can be found on the website via the left-hand side menu -> API Settings -> API Tokens.",
+    "group": ""
+  },
+
+  "followMessage": {
+    "type": "textbox",
+    "label": "Message on Follow",
+    "value": "",
+    "tooltip": "Send a Stream Message to the chat",
+    "group": ""
+  }
 }

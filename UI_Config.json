@@ -3,7 +3,7 @@
   "socket_token": {
     "type": "textbox",
     "label": "Streamlabs Socket Token",
-    "value": "",
+    "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbiI6IkRFMDhFOTQ4QjdFRTFBNzcwRjBBIiwicmVhZF9vbmx5Ijp0cnVlLCJwcmV2ZW50X21hc3RlciI6dHJ1ZSwidHdpdGNoX2lkIjoiMjYxOTc5NTkifQ.0kJX4Rd8USk_UYizxrAXRurFOeGCBgU8Q7C_z5Ccb9",
     "tooltip": "The Streamlabs Socket Token. This can be found on the website via the left-hand side menu -> API Settings -> API Tokens.",
     "group": ""
   },
@@ -11,8 +11,57 @@
   "followMessage": {
     "type": "textbox",
     "label": "Message on Follow",
-    "value": "",
-    "tooltip": "Send a Stream Message to the chat",
+    "value": "@{0} Thank you for the Follow!",
+    "tooltip": "{0} = userName \nSend a Stream Message to the chat",
+    "group": ""
+  },
+  "newSubMessage": {
+    "type": "textbox",
+    "label": "Message on First Sub",
+    "value": "We got a new Squirrel in the Family. Thank You {0} for your support!",
+    "tooltip": "{0} = userName \nSend a Stream Message to the chat because of first Subscribe",
+    "group": ""
+  },
+  "reSubMessage": {
+    "type": "textbox",
+    "label": "Resub",
+    "value": "Thank you for your continious support! @{0}",
+    "tooltip": "{0} = userName \nSend a Stream Message to the chat because of first Subscribe",
+    "group": ""
+  },
+  "wbSubMessage": {
+    "type": "textbox",
+    "label": "wbSub",
+    "value": "WbSub test!",
+    "tooltip": "{0} = userName \nSend a Stream Message to the chat because of first Subscribe",
+    "group": ""
+  },
+  "bitsMessage": {
+    "type": "textbox",
+    "label": "Bits Message",
+    "value": "Bit Test",
+    "tooltip": "{0} = userName \nSend a Stream Message to the chat because of Bits",
+    "group": ""
+  },
+  "hostMessage": {
+    "type": "textbox",
+    "label": "Host Message",
+    "value": "Host Test",
+    "tooltip": "{0} = userName \nSend a Stream Message to the chat because of a Host",
+    "group": ""
+  },
+  "raidMessage": {
+    "type": "textbox",
+    "label": "raid Message",
+    "value": "rag Test",
+    "tooltip": "{0} = userName \nSend a Stream Message to the chat because of a Raid",
+    "group": ""
+  },
+  "donationMessage": {
+    "type": "textbox",
+    "label": "donation Message",
+    "value": "donation Test",
+    "tooltip": "{0} = userName \nSend a Stream Message to the chat because of a donation",
     "group": ""
   }
 }

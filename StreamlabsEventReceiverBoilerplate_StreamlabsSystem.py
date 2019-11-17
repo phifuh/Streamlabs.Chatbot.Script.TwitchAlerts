@@ -5,10 +5,14 @@
 #---------------------------------------
 # Script Import Libraries
 #---------------------------------------
-import os
+import sys
 import json
+import os
 import codecs
+import datetime
+import operator
 import clr
+import time
 
 clr.AddReference("IronPython.SQLite.dll")
 clr.AddReference("IronPython.Modules.dll")
@@ -35,6 +39,7 @@ Version = "1.2"
 m_ConfigFile = os.path.join(os.path.dirname(__file__), "Settings/settings.json")
 m_ConfigFileJs = os.path.join(os.path.dirname(__file__), "Settings/settings.js")
 
+EventReceiver = None
 #---------------------------------------
 # Classes Tries to load settings from file if given The 'default' variable names need to match UI_Config
 #---------------------------------------
@@ -48,8 +53,16 @@ class Settings:
                 self.__dict__ = json.load(f, encoding='utf-8-sig')
          
         else: #set variables if no settings file
-            self.OnlyLive = True
-            self.self.socket_token = None
+            self.socket_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbiI6IkRFMDhFOTQ4QjdFRTFBNzcwRjBBIiwicmVhZF9vbmx5Ijp0cnVlLCJwcmV2ZW50X21hc3RlciI6dHJ1ZSwidHdpdGNoX2lkIjoiMjYxOTc5NTkifQ.0kJX4Rd8USk_UYizxrAXRurFOeGCBgU8Q7C_z5Ccb9I"
+            self.followMessage = "@{0} Thank you for the Follow!"
+            self.newSubMessage = "We got a new Squirrel in the Family. Thank You {0} for your support!"
+            self.reSubMessage = "Resub test!"
+            self.wbSubMessage = "Resub test!"
+            self.bitsMessage = "Bits Test"
+            self.hostMessage = "Host Test"
+            self.raidMessage = "Raid Test"
+            self.donation = "donation test"
+            
 
 
     # Reload settings on save through UI
@@ -105,8 +118,8 @@ def Init():
     EventReceiver.StreamlabsSocketEvent += EventReceiverEvent
 
     ## Auto Connect if key is given in settings
-    if ScriptSettings.socket_token:
-        EventReceiver.Connect(ScriptSettings.socket_token)
+    if MySettings.socket_token:
+        EventReceiver.Connect(MySettings.socket_token)
 
     # End of Init
     return
@@ -122,7 +135,7 @@ def Tick():
 # Script Functions
 #---------------------------------------
 def EventReceiverConnected(sender, args):
-	Parent.Log(ScriptName, "Connected")
+	Parent.Log(ScriptName, "Connected 22")
 	return
 
 def EventReceiverDisconnected(senmder, args):
@@ -130,10 +143,13 @@ def EventReceiverDisconnected(senmder, args):
 
 def EventReceiverEvent(sender, args):
     evntdata = args.Data
+    #Parent.SendStreamMessage (str(evntdata))
     if evntdata and evntdata.For == "twitch_account":
         if evntdata.Type == "follow":
+            Parent.SendStreamMessage (str(evntdata.Type))
             for message in evntdata.Message:
-                Parent.SendStreamMessage ("" + message.Name + " Thank you for the Follow! kobiqqLove")
+
+                Parent.SendStreamMessage (str(MySettings.followMessage.format(message.Name)))
                 updateLatestNotification("follow",message.Name,"0")
 
         elif evntdata.Type == "subscription":
@@ -143,18 +159,19 @@ def EventReceiverEvent(sender, args):
                     Parent.Log("subscription", "{0} resubscribed for {1} months total!".format(message.Name, message.Months))
                     Parent.SendStreamWhisper("kobiqq","sub test!2" + str(message.Name))
                     updateLatestNotification("sub",message.Name,message.Months)
-                    #message.Months
-                    Parent.SendStreamMessage ("" + str(message.Name) + " kobiqqChampion. Thank you for your continious support!")
+                    Parent.SendStreamMessage (str(MySettings.reSubMessage.format(message.Name)))
                 elif message.SubType == "subscriber" and message.Months >= 1:
+
+                    #welcome back sub?
                     Parent.Log("subscription", "{0} resubscribed for {1} months total!".format(message.Name, message.Months))
-                    Parent.SendStreamWhisper("kobiqq","sub test!" + str(message.Name))
+                    Parent.SendStreamWhisper("kobiqq","welcome back test!" + str(message.Name))
                     updateLatestNotification("sub",message.Name,message.Months)
                 else:
                     Parent.Log("subscription", "{0} subscribed!".format(message.Name))
-                    Parent.SendStreamMessage ("We got a new Squirrel in the Family. Thank You " + str(message.Name) + " for your support! kobiqqChampion")
-                    #deutsch + englisch message
-                    #alle sub perks auf meiner website + link
-                    Parent.SendStreamWhisper(message.Name,"Hey, Willkommen im Sub-Club. Ich hoffe, du wirst Freude an deinen neuen Emotes haben! kobiqqLove kobiqqChampion kobiqqGG. Vergiss nicht dein Discord mit Twitch zu verknuepfen, um alle Sub-perks nutzen zu koennen. Kobi!")
+                    Parent.SendStreamMessage (MySettings.newSubMessage.format(message.Name))
+                    Parent.SendStreamWhisper("kobiqq","first sub test")
+                    #deutsch + englisch message  && #alle sub perks auf meiner website + link
+                    #Parent.SendStreamWhisper(message.Name,"Hey, Willkommen im Sub-Club. Ich hoffe, du wirst Freude an deinen neuen Emotes haben! kobiqqLove kobiqqChampion kobiqqGG. Vergiss nicht dein Discord mit Twitch zu verknuepfen, um alle Sub-perks nutzen zu koennen. Kobi!")
                     updateLatestNotification("sub",message.Name,"0")
 
         elif evntdata.Type == "bits":
@@ -167,9 +184,10 @@ def EventReceiverEvent(sender, args):
                 BanWord1 = splitted[1].lower()
                 BanWord2 = splitted[2].lower()
                 Parent.Log("bits",str(bitName))
-                dict = {"bitName":bitName,"bitAmount":bitAmount,"BanWord1":BanWord1,"BanWord2":BanWord2}
-                Parent.BroadcastWsEvent("EVENT_CURRENCY_SHOW_BIT_SLOTS", json.dumps(dict))
-                Parent.SendStreamWhisper("kobiqq","bit test!" + str(message.Name))
+
+                #dict = {"bitName":bitName,"bitAmount":bitAmount,"BanWord1":BanWord1,"BanWord2":BanWord2}
+                #Parent.BroadcastWsEvent("EVENT_CURRENCY_SHOW_BIT_SLOTS", json.dumps(dict))
+                Parent.SendStreamWhisper("kobiqq","Bit Test" + str(MySettings.bitsMessage.format(message.Name)))
                 updateLatestNotification("bits",bitName,bitAmount)
 
         elif evntdata.Type == "host":
@@ -178,7 +196,7 @@ def EventReceiverEvent(sender, args):
                 hostName     = message.Name
                 hostViewers  = message.Viewers  
                 #Parent.Log("host","testRaid")
-                Parent.SendStreamWhisper("kobiqq","host test!" + str(message.Name))
+                Parent.SendStreamWhisper("kobiqq","host Test" + str(MySettings.hostMessage.format(message.Name)))
                 updateLatestNotification("host",hostName,hostViewers)
 
         elif evntdata.Type == "raid":
@@ -188,7 +206,7 @@ def EventReceiverEvent(sender, args):
                 raidViewers  = message.Raiders  
                 Parent.SendStreamMessage ("Uii ein Raid mit " + str(raidViewers) + " von " + str(message.Name) + ", Vielen dank!! Wo bleibt das !hype?!" )
                 #Parent.Log("raid","testRaid")
-                Parent.SendStreamWhisper("kobiqq","raid test!" + str(message.Name))
+                Parent.SendStreamWhisper("kobiqq","raid Test" + str(MySettings.raidMessage.format(message.Name)))
                 updateLatestNotification("raid",raidName,raidViewers)
 
 
@@ -201,9 +219,9 @@ def EventReceiverEvent(sender, args):
                 donationAmount = message.Amount
                 Parent.Log("donate2",str(donationName))
                 Parent.Log("donate2",str(donationAmount))
-                dict = {"donationName":donationName,"donationAmount":donationAmount}
-                Parent.BroadcastWsEvent("EVENT_SHOW_DONATION", json.dumps(dict))
-                Parent.SendStreamWhisper("kobiqq","donation test!")
+                #dict = {"donationName":donationName,"donationAmount":donationAmount}
+                #Parent.BroadcastWsEvent("EVENT_SHOW_DONATION", json.dumps(dict))
+                Parent.SendStreamWhisper("kobiqq","donation Test" + str(MySettings.donation.format(message.Name)))
                 updateLatestNotification("donation",donationName,donationAmount)
 
 
@@ -256,8 +274,8 @@ def ReloadSettings(jsonData):
     MySettings.ReloadSettings(jsonData)
 
     if EventReceiver and not EventReceiver.IsConnected:
-        if ScriptSettings.socket_token:
-            EventReceiver.Connect(ScriptSettings.socket_token)
+        if MySettings.socket_token:
+            EventReceiver.Connect(MySettings.socket_token)
 
     # End of ReloadSettings
     return

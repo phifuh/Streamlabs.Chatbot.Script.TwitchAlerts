@@ -146,7 +146,7 @@ def EventReceiverEvent(sender, args):
     #Parent.SendStreamMessage (str(evntdata))
     if evntdata and evntdata.For == "twitch_account":
         if evntdata.Type == "follow":
-            Parent.SendStreamMessage (str(evntdata.Type))
+            #Parent.SendStreamMessage (str(evntdata.Type))
             for message in evntdata.Message:
 
                 Parent.SendStreamMessage (str(MySettings.followMessage.format(message.Name)))
@@ -168,7 +168,7 @@ def EventReceiverEvent(sender, args):
                     updateLatestNotification("sub",message.Name,message.Months)
                 else:
                     Parent.Log("subscription", "{0} subscribed!".format(message.Name))
-                    Parent.SendStreamMessage (MySettings.newSubMessage.format(message.Name))
+                    Parent.SendStreamMessage (str(MySettings.newSubMessage.format(message.Name)))
                     Parent.SendStreamWhisper("kobiqq","first sub test")
                     #deutsch + englisch message  && #alle sub perks auf meiner website + link
                     #Parent.SendStreamWhisper(message.Name,"Hey, Willkommen im Sub-Club. Ich hoffe, du wirst Freude an deinen neuen Emotes haben! kobiqqLove kobiqqChampion kobiqqGG. Vergiss nicht dein Discord mit Twitch zu verknuepfen, um alle Sub-perks nutzen zu koennen. Kobi!")

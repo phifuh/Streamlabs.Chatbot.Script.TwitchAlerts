@@ -7,61 +7,144 @@
     "tooltip": "The Streamlabs Socket Token. This can be found on the website via the left-hand side menu -> API Settings -> API Tokens.",
     "group": ""
   },
+  "TokenWebsite": {
+    "type": "button",
+    "label": "Open SL website",
+    "tooltip": "Opens the Website to get the Token",
+    "function": "OpenSL",
+    "wsevent": "",
+    "group": "Token"
+  },
+  "activateFollowMessage": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Activate",
+    "tooltip": "Activates the Follow message",
+    "group": "Follow"
+  },
 
   "followMessage": {
     "type": "textbox",
     "label": "Message on Follow",
     "value": "@{0} Thank you for the Follow!",
     "tooltip": "{0} = userName \nSend a Stream Message to the chat",
-    "group": ""
+    "group": "Follow"
   },
+  "activateSubscribeMessage": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Activate",
+    "tooltip": "Activates the Sub messages",
+    "group": "Sub"
+  },
+
   "newSubMessage": {
     "type": "textbox",
     "label": "Message on First Sub",
     "value": "We got a new Squirrel in the Family. Thank You {0} for your support!",
     "tooltip": "{0} = userName \nSend a Stream Message to the chat because of first Subscribe",
-    "group": ""
+    "group": "Sub"
   },
   "reSubMessage": {
     "type": "textbox",
     "label": "Resub",
     "value": "Thank you for your continious support! @{0}",
     "tooltip": "{0} = userName \nSend a Stream Message to the chat because of first Subscribe",
-    "group": ""
+    "group": "Sub"
   },
   "wbSubMessage": {
     "type": "textbox",
     "label": "wbSub",
     "value": "WbSub test!",
     "tooltip": "{0} = userName \nSend a Stream Message to the chat because of first Subscribe",
-    "group": ""
+    "group": "Sub"
+  },
+
+  "activateBitMessage": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Activate",
+    "tooltip": "Activates the Sub messages",
+    "group": "Bits"
+  },
+  "banChampWithBits": {
+    "type": "checkbox",
+    "value": true,
+    "label": "ban with Bits",
+    "tooltip": "Activates the extra ban feature",
+    "group": "Bits"
   },
   "bitsMessage": {
     "type": "textbox",
     "label": "Bits Message",
     "value": "Bit Test",
     "tooltip": "{0} = userName \nSend a Stream Message to the chat because of Bits",
-    "group": ""
+    "group": "Bits"
+  },
+  "activateHostMessage": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Activate",
+    "tooltip": "Activates the Sub messages",
+    "group": "Host"
   },
   "hostMessage": {
     "type": "textbox",
     "label": "Host Message",
     "value": "Host Test",
     "tooltip": "{0} = userName \nSend a Stream Message to the chat because of a Host",
-    "group": ""
+    "group": "Host"
+  },
+  "activateRaidMessage": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Activate",
+    "tooltip": "Activates the Sub messages",
+    "group": "Raid"
   },
   "raidMessage": {
     "type": "textbox",
     "label": "raid Message",
     "value": "rag Test",
     "tooltip": "{0} = userName \nSend a Stream Message to the chat because of a Raid",
-    "group": ""
+    "group": "Raid"
+  },
+  "activateDonationMessage": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Activate",
+    "tooltip": "Activates the Sub messages",
+    "group": "Donation"
   },
   "donationMessage": {
     "type": "textbox",
     "label": "donation Message",
     "value": "donation Test",
     "tooltip": "{0} = userName \nSend a Stream Message to the chat because of a donation",
-    "group": ""
+    "group": "Donation"
+  },
+  "button_readme": {
+    "type": "button",
+    "label": "Open ReadMe File",
+    "tooltip": "Opens the readme of this script.",
+    "function": "OpenReadMe",
+    "wsevent": "",
+    "group": "Support"
+  },
+  "copyright": {
+    "type": "button",
+    "label": "Open Copyright File",
+    "tooltip": "Opens the Copyright of this script.",
+    "function": "OpenCopyright",
+    "wsevent": "",
+    "group": "Support"
+  },
+  "twitchChannel": {
+    "type": "button",
+    "label": "Open twitchChannel",
+    "tooltip": "Opens twitchChannel",
+    "function": "OpenStream",
+    "wsevent": "",
+    "group": "Support"
   }
 }

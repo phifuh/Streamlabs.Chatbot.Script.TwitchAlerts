@@ -22,6 +22,9 @@ import sqlite3
 clr.AddReferenceToFileAndPath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "StreamlabsEventReceiver.dll"))
 from StreamlabsEventReceiver import StreamlabsEventClient
 
+clr.AddReferenceToFileAndPath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "../Moduls/basicFunctionality/bin/Debug/netstandard2.0/basicFunctionality.dll"))
+from basicFunctions import *
+
 
 #---------------------------------------
 # Script Information
@@ -54,15 +57,21 @@ class Settings:
          
         else: #set variables if no settings file
             self.socket_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbiI6IkRFMDhFOTQ4QjdFRTFBNzcwRjBBIiwicmVhZF9vbmx5Ijp0cnVlLCJwcmV2ZW50X21hc3RlciI6dHJ1ZSwidHdpdGNoX2lkIjoiMjYxOTc5NTkifQ.0kJX4Rd8USk_UYizxrAXRurFOeGCBgU8Q7C_z5Ccb9I"
+            self.activateFollowMessage = True
             self.followMessage = "@{0} Thank you for the Follow!"
+            self.activateSubscribeMessage = True
             self.newSubMessage = "We got a new Squirrel in the Family. Thank You {0} for your support!"
-            self.reSubMessage = "Resub test!"
-            self.wbSubMessage = "Resub test!"
+            self.reSubMessage = "Resub!"
+            self.wbSubMessage = "Welcome Back Sub!"
+            self.activateBitMessage = True
             self.bitsMessage = "Bits Test"
+            self.activateHostMessage = True
             self.hostMessage = "Host Test"
+            self.activateRaidMessage = True
             self.raidMessage = "Raid Test"
+            self.activateDonationMessage = True
             self.donation = "donation test"
-            
+            self.banChampWithBits = False
 
 
     # Reload settings on save through UI
@@ -81,7 +90,8 @@ class Settings:
         return
 
 MySettings = Settings()
-
+ReadMeFile = os.path.join(os.path.dirname(__file__), "ReadMe.txt")
+CopyrightFile = os.path.join(os.path.dirname(__file__), "Copyright.txt")
 
 #---------------------------------------
 # Chatbot Initialize Function
@@ -93,6 +103,8 @@ def Init():
     global MySettings
     MySettings = Settings()
 
+    global basic
+    basic = getBasicFunctions()
 
     if not os.path.isfile(m_ConfigFile):
         text_file = codecs.open(m_ConfigFile, encoding='utf-8-sig', mode='w')
@@ -143,36 +155,47 @@ def EventReceiverDisconnected(senmder, args):
 
 def EventReceiverEvent(sender, args):
     evntdata = args.Data
-    #Parent.SendStreamMessage (str(evntdata))
+
     if evntdata and evntdata.For == "twitch_account":
         if evntdata.Type == "follow":
-            #Parent.SendStreamMessage (str(evntdata.Type))
             for message in evntdata.Message:
 
-                Parent.SendStreamMessage (str(MySettings.followMessage.format(message.Name)))
+                if MySettings.activateFollowMessage:
+                    basic.streamMessage(Parent,str(MySettings.followMessage.format(message.Name)))
+
                 updateLatestNotification("follow",message.Name,"0")
 
         elif evntdata.Type == "subscription":
             for message in evntdata.Message:
 
                 if message.SubType == "resub":
-                    Parent.Log("subscription", "{0} resubscribed for {1} months total!".format(message.Name, message.Months))
-                    Parent.SendStreamWhisper("kobiqq","sub test!2" + str(message.Name))
+
+                    if MySettings.activateSubscribeMessage:
+                        basic.streamMessage(Parent,str(MySettings.reSubMessage.format(message.Name)))
+                        basic.streamWhisper(Parent,"kobiqq",str("subscription", "{0} resubscribed for {1} months total!".format(message.Name, message.Months)))
+
+
                     updateLatestNotification("sub",message.Name,message.Months)
-                    Parent.SendStreamMessage (str(MySettings.reSubMessage.format(message.Name)))
+
                 elif message.SubType == "subscriber" and message.Months >= 1:
 
                     #welcome back sub?
-                    Parent.Log("subscription", "{0} resubscribed for {1} months total!".format(message.Name, message.Months))
-                    Parent.SendStreamWhisper("kobiqq","welcome back test!" + str(message.Name))
+                    if MySettings.activateSubscribeMessage:
+                        basic.streamMessage(Parent,str(MySettings.wbSubMessage.format(message.Name)))
+                        basic.streamWhisper(Parent,"kobiqq",str("subscription", "{0} resubscribed for {1} months Test!".format(message.Name, message.Months)))
                     updateLatestNotification("sub",message.Name,message.Months)
+
                 else:
-                    Parent.Log("subscription", "{0} subscribed!".format(message.Name))
-                    Parent.SendStreamMessage (str(MySettings.newSubMessage.format(message.Name)))
-                    Parent.SendStreamWhisper("kobiqq","first sub test")
+
+                    if MySettings.activateSubscribeMessage:
+
+                        basic.streamMessage(Parent,str(MySettings.newSubMessage.format(message.Name)))
+                        basic.streamWhisper(Parent,"kobiqq",str("first sub test"))
+                    updateLatestNotification("sub",message.Name,"0")
+
                     #deutsch + englisch message  && #alle sub perks auf meiner website + link
                     #Parent.SendStreamWhisper(message.Name,"Hey, Willkommen im Sub-Club. Ich hoffe, du wirst Freude an deinen neuen Emotes haben! kobiqqLove kobiqqChampion kobiqqGG. Vergiss nicht dein Discord mit Twitch zu verknuepfen, um alle Sub-perks nutzen zu koennen. Kobi!")
-                    updateLatestNotification("sub",message.Name,"0")
+                    
 
         elif evntdata.Type == "bits":
 
@@ -180,23 +203,35 @@ def EventReceiverEvent(sender, args):
                 bitName   = message.Name
                 bitAmount = message.Amount
                 bitMessage = message.Message 
-                splitted = bitMessage.split()
-                BanWord1 = splitted[1].lower()
-                BanWord2 = splitted[2].lower()
-                Parent.Log("bits",str(bitName))
 
-                #dict = {"bitName":bitName,"bitAmount":bitAmount,"BanWord1":BanWord1,"BanWord2":BanWord2}
-                #Parent.BroadcastWsEvent("EVENT_CURRENCY_SHOW_BIT_SLOTS", json.dumps(dict))
-                Parent.SendStreamWhisper("kobiqq","Bit Test" + str(MySettings.bitsMessage.format(message.Name)))
+                if MySettings.activateBitMessage:
+                    basic.streamMessage(Parent,str(MySettings.bitsMessage.format(message.Name)))
+                    basic.streamWhisper(Parent,"kobiqq",str("Bit Test succesfull" + str(MySettings.bitsMessage.format(message.Name))))
+
                 updateLatestNotification("bits",bitName,bitAmount)
+
+                if MySettings.banChampWithBits:
+
+                    splitted = bitMessage.split()
+                    BanWord1 = splitted[1].lower()
+                    BanWord2 = splitted[2].lower()
+                    Parent.Log("bits",str(bitName))
+
+                    dict = {"bitName":bitName,"bitAmount":bitAmount,"BanWord1":BanWord1,"BanWord2":BanWord2}
+                    Parent.BroadcastWsEvent("EVENT_CURRENCY_SHOW_BIT_SLOTS", json.dumps(dict))
+                    
+                
 
         elif evntdata.Type == "host":
 
             for message in evntdata.Message:
                 hostName     = message.Name
                 hostViewers  = message.Viewers  
-                #Parent.Log("host","testRaid")
-                Parent.SendStreamWhisper("kobiqq","host Test" + str(MySettings.hostMessage.format(message.Name)))
+
+                if MySettings.activateHostMessage:
+                    basic.streamMessage(Parent,str(MySettings.hostMessage.format(message.Name)))
+                    basic.streamWhisper(Parent,"kobiqq",str("Bit Test succesfull" + str(MySettings.bitsMessage.format(message.Name))))
+
                 updateLatestNotification("host",hostName,hostViewers)
 
         elif evntdata.Type == "raid":
@@ -204,9 +239,10 @@ def EventReceiverEvent(sender, args):
             for message in evntdata.Message:
                 raidName     = message.Name
                 raidViewers  = message.Raiders  
-                Parent.SendStreamMessage ("Uii ein Raid mit " + str(raidViewers) + " von " + str(message.Name) + ", Vielen dank!! Wo bleibt das !hype?!" )
-                #Parent.Log("raid","testRaid")
-                Parent.SendStreamWhisper("kobiqq","raid Test" + str(MySettings.raidMessage.format(message.Name)))
+
+                if MySettings.activateRaidMessage:
+                    Parent.SendStreamMessage ("Uii ein Raid mit " + str(raidViewers) + " von " + str(message.Name) + ", Vielen dank!! Wo bleibt das !hype?!" )
+                    Parent.SendStreamWhisper("kobiqq","raid Test" + str(MySettings.raidMessage.format(message.Name)))
                 updateLatestNotification("raid",raidName,raidViewers)
 
 
@@ -217,10 +253,12 @@ def EventReceiverEvent(sender, args):
             for message in evntdata.Message:
                 donationName     = message.Name
                 donationAmount = message.Amount
-                Parent.Log("donate2",str(donationName))
-                Parent.Log("donate2",str(donationAmount))
+
+                basic.streamWhisper(Parent,"kobiqq",str(donationName + " " + donationAmount))
+
                 #dict = {"donationName":donationName,"donationAmount":donationAmount}
                 #Parent.BroadcastWsEvent("EVENT_SHOW_DONATION", json.dumps(dict))
+
                 Parent.SendStreamWhisper("kobiqq","donation Test" + str(MySettings.donation.format(message.Name)))
                 updateLatestNotification("donation",donationName,donationAmount)
 
@@ -251,6 +289,25 @@ def updateLatestNotification(eventType,fromName,amount):
     
 
     return
+
+def OpenReadMe():
+	""" Open the script readme file in users default .txt application. """
+	os.startfile(ReadMeFile)
+	return
+
+def OpenCopyright():
+	""" Open the script readme file in users default .txt application. """
+	os.startfile(CopyrightFile)
+	return
+
+def OpenStream():
+	os.startfile("https://www.twitch.tv/kobiqq")
+	return
+
+def OpenSL():
+	os.startfile("https://streamlabs.com/dashboard/#/settings/api-settings")
+	return
+
 
 
 #c.execute("DELETE FROM whisperuser WHERE id='" + str(userID) + "'")

@@ -312,24 +312,6 @@ def updateLatestNotification(eventType,fromName,amount):
 
     return
 
-def OpenReadMe():
-	""" Open the script readme file in users default .txt application. """
-	os.startfile(ReadMeFile)
-	return
-
-def OpenCopyright():
-	""" Open the script readme file in users default .txt application. """
-	os.startfile(CopyrightFile)
-	return
-
-def OpenStream():
-	os.startfile("https://www.twitch.tv/kobiqq")
-	return
-
-def OpenSL():
-	os.startfile("https://streamlabs.com/dashboard/#/settings/api-settings")
-	return
-
 def getProfileInfo(twitchUserID,userName,hoursWatched):
 
     conn = sqlite3.connect(os.path.dirname(__file__) + "/database.db")
@@ -465,6 +447,26 @@ def insertProfileData(twitchID,userName,supportType,Amount):
         conn.close()
 
     return
+
+def OpenReadMe():
+	""" Open the script readme file in users default .txt application. """
+	os.startfile(ReadMeFile)
+	return
+
+def OpenCopyright():
+	""" Open the script readme file in users default .txt application. """
+	os.startfile(CopyrightFile)
+	return
+
+def OpenStream():
+	os.startfile("https://www.twitch.tv/kobiqq")
+	return
+
+def OpenSL():
+	os.startfile("https://streamlabs.com/dashboard/#/settings/api-settings")
+	return
+
+
 
 
 #c.execute("DELETE FROM whisperuser WHERE id='" + str(userID) + "'")

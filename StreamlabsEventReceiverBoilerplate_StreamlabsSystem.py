@@ -42,6 +42,8 @@ Version = "1.2"
 m_ConfigFile = os.path.join(os.path.dirname(__file__), "Settings/settings.json")
 m_ConfigFileJs = os.path.join(os.path.dirname(__file__), "Settings/settings.js")
 
+PrestigeFile = os.path.join(os.path.dirname(__file__), "testFile.txt")
+
 EventReceiver = None
 #---------------------------------------
 # Classes Tries to load settings from file if given The 'default' variable names need to match UI_Config
@@ -147,7 +149,7 @@ def Tick():
 # Script Functions
 #---------------------------------------
 def EventReceiverConnected(sender, args):
-	Parent.Log(ScriptName, "Connected 22")
+	#Parent.Log(ScriptName, "Connected 22")
 	return
 
 def EventReceiverDisconnected(senmder, args):
@@ -176,6 +178,11 @@ def EventReceiverEvent(sender, args):
 
 
                     updateLatestNotification("sub",message.Name,message.Months)
+                    subName = message.Name
+
+                    userID = twitchFuncs.getTwitchUserID(Parent,str(message.Name))
+                    insertProfileData(userID,str(subName),"sub",str(message.Months))
+
 
                 elif message.SubType == "subscriber" and message.Months >= 1:
 
@@ -183,7 +190,12 @@ def EventReceiverEvent(sender, args):
                     if MySettings.activateSubscribeMessage:
                         basic.streamMessage(Parent,str(MySettings.wbSubMessage.format(message.Name)))
                         basic.streamWhisper(Parent,"kobiqq",str("subscription", "{0} resubscribed for {1} months Test!".format(message.Name, message.Months)))
+                    
                     updateLatestNotification("sub",message.Name,message.Months)
+                   
+                    subName = message.Name
+                    userID = twitchFuncs.getTwitchUserID(Parent,str(message.Name))
+                    insertProfileData(userID,str(subName),"sub",str(message.Months))
 
                 else:
 
@@ -192,6 +204,10 @@ def EventReceiverEvent(sender, args):
                         basic.streamMessage(Parent,str(MySettings.newSubMessage.format(message.Name)))
                         basic.streamWhisper(Parent,"kobiqq",str("first sub test"))
                     updateLatestNotification("sub",message.Name,"0")
+
+                    subName = message.Name
+                    userID = twitchFuncs.getTwitchUserID(Parent,str(message.Name))
+                    insertProfileData(userID,str(subName),"sub",str(1))
 
                     #deutsch + englisch message  && #alle sub perks auf meiner website + link
                     #Parent.SendStreamWhisper(message.Name,"Hey, Willkommen im Sub-Club. Ich hoffe, du wirst Freude an deinen neuen Emotes haben! kobiqqLove kobiqqChampion kobiqqGG. Vergiss nicht dein Discord mit Twitch zu verknuepfen, um alle Sub-perks nutzen zu koennen. Kobi!")
@@ -220,6 +236,9 @@ def EventReceiverEvent(sender, args):
                     dict = {"bitName":bitName,"bitAmount":bitAmount,"BanWord1":BanWord1,"BanWord2":BanWord2}
                     Parent.BroadcastWsEvent("EVENT_CURRENCY_SHOW_BIT_SLOTS", json.dumps(dict))
                     
+                userID = twitchFuncs.getTwitchUserID(Parent,str(message.Name))
+                insertProfileData(userID,str(bitName),"bits",str(bitAmount))
+
                 
 
         elif evntdata.Type == "host":
@@ -233,6 +252,8 @@ def EventReceiverEvent(sender, args):
                     basic.streamWhisper(Parent,"kobiqq",str("Bit Test succesfull" + str(MySettings.bitsMessage.format(message.Name))))
 
                 updateLatestNotification("host",hostName,hostViewers)
+                userID = twitchFuncs.getTwitchUserID(Parent,str(message.Name))
+
 
         elif evntdata.Type == "raid":
 
@@ -262,9 +283,10 @@ def EventReceiverEvent(sender, args):
                 Parent.SendStreamWhisper("kobiqq","donation Test" + str(MySettings.donation.format(message.Name)))
                 updateLatestNotification("donation",donationName,donationAmount)
 
+                insertProfileData(userID,message.Name,"donation",donationAmount)
+
 
     return
-
 
 def updateLatestNotification(eventType,fromName,amount):
 
@@ -308,6 +330,141 @@ def OpenSL():
 	os.startfile("https://streamlabs.com/dashboard/#/settings/api-settings")
 	return
 
+def getProfileInfo(twitchUserID,userName,hoursWatched):
+
+    conn = sqlite3.connect(os.path.dirname(__file__) + "/database.db")
+    c = conn.cursor()
+    profileMessage = ""
+    profileMessage += str(userName)
+    profileMessage += " "
+
+    try:
+
+        c.execute("SELECT totalSub,totalBits,totalDonation,totalGiftedSubs FROM profileData WHERE twitchID='" + str(twitchUserID) + "'")
+        row = c.fetchone()
+
+        totalSub = row[0]
+        totalBits = row[1]
+        totalDonation = row[2]
+        totalGiftedSubs = row[3]
+
+        if Parent.HasPermission(userName,"subscriber",userName):
+            profileMessage += str(MySettings.isSub)        
+
+        if(totalSub != 0):
+            profileMessage += str(MySettings.subStreak.format(str(totalSub)))
+
+        if(totalDonation != 0):
+            profileMessage += str(MySettings.maxDonation.format(str(totalDonation)))
+
+        if(totalBits != 0):
+            profileMessage += str(MySettings.maxBits.format(str(totalBits)))
+
+        if(totalGiftedSubs != 0):
+            profileMessage += str(MySettings.giftedSubs.format(str(totalGiftedSubs)))
+
+        if(hoursWatched != 0):
+            profileMessage += str("You have been watching the stream for {0} hours!".format(str(hoursWatched)))
+
+        else:
+            profileMessage += str("You have been watching the stream for 0 hours!")
+
+        basic.streamMessage(Parent,str(profileMessage))
+
+
+    except:
+
+        if Parent.HasPermission(userName,"subscriber",userName):
+            profileMessage += str(MySettings.isSub)
+
+            if(hoursWatched != 0):
+                profileMessage += str("You have been watching the stream for {0} hours!".format(str(hoursWatched)))
+
+            else:
+                profileMessage += str("You have been watching the stream for 0 hours!")
+
+            basic.streamMessage(Parent, str(profileMessage))
+        
+        else:
+
+            if(hoursWatched != 0):
+                profileMessage += str("You have been watching the stream for {0} hours!".format(str(hoursWatched)))
+
+            else:
+                profileMessage += str("You have been watching the stream for 0 hours!")
+
+            basic.streamMessage(Parent, str(profileMessage))
+    finally:
+        conn.close()
+
+    return
+
+def insertProfileData(twitchID,userName,supportType,Amount):
+
+
+    conn = sqlite3.connect(os.path.dirname(__file__) + "/database.db")
+    c = conn.cursor()
+
+    try:
+
+        c.execute("SELECT totalSub,totalBits,totalDonation,totalGiftedSubs FROM profileData WHERE twitchID='" + str(twitchID) + "'")
+        row = c.fetchone()
+
+        totalSub = row[0]
+        totalBits = row[1]
+        totalDonation = row[2]
+        totalGiftedSubs = row[3]
+
+        if supportType == "sub":
+
+            newTotalSub = int(Amount) 
+            c.execute("UPDATE profileData SET userName ='" + str(userName) + "',totalSub ='" + str(newTotalSub) + "' WHERE twitchID='" + str(twitchID) + "'")
+            conn.commit()
+
+        elif supportType == "bits":
+
+            newTotalBits = int(totalBits) + int(Amount) 
+            c.execute("UPDATE profileData SET userName ='" + str(userName) + "', totalBits ='" + str(newTotalBits) + "' WHERE twitchID='" + str(twitchID) + "'")
+            conn.commit()
+
+        elif supportType == "donation":
+
+            newTotalDonation = int(totalDonation) + int(Amount) 
+            c.execute("UPDATE profileData SET userName ='" + str(userName) + "',totalDonation ='" + str(newTotalDonation) + "' WHERE twitchID='" + str(twitchID) + "'")
+            conn.commit()
+
+        elif supportType == "giftedSub":
+
+            newTotalGiftesSubs = int(totalGiftedSubs) + int(Amount) 
+            c.execute("UPDATE profileData SET userName ='" + str(userName) + "',totalGiftedSubs ='" + str(newTotalGiftesSubs) + "' WHERE twitchID='" + str(twitchID) + "'")
+            conn.commit()
+
+    except:
+
+        if supportType == "sub":
+
+            c.execute("INSERT INTO profileData ('twitchID','userName','totalSub','totalBits','totalDonation','totalGiftedSubs') values ('" + str(twitchID) + "','" + str(userName) + "','" + str(Amount) + "','0','0','0') ")
+            conn.commit()
+
+        elif supportType == "bits":
+
+            c.execute("INSERT INTO profileData ('twitchID','userName','totalSub','totalBits','totalDonation','totalGiftedSubs') values ('" + str(twitchID) + "','" + str(userName) + "','0','" + str(Amount) + "','0','0') ")
+            conn.commit()
+
+        elif supportType == "donation":
+
+            c.execute("INSERT INTO profileData ('twitchID','userName','totalSub','totalBits','totalDonation','totalGiftedSubs') values ('" + str(twitchID) + "','" + str(userName) + "','0','0','" + str(Amount) + "','0') ")
+            conn.commit()
+        
+        elif supportType == "giftedSub":
+
+            c.execute("INSERT INTO profileData ('twitchID','userName','totalSub','totalBits','totalDonation','totalGiftedSubs') values ('" + str(twitchID) + "','" + str(userName) + "','0','0','0','"+ str(Amount) +"') ")
+            conn.commit()
+
+    finally:
+        conn.close()
+
+    return
 
 
 #c.execute("DELETE FROM whisperuser WHERE id='" + str(userID) + "'")

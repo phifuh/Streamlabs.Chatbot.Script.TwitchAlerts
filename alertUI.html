@@ -1,0 +1,325 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+
+    <meta charset="UTF-8">
+    <title>UI</title>
+
+    <script src="API_Key.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="../globalClient/superClient.js" charset="utf-8"></script>
+
+
+<style>
+
+    /* 
+       2D2D2D
+       1C1C1C
+    */
+    #AlertUI {
+        /*width: 460px;
+
+        /*background-color: aqua;*/
+        display: block;
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        font-display: block;
+        font-size: 33px;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        color: white;
+    }
+    #follow {
+        background-image: linear-gradient(#3E3E3F 50%, #1C1C1C 50%);
+        display: inline-block;
+        min-width: 470px;
+    }
+
+    #followIcon {
+        /* background-image: url(alertImages/shroom.png);*/
+        background-size: 36px;
+        width: 36px;
+        height: 36px;
+        margin-left: 3px;
+        margin-top: 3px;
+        background-repeat: no-repeat;
+        display: inline-block;
+    }
+
+    #followPrefix {
+        display: inline-block;
+        vertical-align: top;
+        padding-top: 6px;
+        font-size:28px;
+    }
+
+    #followName {
+        display: inline-block;
+        vertical-align: top;
+        padding-top: 4px;
+    }
+
+    #sub {
+        background-image: linear-gradient(#3E3E3F 50%, #1C1C1C 50%);
+        display: inline-block;
+        min-width: 470px;
+    }
+
+    #subIcon {
+        /*background-image: url(alertImages/star.png);*/
+        background-size: 36px;
+        width: 36px;
+        height: 36px;
+        margin-left: 3px;
+        margin-top: 3px;
+        background-repeat: no-repeat;
+        display: inline-block;
+    }
+
+    #subPrefix {
+        display: inline-block;
+        vertical-align: top;
+        padding-top: 6px;
+        font-size: 28px;
+    }
+
+    #subName {
+        display: inline-block;
+        vertical-align: top;
+        padding-top: 4px;
+    }
+
+    #bits {
+        background-image: linear-gradient(#3E3E3F 50%, #1C1C1C 50%);
+        display: inline-block;
+        min-width: 470px;
+    }
+
+    #bitsIcon {
+        /*background-image: url(alertImages/boo.png);*/
+        background-size: 36px;
+        width: 36px;
+        height: 36px;
+        margin-left: 3px;
+        margin-top: 3px;
+        background-repeat: no-repeat;
+        display: inline-block;
+    }
+
+    #bitsPrefix {
+        display: inline-block;
+        vertical-align: top;
+        padding-top: 6px;
+        font-size: 28px;
+    }
+
+    #bitsName {
+        display: inline-block;
+        vertical-align: top;
+        padding-top: 4px;
+    }
+
+    #donation {
+        background-image: linear-gradient(#3E3E3F 50%, #1C1C1C 50%);
+        display: inline-block;
+        min-width: 470px;
+    }
+
+    #donationIcon {
+        /*background-image: url(alertImages/coin.png);*/
+        background-size: 36px;
+        width: 36px;
+        height: 36px;
+        margin-left: 3px;
+        margin-top: 3px;
+        background-repeat: no-repeat;
+        display: inline-block;
+    }
+
+    #donationPrefix {
+        display: inline-block;
+        vertical-align: top;
+        padding-top: 6px;
+        font-size: 28px;
+    }
+
+    #donationName{
+        display: inline-block;
+        vertical-align: top;
+        padding-top: 4px;
+    }
+
+
+
+</style>
+</head >
+
+
+<body >
+
+    <audio id="startSoundAndMusic" >
+    <source src="audio/newSlotStartMusic.mp3" type="audio/mpeg" >
+    </audio >
+
+    <audio id="stopSound" >
+    <source src="audio/stopSound.mp3" type="audio/mpeg" >
+    </audio >
+
+    <audio id="slotDrop" >
+    <source src="audio/slotDrop.wav" type="audio/mpeg" >
+    </audio >
+
+
+    <div id="MainFrame" style="width:1920px;height:1080px;display:block;">
+
+
+        <span style="z-index:-1">
+            <video id="donationVideo" autoplay width="36" height="36">
+                <source src="video/donation.webm" type="video/webm">
+            </video>
+        </span>
+
+        <span id="AlertUI"><span id="follow">
+                <span id="followIcon">
+                    <video id="subIconAnimation" muted Autoplay=autoplay width="36" height="36">
+                        <source src="video/shroom.webm" type="video/webm">
+                    </video>
+                </span>
+                <span id="followPrefix">Follow: </span>
+                <span id="followName"> langer follower name</span>
+            </span><span id="sub">
+                <span id="subIcon">
+                    <video id="subIconAnimation" muted Autoplay=autoplay width="36" height="36">
+                        <source src="video/star.webm" type="video/webm">
+                    </video>
+                </span>
+                <span id="subPrefix">Sub: </span>
+                <span id="subName"> langer follower name</span>
+            </span><span id="bits">
+                <span id="bitsIcon">
+                    <video id="bitsIconAnimation" muted Autoplay=autoplay width="36" height="36">
+                        <source src="video/boo.webm" type="video/mp4">
+                    </video>
+                </span>
+                <span id="bitsPrefix">Bits: </span>
+                <span id="bitsName"> langer follower name</span>
+            </span><span id="donation">
+                <span id="donationIcon">
+                    <video id="donationIconAnimation" muted Autoplay=autoplay width="36" height="36">
+                        <source src="video/coin.webm" type="video/mp4">
+                    </video>
+                </span>
+                <span id="donationPrefix">Donation: </span>
+                <span id="donationName"> langer follower</span>
+            </span>
+
+        </span>
+
+    </div>
+
+<script >
+
+    function changeUIPosition(newPosition) {
+
+        if (newPosition == "botRight") {
+            document.getElementById('AlertUI').style = 'left:unset;right:0;top:unset;bot:0;width: 470px;';
+        }
+        else if (newPosition == "botLeft") {
+            document.getElementById('AlertUI').style = 'left:0;right:unset;top:unset;bot:0;width: 470px;';
+        }
+        else if (newPosition == "top") {
+            document.getElementById('AlertUI').style = 'left:unset;right:unset;bot:unset;top:0;width: unset;';
+        }
+        else if (newPosition == "top") {
+            document.getElementById('AlertUI').style = 'left:unset;right:unset;bot:0;top:unset;width: unset;';
+        }
+        else {
+            document.getElementById('AlertUI').style = 'left:unset;right:unset;bot:unset;top:0;width: unset;';
+        }
+        
+    }
+
+    function sleep(time) {
+        return new Promise((resolve) => setTimeout(resolve, time));
+    }
+
+    function decode_utf8(s) {
+        return decodeURIComponent(escape(s));
+    }
+    
+    function event(dataArray) {
+
+        console.log(dataArray);
+        if (dataArray.eventName === "Alerts_showFollowEvent")
+        {
+            updateFollow(dataArray.userName);
+            displayFollowAlert();
+        }
+
+        else if (dataArray.eventName === "Alerts_showSubEvent") {
+
+            updateSub(dataArray.userName, dataArray.subAmount)
+            displaySubAlert();
+        }
+
+        else if (dataArray.eventName === "Alerts_Init") {
+            initAlerts(dataArray.followName, dataArray.subName, dataArray.subAmount, dataArray.bitsName, dataArray.bitsAmount, dataArray.donationName, dataArray.donationAmount);
+        }
+
+        else if (dataArray.eventName === "Alerts_ChangeUI_Position") {
+            changeUIPosition(dataArray.newPosition)
+        }
+        
+    }
+
+    function initAlerts(followName, subName, subAmount, bitsName, bitsAmount, donationName, donationAmount)
+    {
+        followNameSpan = document.getElementById('followName');
+        followNameSpan.innerHTML = followName;
+
+        subNameSpan = document.getElementById('subName');
+        subNameSpan.innerHTML = subName + " " + subAmount + "x";
+
+        bitsNameSpan = document.getElementById('bitsName');
+        bitsNameSpan.innerHTML = + bitsAmount + " " + bitsName  ;
+
+        donationNameSpan = document.getElementById('donationName');
+        donationNameSpan.innerHTML = donationAmount + " " + donationName ;
+    }   
+
+    function updateFollow(followerUsername) {
+
+        followNameSpan = document.getElementById('followName');
+        followNameSpan.innerHTML = followerUsername;
+
+    }
+
+    function updateSub(subUsername,subAmount) {
+
+        subNameSpan = document.getElementById('subName');
+        subNameSpan.innerHTML = subUsername + " " + subAmount + "x";
+
+    }
+
+    function showDonation(donationName, donationAmount) {
+        var video = document.getElementById("donationVideo");
+        video .playbackRate = 0.4;
+        video .play();
+        var AudioCoin = document.getElementById("slotDrop");
+        sleep(4000).then(() => {
+
+            AudioCoin.playbackRate = 0.8;
+            AudioCoin.play();
+            //AudioCoin.loop = true;
+        });
+        //sleep(8000).then(() => {
+
+        //    AudioCoin.loop = false;
+        //});
+    }
+
+</script >
+
+
+</body >
+</html >

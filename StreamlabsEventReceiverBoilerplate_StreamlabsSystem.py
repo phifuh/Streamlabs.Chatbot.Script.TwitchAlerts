@@ -108,6 +108,9 @@ def Init():
     global basic
     basic = getBasicFunctions()
 
+    initAlerts()
+
+
     if not os.path.isfile(m_ConfigFile):
         text_file = codecs.open(m_ConfigFile, encoding='utf-8-sig', mode='w')
         out = json.dumps(MySettings.__dict__, encoding="utf-8-sig")
@@ -167,6 +170,9 @@ def EventReceiverEvent(sender, args):
 
                 updateLatestNotification("follow",message.Name,"0")
 
+                dict = {"eventName":"Alerts_showFollowEvent","userName":message.Name}
+                Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
+
         elif evntdata.Type == "subscription":
             for message in evntdata.Message:
 
@@ -179,6 +185,9 @@ def EventReceiverEvent(sender, args):
 
                     updateLatestNotification("sub",message.Name,message.Months)
                     subName = message.Name
+
+                    dict = {"eventName":"Alerts_showSubEvent","userName":message.Name,"subAmount":message.Months}
+                    Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
 
                     userID = twitchFuncs.getTwitchUserID(Parent,str(message.Name))
                     insertProfileData(userID,str(subName),"sub",str(message.Months))
@@ -193,6 +202,9 @@ def EventReceiverEvent(sender, args):
                     
                     updateLatestNotification("sub",message.Name,message.Months)
                    
+                    dict = {"eventName":"Alerts_showSubEvent","userName":message.Name,"subAmount":message.Months}
+                    Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
+
                     subName = message.Name
                     userID = twitchFuncs.getTwitchUserID(Parent,str(message.Name))
                     insertProfileData(userID,str(subName),"sub",str(message.Months))
@@ -203,7 +215,11 @@ def EventReceiverEvent(sender, args):
 
                         basic.streamMessage(Parent,str(MySettings.newSubMessage.format(message.Name)))
                         basic.streamWhisper(Parent,"kobiqq",str("first sub test"))
+
                     updateLatestNotification("sub",message.Name,"0")
+
+                    dict = {"eventName":"Alerts_showSubEvent","userName":message.Name,"subAmount":message.Months}
+                    Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
 
                     subName = message.Name
                     userID = twitchFuncs.getTwitchUserID(Parent,str(message.Name))
@@ -216,7 +232,7 @@ def EventReceiverEvent(sender, args):
         elif evntdata.Type == "bits":
 
             for message in evntdata.Message:
-                bitName   = message.Name
+
                 bitAmount = message.Amount
                 bitMessage = message.Message 
 
@@ -224,20 +240,23 @@ def EventReceiverEvent(sender, args):
                     basic.streamMessage(Parent,str(MySettings.bitsMessage.format(message.Name)))
                     basic.streamWhisper(Parent,"kobiqq",str("Bit Test succesfull" + str(MySettings.bitsMessage.format(message.Name))))
 
-                updateLatestNotification("bits",bitName,bitAmount)
+                updateLatestNotification("bits",message.Name,bitAmount)
 
                 if MySettings.banChampWithBits:
 
                     splitted = bitMessage.split()
                     BanWord1 = splitted[1].lower()
                     BanWord2 = splitted[2].lower()
-                    Parent.Log("bits",str(bitName))
+                    Parent.Log("bits",str(message.Name))
 
-                    dict = {"bitName":bitName,"bitAmount":bitAmount,"BanWord1":BanWord1,"BanWord2":BanWord2}
-                    Parent.BroadcastWsEvent("EVENT_CURRENCY_SHOW_BIT_SLOTS", json.dumps(dict))
+                    dict = {"userName":message.Name,"bitAmount":bitAmount,"BanWord1":BanWord1,"BanWord2":BanWord2}
+                    Parent.BroadcastWsEvent("Alert_Ban_Slot", json.dumps(dict))
+
+                dict = {"eventName":"Alerts_showBitEvent","userName":message.Name,"bitAmount":bitAmount}
+                Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
                     
                 userID = twitchFuncs.getTwitchUserID(Parent,str(message.Name))
-                insertProfileData(userID,str(bitName),"bits",str(bitAmount))
+                insertProfileData(userID,str(message.Name),"bits",str(bitAmount))
 
                 
 
@@ -445,6 +464,52 @@ def insertProfileData(twitchID,userName,supportType,Amount):
 
     finally:
         conn.close()
+
+    return
+
+
+def initAlerts():
+    
+    conn = sqlite3.connect(os.path.dirname(__file__) + "/../Datenbanken/streamMetaData.db")
+    c = conn.cursor()
+
+    try:
+
+        c.execute("SELECT fromViewer,amount FROM latestNotifications WHERE alertType='follow'")
+        row = c.fetchone()
+
+        followName = row[0]
+
+        c.execute("SELECT fromViewer,amount FROM latestNotifications WHERE alertType='sub'")
+        row = c.fetchone()
+
+        subName = row[0]
+        subAmount = row[1]
+
+        c.execute("SELECT fromViewer,amount FROM latestNotifications WHERE alertType='bits'")
+        row = c.fetchone()
+
+        bitsName = row[0]
+        bitsAmount = row[1]
+
+        c.execute("SELECT fromViewer,amount FROM latestNotifications WHERE alertType='donation'")
+        row = c.fetchone()
+
+        donationName = row[0]
+        donationAmount = row[1]
+
+        dict = {"eventName":"Alerts_Init","followName":followName,"subName":subName,"subAmount":subAmount,"bitsName":bitsName,"bitsAmount":bitsAmount,"donationName":donationName,"donationAmount":donationAmount}
+        Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
+
+    except:
+
+        pass
+
+    finally:
+        conn.close()
+
+    
+
 
     return
 

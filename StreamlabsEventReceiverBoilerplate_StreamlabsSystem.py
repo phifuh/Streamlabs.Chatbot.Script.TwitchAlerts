@@ -309,7 +309,7 @@ def EventReceiverEvent(sender, args):
 
 def updateLatestNotification(eventType,fromName,amount):
 
-    conn = sqlite3.connect(os.path.dirname(__file__) + "/../Datenbanken/streamMetaData.db")
+    conn = sqlite3.connect(os.path.dirname(__file__) + "/../globalFiles/Datenbanken/streamMetaData.db")
     c = conn.cursor()
 
     try:
@@ -470,7 +470,7 @@ def insertProfileData(twitchID,userName,supportType,Amount):
 
 def initAlerts():
     
-    conn = sqlite3.connect(os.path.dirname(__file__) + "/../Datenbanken/streamMetaData.db")
+    conn = sqlite3.connect(os.path.dirname(__file__) + "/../globalFiles/Datenbanken/streamMetaData.db")
     c = conn.cursor()
 
     try:

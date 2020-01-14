@@ -5,9 +5,9 @@
     <meta charset="UTF-8">
     <title>UI</title>
 
-    <script src="API_Key.js"></script>
+    <script src="../globalFiles/API_Key.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="../globalClient/superClient.js" charset="utf-8"></script>
+    <script src="../globalFiles/superClient.js" charset="utf-8"></script>
 
 
 <style>
@@ -33,6 +33,7 @@
         background-image: linear-gradient(#3E3E3F 50%, #1C1C1C 50%);
         display: inline-block;
         min-width: 470px;
+        padding-left: 40px;
     }
 
     #followIcon {
@@ -149,8 +150,6 @@
         padding-top: 4px;
     }
 
-
-
 </style>
 </head >
 
@@ -158,20 +157,19 @@
 <body >
 
     <audio id="startSoundAndMusic" >
-    <source src="audio/newSlotStartMusic.mp3" type="audio/mpeg" >
+        <source src="audio/newSlotStartMusic.mp3" type="audio/mpeg" >
     </audio >
 
     <audio id="stopSound" >
-    <source src="audio/stopSound.mp3" type="audio/mpeg" >
+        <source src="audio/stopSound.mp3" type="audio/mpeg" >
     </audio >
 
     <audio id="slotDrop" >
-    <source src="audio/slotDrop.wav" type="audio/mpeg" >
+        <source src="audio/slotDrop.wav" type="audio/mpeg" >
     </audio >
 
 
     <div id="MainFrame" style="width:1920px;height:1080px;display:block;">
-
 
         <span style="z-index:-1">
             <video id="donationVideo" autoplay width="36" height="36">
@@ -179,7 +177,8 @@
             </video>
         </span>
 
-        <span id="AlertUI"><span id="follow">
+        <span id="AlertUI">
+            <span id="follow">
                 <span id="followIcon">
                     <video id="subIconAnimation" muted Autoplay=autoplay width="36" height="36">
                         <source src="video/shroom.webm" type="video/webm">
@@ -219,25 +218,7 @@
 
 <script >
 
-    function changeUIPosition(newPosition) {
 
-        if (newPosition == "botRight") {
-            document.getElementById('AlertUI').style = 'left:unset;right:0;top:unset;bot:0;width: 470px;';
-        }
-        else if (newPosition == "botLeft") {
-            document.getElementById('AlertUI').style = 'left:0;right:unset;top:unset;bot:0;width: 470px;';
-        }
-        else if (newPosition == "top") {
-            document.getElementById('AlertUI').style = 'left:unset;right:unset;bot:unset;top:0;width: unset;';
-        }
-        else if (newPosition == "top") {
-            document.getElementById('AlertUI').style = 'left:unset;right:unset;bot:0;top:unset;width: unset;';
-        }
-        else {
-            document.getElementById('AlertUI').style = 'left:unset;right:unset;bot:unset;top:0;width: unset;';
-        }
-        
-    }
 
     function sleep(time) {
         return new Promise((resolve) => setTimeout(resolve, time));
@@ -250,6 +231,7 @@
     function event(dataArray) {
 
         console.log(dataArray);
+
         if (dataArray.eventName === "Alerts_showFollowEvent")
         {
             updateFollow(dataArray.userName);
@@ -268,8 +250,35 @@
 
         else if (dataArray.eventName === "Alerts_ChangeUI_Position") {
             changeUIPosition(dataArray.newPosition)
+            
         }
-        
+    }
+
+    function changeUIPosition(newPosition) {
+
+        if (newPosition == "BotRight") {
+            document.getElementById('AlertUI').style = 'left:unset;right:0;top:unset;bot:0;width: 470px;';
+            document.getElementById('follow').style = 'padding-left:unset';
+        }
+        else if (newPosition == "BotLeft") {
+            document.getElementById('AlertUI').style = 'left:0;right:unset;top:unset;bot:0;width: 470px;';
+            document.getElementById('follow').style = 'padding-left:unset';
+            
+        }
+        else if (newPosition == "Top") {
+            document.getElementById('AlertUI').style = 'left:unset;right:unset;bot:unset;top:0;width: unset;';
+            document.getElementById('follow').style = 'padding-left:40px';
+            
+        }
+        else if (newPosition == "Bot") {
+            document.getElementById('AlertUI').style = 'left:unset;right:unset;bot:0;top:unset;width: unset;';
+            document.getElementById('follow').style = 'padding-left:40px';
+        }
+        else {
+            document.getElementById('AlertUI').style = 'left:unset;right:unset;bot:unset;top:0;width: unset;';
+            document.getElementById('follow').style = 'padding-left:40px';
+        }
+
     }
 
     function initAlerts(followName, subName, subAmount, bitsName, bitsAmount, donationName, donationAmount)

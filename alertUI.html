@@ -227,32 +227,43 @@
     function decode_utf8(s) {
         return decodeURIComponent(escape(s));
     }
-    
-    function event(dataArray) {
+
+    function revieveArray(dataArray) {
 
         console.log(dataArray);
+        var countEvents = dataArray.eventList.length;
 
-        if (dataArray.eventName === "Alerts_showFollowEvent")
-        {
-            updateFollow(dataArray.userName);
+
+        i = 0;
+        while (countEvents > i) {
+
+            webSocketEvent(dataArray.eventList[i], dataArray.varList[i]);
+            i += 1;
+        }
+    }
+
+    function webSocketEvent(eventName, varList) {
+
+        if (eventName === "Alerts_showFollowEvent") {
+            updateFollow(varList.userName);
             displayFollowAlert();
         }
 
-        else if (dataArray.eventName === "Alerts_showSubEvent") {
+        else if (eventName === "Alerts_showSubEvent") {
 
-            updateSub(dataArray.userName, dataArray.subAmount)
+            updateSub(varList.userName, varList.subAmount)
             displaySubAlert();
         }
 
-        else if (dataArray.eventName === "Alerts_Init") {
-            initAlerts(dataArray.followName, dataArray.subName, dataArray.subAmount, dataArray.bitsName, dataArray.bitsAmount, dataArray.donationName, dataArray.donationAmount);
+        else if (eventName === "Alerts_Init") {
+            initAlerts(varList.followName, varList.subName, varList.subAmount, varList.bitsName, varList.bitsAmount, varList.donationName, varList.donationAmount);
         }
 
-        else if (dataArray.eventName === "Alerts_ChangeUI_Position") {
-            changeUIPosition(dataArray.newPosition)
-            
+        else if (eventName === "Alerts_ChangeUI_Position") {
+            changeUIPosition(varList.newPosition)
         }
     }
+
 
     function changeUIPosition(newPosition) {
 

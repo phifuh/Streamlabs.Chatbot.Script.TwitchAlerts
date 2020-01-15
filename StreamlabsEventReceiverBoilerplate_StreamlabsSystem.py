@@ -170,7 +170,14 @@ def EventReceiverEvent(sender, args):
 
                 updateLatestNotification("follow",message.Name,"0")
 
-                dict = {"eventName":"Alerts_showFollowEvent","userName":message.Name}
+                eventList = []
+                varList = []
+
+                eventList.append("Alerts_showFollowEvent")
+                dict = {"userName":message.Name}
+                varList.append(dict)
+                dict = {"eventList":eventList,"varList":varList} 
+
                 Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
 
         elif evntdata.Type == "subscription":
@@ -186,7 +193,14 @@ def EventReceiverEvent(sender, args):
                     updateLatestNotification("sub",message.Name,message.Months)
                     subName = message.Name
 
-                    dict = {"eventName":"Alerts_showSubEvent","userName":message.Name,"subAmount":message.Months}
+                    eventList = []
+                    varList = []
+
+                    eventList.append("Alerts_showSubEvent")
+                    dict = {"userName":message.Name,"subAmount":message.Months}
+                    varList.append(dict)
+                    dict = {"eventList":eventList,"varList":varList} 
+
                     Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
 
                     userID = twitchFuncs.getTwitchUserID(Parent,str(message.Name))
@@ -202,7 +216,14 @@ def EventReceiverEvent(sender, args):
                     
                     updateLatestNotification("sub",message.Name,message.Months)
                    
-                    dict = {"eventName":"Alerts_showSubEvent","userName":message.Name,"subAmount":message.Months}
+                    eventList = []
+                    varList = []
+
+                    eventList.append("Alerts_showSubEvent")
+                    dict = {"userName":message.Name,"subAmount":message.Months}
+                    varList.append(dict)
+                    dict = {"eventList":eventList,"varList":varList} 
+
                     Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
 
                     subName = message.Name
@@ -218,7 +239,14 @@ def EventReceiverEvent(sender, args):
 
                     updateLatestNotification("sub",message.Name,"0")
 
-                    dict = {"eventName":"Alerts_showSubEvent","userName":message.Name,"subAmount":message.Months}
+                    eventList = []
+                    varList = []
+
+                    eventList.append("Alerts_showSubEvent")
+                    dict = {"userName":message.Name,"subAmount":message.Months}
+                    varList.append(dict)
+                    dict = {"eventList":eventList,"varList":varList} 
+
                     Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
 
                     subName = message.Name
@@ -252,7 +280,14 @@ def EventReceiverEvent(sender, args):
                     dict = {"userName":message.Name,"bitAmount":bitAmount,"BanWord1":BanWord1,"BanWord2":BanWord2}
                     Parent.BroadcastWsEvent("Alert_Ban_Slot", json.dumps(dict))
 
-                dict = {"eventName":"Alerts_showBitEvent","userName":message.Name,"bitAmount":bitAmount}
+                eventList = []
+                varList = []
+
+                eventList.append("Alerts_showBitEvent")
+                dict = {"userName":message.Name,"bitAmount":bitAmount}
+                varList.append(dict)
+                dict = {"eventList":eventList,"varList":varList} 
+
                 Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
                     
                 userID = twitchFuncs.getTwitchUserID(Parent,str(message.Name))
@@ -498,7 +533,14 @@ def initAlerts():
         donationName = row[0]
         donationAmount = row[1]
 
-        dict = {"eventName":"Alerts_Init","followName":followName,"subName":subName,"subAmount":subAmount,"bitsName":bitsName,"bitsAmount":bitsAmount,"donationName":donationName,"donationAmount":donationAmount}
+        eventList = []
+        varList = []
+
+        eventList.append("Alerts_Init")
+        dict = {"followName":followName,"subName":subName,"subAmount":subAmount,"bitsName":bitsName,"bitsAmount":bitsAmount,"donationName":donationName,"donationAmount":donationAmount}
+        varList.append(dict)
+        dict = {"eventList":eventList,"varList":varList} 
+
         Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
 
     except:

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <audio id="audio-source1" src="BlipV1.wav" preload="auto" volume="0.0"></audio>
+    <audio id="audio-source2" src="BlipV1.wav" preload="auto" volume="0.0"></audio>
+    <audio id="audio-source3" src="BlipV1.wav" preload="auto" volume="0.0"></audio>
+
+
+    <!--- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script> -->
+    <script src="../globalFiles/jquery.min.js"></script>
+    <script src="../globalFiles/commonUsedFunctions.js"></script>
+    <script src="dialogue.js"></script>
+
+    <style>
+
+        .wrapper {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 200px;
+            width: 480px;
+        }
+
+        @font-face {
+            font-family: 'MyFont';
+            src: url('ZeldaOracles.ttf') format('truetype');
+        }
+
+        .dialogue-box {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            height: 200px;
+            margin: 1px;
+            opacity: 0.9;
+        }
+
+        .item {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+            height: 50px;
+            color: white;
+            text-align: center;
+            font-weight: 600;
+            word-wrap: break-word;
+        }
+
+        .sub-item {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Text box */
+        .item:nth-child(1) {
+            flex-grow: 10;
+            line-height: 50px;
+            background: #1d1d1d;
+            border-radius: 25px;
+        }
+
+            .item:nth-child(1) p {
+                margin-left: 25px;
+                margin-right: 25px;
+                text-align: center;
+                font-family: 'MyFont', Fallback, Tahoma;
+                user-select: none;
+            }
+
+        /* End marker */
+        .item:nth-child(2) {
+            width: 50px;
+            align-self: center;
+            margin: -15px 0px 5px 0px;
+            animation: end-marker-flash 1s linear infinite;
+            animation-duration: 1.5s;
+        }
+
+        .item #text_target {
+            font-size: 30px;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .item #text_target_userName {
+            font-size: 30px;
+            color: blue;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+    </style>
+
+</head>
+	<body>
+        <div class="wrapper">
+            <div id="dialogue-box" class="dialogue-box">
+                <div class="item">
+                    <p>
+
+                        <span id="text_target"></span>
+
+                        <span id="text_target_userName"></span>
+                    </p>
+
+                </div>
+            </div>
+
+            <button onclick="createZeldaTextBox('Thanks for the Follow ','Username')">go</button>
+
+
+        </div>
+	</body>
+</html>

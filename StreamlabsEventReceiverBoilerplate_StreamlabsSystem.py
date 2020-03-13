@@ -107,8 +107,9 @@ def Init():
 
     global basic
     basic = getBasicFunctions()
-
+    
     initAlerts()
+    updateGameIconInUIBar()
 
 
     if not os.path.isfile(m_ConfigFile):
@@ -143,6 +144,23 @@ def Init():
 
 
 def Execute(data):
+
+    if data.IsChatMessage() and data.GetParam(0).lower() == "!b":
+        
+
+
+        donationName = "Kobi QQ"
+        donationAmount = 20
+        eventList = []
+        varList = []
+
+        eventList.append("Alerts_showDonationEvent")
+        varDict = {"userName":donationName,"donationAmount":donationAmount}
+        varList.append(varDict)
+        dict = {"eventList":eventList,"varList":varList} 
+
+        Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
+
 	return
 
 def Tick():
@@ -174,8 +192,8 @@ def EventReceiverEvent(sender, args):
                 varList = []
 
                 eventList.append("Alerts_showFollowEvent")
-                dict = {"userName":message.Name}
-                varList.append(dict)
+                varDict = {"userName":message.Name}
+                varList.append(varDict)
                 dict = {"eventList":eventList,"varList":varList} 
 
                 Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
@@ -197,8 +215,8 @@ def EventReceiverEvent(sender, args):
                     varList = []
 
                     eventList.append("Alerts_showSubEvent")
-                    dict = {"userName":message.Name,"subAmount":message.Months}
-                    varList.append(dict)
+                    varDict = {"userName":message.Name,"subAmount":message.Months}
+                    varList.append(varDict)
                     dict = {"eventList":eventList,"varList":varList} 
 
                     Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
@@ -253,6 +271,7 @@ def EventReceiverEvent(sender, args):
                     userID = twitchFuncs.getTwitchUserID(Parent,str(message.Name))
                     insertProfileData(userID,str(subName),"sub",str(1))
 
+                    # FIX 
                     #deutsch + englisch message  && #alle sub perks auf meiner website + link
                     #Parent.SendStreamWhisper(message.Name,"Hey, Willkommen im Sub-Club. Ich hoffe, du wirst Freude an deinen neuen Emotes haben! kobiqqLove kobiqqChampion kobiqqGG. Vergiss nicht dein Discord mit Twitch zu verknuepfen, um alle Sub-perks nutzen zu koennen. Kobi!")
                     
@@ -303,7 +322,16 @@ def EventReceiverEvent(sender, args):
 
                 if MySettings.activateHostMessage:
                     basic.streamMessage(Parent,str(MySettings.hostMessage.format(message.Name)))
-                    basic.streamWhisper(Parent,"kobiqq",str("Bit Test succesfull" + str(MySettings.bitsMessage.format(message.Name))))
+
+                eventList = []
+                varList = []
+
+                eventList.append("Alerts_showHostEvent")
+                varDict = {"userName":hostName,"hostAmount":hostViewers}
+                varList.append(varDict)
+                dict = {"eventList":eventList,"varList":varList} 
+
+                Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
 
                 updateLatestNotification("host",hostName,hostViewers)
                 userID = twitchFuncs.getTwitchUserID(Parent,str(message.Name))
@@ -331,12 +359,22 @@ def EventReceiverEvent(sender, args):
 
                 basic.streamWhisper(Parent,"kobiqq",str(donationName + " " + donationAmount))
 
+
+                eventList = []
+                varList = []
+
+                eventList.append("Alerts_showDonationEvent")
+                varDict = {"userName":donationName,"donationAmount":donationAmount}
+                varList.append(varDict)
+                dict = {"eventList":eventList,"varList":varList} 
+
+                Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
+
                 #dict = {"donationName":donationName,"donationAmount":donationAmount}
                 #Parent.BroadcastWsEvent("EVENT_SHOW_DONATION", json.dumps(dict))
 
                 Parent.SendStreamWhisper("kobiqq","donation Test" + str(MySettings.donation.format(message.Name)))
                 updateLatestNotification("donation",donationName,donationAmount)
-
                 insertProfileData(userID,message.Name,"donation",donationAmount)
 
 
@@ -368,7 +406,7 @@ def updateLatestNotification(eventType,fromName,amount):
 
 def getProfileInfo(twitchUserID,userName,hoursWatched):
 
-    conn = sqlite3.connect(os.path.dirname(__file__) + "/database.db")
+    conn = sqlite3.connect(os.path.dirname(__file__) + "/../globalFiles/Datenbanken/streamUserData.db")
     c = conn.cursor()
     profileMessage = ""
     profileMessage += str(userName)
@@ -438,7 +476,7 @@ def getProfileInfo(twitchUserID,userName,hoursWatched):
 def insertProfileData(twitchID,userName,supportType,Amount):
 
 
-    conn = sqlite3.connect(os.path.dirname(__file__) + "/database.db")
+    conn = sqlite3.connect(os.path.dirname(__file__) + "/../globalFiles/Datenbanken/streamUserData.db")
     c = conn.cursor()
 
     try:
@@ -502,7 +540,6 @@ def insertProfileData(twitchID,userName,supportType,Amount):
 
     return
 
-
 def initAlerts():
     
     conn = sqlite3.connect(os.path.dirname(__file__) + "/../globalFiles/Datenbanken/streamMetaData.db")
@@ -550,10 +587,34 @@ def initAlerts():
     finally:
         conn.close()
 
-    
-
-
     return
+
+def updateGameIconInUIBar():
+
+    conn = sqlite3.connect(os.path.dirname(__file__) + "/../globalFiles/Datenbanken/streamMetaData.db")
+    c = conn.cursor()
+
+    try:
+
+        c.execute("SELECT game FROM gameStats WHERE id='1'")
+        row = c.fetchone()
+        game = row[0]
+
+    except:
+        basicFuncs.printLog(Parent,str(ScriptName), "Error couldnt Open DB or find a game on ID 1")
+
+    finally:
+        conn.close()
+
+    eventList = []
+    varList = []
+
+    eventList.append("updateGameIcons")
+    varDict = {"currentGame":game}
+    varList.append(varDict)
+    dict = {"eventList":eventList,"varList":varList} 
+
+    Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))   
 
 def OpenReadMe():
 	""" Open the script readme file in users default .txt application. """

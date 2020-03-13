@@ -2,187 +2,297 @@
 <html>
 <head>
 
+    <audio id="audio-source1" src="ZeldaTextBox/BlipV1.wav" preload="auto" volume="0.0"></audio>
+    <audio id="audio-source2" src="ZeldaTextBox/BlipV1.wav" preload="auto" volume="0.0"></audio>
+    <audio id="audio-source3" src="ZeldaTextBox/BlipV1.wav" preload="auto" volume="0.0"></audio>
+
     <meta charset="UTF-8">
     <title>UI</title>
 
     <script src="../globalFiles/API_Key.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
+    <script src="../globalFiles/jquery.min.js"></script>
     <script src="../globalFiles/superClient.js" charset="utf-8"></script>
+    <script src="../globalFiles/commonUsedFunctions.js"></script>
+    <script src="ZeldaTextBox/dialogue.js"></script>
 
 
-<style>
+    <style>
 
-    /* 
-       2D2D2D
-       1C1C1C
-    */
-    #AlertUI {
-        /*width: 460px;
+        /*
+           2D2D2D
+           1C1C1C
+        */
+        #AlertUI {
+            /*width: 460px;
 
-        /*background-color: aqua;*/
-        display: block;
-        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-        font-display: block;
-        font-size: 33px;
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        color: white;
-    }
-    #follow {
-        background-image: linear-gradient(#3E3E3F 50%, #1C1C1C 50%);
-        display: inline-block;
-        min-width: 470px;
-        padding-left: 40px;
-    }
+            /*background-color: aqua;*/
+            display: block;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            font-display: block;
+            font-size: 33px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            color: white;
+        }
 
-    #followIcon {
-        /* background-image: url(alertImages/shroom.png);*/
-        background-size: 36px;
-        width: 36px;
-        height: 36px;
-        margin-left: 3px;
-        margin-top: 3px;
-        background-repeat: no-repeat;
-        display: inline-block;
-    }
+        #follow {
+            background-image: linear-gradient(#3E3E3F 50%, #1C1C1C 50%);
+            display: inline-block;
+            min-width: 470px;
+            padding-left: 40px;
+        }
 
-    #followPrefix {
-        display: inline-block;
-        vertical-align: top;
-        padding-top: 6px;
-        font-size:28px;
-    }
+        #followIcon {
+            /* background-image: url(alertImages/shroom.png);*/
+            background-size: 36px;
+            width: 36px;
+            height: 36px;
+            margin-left: 3px;
+            margin-top: 3px;
+            background-repeat: no-repeat;
+            display: inline-block;
+        }
 
-    #followName {
-        display: inline-block;
-        vertical-align: top;
-        padding-top: 4px;
-    }
+        #followPrefix {
+            display: inline-block;
+            vertical-align: top;
+            padding-top: 6px;
+            font-size: 28px;
+        }
 
-    #sub {
-        background-image: linear-gradient(#3E3E3F 50%, #1C1C1C 50%);
-        display: inline-block;
-        min-width: 470px;
-    }
+        #followName {
+            display: inline-block;
+            vertical-align: top;
+            padding-top: 4px;
+        }
 
-    #subIcon {
-        /*background-image: url(alertImages/star.png);*/
-        background-size: 36px;
-        width: 36px;
-        height: 36px;
-        margin-left: 3px;
-        margin-top: 3px;
-        background-repeat: no-repeat;
-        display: inline-block;
-    }
+        #sub {
+            background-image: linear-gradient(#3E3E3F 50%, #1C1C1C 50%);
+            display: inline-block;
+            min-width: 470px;
+        }
 
-    #subPrefix {
-        display: inline-block;
-        vertical-align: top;
-        padding-top: 6px;
-        font-size: 28px;
-    }
+        #subIcon {
+            /*background-image: url(alertImages/star.png);*/
+            background-size: 36px;
+            width: 36px;
+            height: 36px;
+            margin-left: 3px;
+            margin-top: 3px;
+            background-repeat: no-repeat;
+            display: inline-block;
+        }
 
-    #subName {
-        display: inline-block;
-        vertical-align: top;
-        padding-top: 4px;
-    }
+        #subPrefix {
+            display: inline-block;
+            vertical-align: top;
+            padding-top: 6px;
+            font-size: 28px;
+        }
 
-    #bits {
-        background-image: linear-gradient(#3E3E3F 50%, #1C1C1C 50%);
-        display: inline-block;
-        min-width: 470px;
-    }
+        #subName {
+            display: inline-block;
+            vertical-align: top;
+            padding-top: 4px;
+        }
 
-    #bitsIcon {
-        /*background-image: url(alertImages/boo.png);*/
-        background-size: 36px;
-        width: 36px;
-        height: 36px;
-        margin-left: 3px;
-        margin-top: 3px;
-        background-repeat: no-repeat;
-        display: inline-block;
-    }
+        #bits {
+            background-image: linear-gradient(#3E3E3F 50%, #1C1C1C 50%);
+            display: inline-block;
+            min-width: 470px;
+        }
 
-    #bitsPrefix {
-        display: inline-block;
-        vertical-align: top;
-        padding-top: 6px;
-        font-size: 28px;
-    }
+        #bitsIcon {
+            /*background-image: url(alertImages/boo.png);*/
+            background-size: 36px;
+            width: 36px;
+            height: 36px;
+            margin-left: 3px;
+            margin-top: 3px;
+            background-repeat: no-repeat;
+            display: inline-block;
+        }
 
-    #bitsName {
-        display: inline-block;
-        vertical-align: top;
-        padding-top: 4px;
-    }
+        #bitsPrefix {
+            display: inline-block;
+            vertical-align: top;
+            padding-top: 6px;
+            font-size: 28px;
+        }
 
-    #donation {
-        background-image: linear-gradient(#3E3E3F 50%, #1C1C1C 50%);
-        display: inline-block;
-        min-width: 470px;
-    }
+        #bitsName {
+            display: inline-block;
+            vertical-align: top;
+            padding-top: 4px;
+        }
 
-    #donationIcon {
-        /*background-image: url(alertImages/coin.png);*/
-        background-size: 36px;
-        width: 36px;
-        height: 36px;
-        margin-left: 3px;
-        margin-top: 3px;
-        background-repeat: no-repeat;
-        display: inline-block;
-    }
+        #donation {
+            background-image: linear-gradient(#3E3E3F 50%, #1C1C1C 50%);
+            display: inline-block;
+            min-width: 470px;
+        }
 
-    #donationPrefix {
-        display: inline-block;
-        vertical-align: top;
-        padding-top: 6px;
-        font-size: 28px;
-    }
+        #donationIcon {
+            /*background-image: url(alertImages/coin.png);*/
+            background-size: 36px;
+            width: 36px;
+            height: 36px;
+            margin-left: 3px;
+            margin-top: 3px;
+            background-repeat: no-repeat;
+            display: inline-block;
+        }
 
-    #donationName{
-        display: inline-block;
-        vertical-align: top;
-        padding-top: 4px;
-    }
+        #donationPrefix {
+            display: inline-block;
+            vertical-align: top;
+            padding-top: 6px;
+            font-size: 28px;
+        }
 
-</style>
-</head >
+        #donationName {
+            display: inline-block;
+            vertical-align: top;
+            padding-top: 4px;
+        }
 
+        /*zelda box is streamed in 1280x720*/
+        .wrapper {
+            /*display: flex;
+            flex-direction: column;
+            justify-content: space-between;*/
+            padding-left: 710px;
+            padding-top: 440px;
+            height: 200px;
+            width: 480px;
+        }
 
-<body >
-
-    <audio id="startSoundAndMusic" >
-        <source src="audio/newSlotStartMusic.mp3" type="audio/mpeg" >
-    </audio >
-
-    <audio id="stopSound" >
-        <source src="audio/stopSound.mp3" type="audio/mpeg" >
-    </audio >
-
-    <audio id="slotDrop" >
-        <source src="audio/slotDrop.wav" type="audio/mpeg" >
-    </audio >
+        @font-face { font-family: 'MyFont'; src: url('ZeldaTextBox/ZeldaOracles.ttf') format('truetype'); }
 
 
-    <div id="MainFrame" style="width:1920px;height:1080px;display:block;">
 
-        <span style="z-index:-1">
-            <video id="donationVideo" autoplay width="36" height="36">
-                <source src="video/donation.webm" type="video/webm">
-            </video>
+        .dialogue-box {
+            display: flex;
+            visibility:hidden;
+            flex-direction: column;
+            justify-content: space-around;
+            height: 200px;
+            margin: 1px;
+            opacity: 0.9;
+        }
+
+        .item {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+            height: 50px;
+            color: white;
+            text-align: center;
+            font-weight: 600;
+            word-wrap: break-word;
+        }
+
+        .sub-item {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Text box */
+        .item:nth-child(1) {
+            flex-grow: 10;
+            line-height: 50px;
+            background: #1d1d1d;
+            border-radius: 25px;
+        }
+
+            .item:nth-child(1) p {
+                margin-left: 25px;
+                margin-right: 25px;
+                text-align: center;
+                font-family: 'MyFont', Fallback, Tahoma;
+                user-select: none;
+            }
+
+        /* End marker */
+        .item:nth-child(2) {
+            width: 50px;
+            align-self: center;
+            margin: -15px 0px 5px 0px;
+            animation: end-marker-flash 1s linear infinite;
+            animation-duration: 1.5s;
+        }
+
+        .item #text_target {
+            font-size: 30px;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .item #text_target_userName {
+            font-size: 30px;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+    </style>
+</head>
+
+
+<body>
+
+    <audio id="startSoundAndMusic">
+        <source src="audio/newSlotStartMusic.mp3" type="audio/mpeg">
+    </audio>
+
+    <audio id="stopSound">
+        <source src="audio/stopSound.mp3" type="audio/mpeg">
+    </audio>
+
+    <audio id="slotDrop">
+        <source src="audio/slotDrop.wav" type="audio/mpeg">
+    </audio>
+
+
+    <div id="MainFrame" style="width:1900px;height:1060px;display:block;">
+
+        <span id="donationVideoFrame" style="z-index:-1">
+
         </span>
+
+
+        <div class="wrapper">
+            <span class="dialogue-box">
+                <span class="item">
+                    <p>
+                        <span id="text_target"></span>
+                        <span id="text_target_userName"></span>
+                    </p>
+
+                </span>
+            </span>
+
+            <!--
+        <button onclick="createZeldaTextBox('Thanks for the Follow ','Username')">go</button>
+    -->
+
+        </div>
 
         <span id="AlertUI">
             <span id="follow">
-                <span id="followIcon">
-                    <video id="subIconAnimation" muted Autoplay=autoplay width="36" height="36">
+                <span id="followIcon">                   
+                    <video id="followIconAnimation" muted Autoplay=autoplay width="36" height="36">
                         <source src="video/shroom.webm" type="video/webm">
-                    </video>
+                    </video>                  
                 </span>
                 <span id="followPrefix">Follow: </span>
                 <span id="followName"></span>
@@ -211,59 +321,87 @@
                 <span id="donationPrefix">Donation: </span>
                 <span id="donationName"></span>
             </span>
-
         </span>
 
     </div>
 
-<script >
+<script>
 
 
+    function recieveArray(dataArray) {
 
-    function sleep(time) {
-        return new Promise((resolve) => setTimeout(resolve, time));
-    }
-
-    function decode_utf8(s) {
-        return decodeURIComponent(escape(s));
-    }
-
-    function revieveArray(dataArray) {
-
-        console.log(dataArray);
-        var countEvents = dataArray.eventList.length;
-
-
-        i = 0;
-        while (countEvents > i) {
-
-            webSocketEvent(dataArray.eventList[i], dataArray.varList[i]);
-            i += 1;
-        }
+        splittIncomingEvent(dataArray)
     }
 
     function webSocketEvent(eventName, varList) {
 
         if (eventName === "Alerts_showFollowEvent") {
+
             updateFollow(varList.userName);
-            displayFollowAlert();
+            reloadASingleIcon(0)
+            showAndHideZeldaBox();
+            createZeldaTextBox('Thanks for the Follow ', varList.userName)
+            //displayFollowAlert();
         }
 
         else if (eventName === "Alerts_showSubEvent") {
 
             updateSub(varList.userName, varList.subAmount)
-            displaySubAlert();
+            reloadASingleIcon(1)
+            showAndHideZeldaBox();
+            createZeldaTextBox('Welcome to the Family @', varList.userName)
+            //Gif animation video or  what ever. Currently Zelda txt box displaySubAlert();
         }
 
+        else if (eventName === "Alerts_showHostEvent") {
+
+            showAndHideZeldaBox();
+            createZeldaTextBox('Thank you for the Host @', varList.userName)
+        }
+
+        else if (eventName === "Alerts_showBitEvent") {
+
+            updateBits(varList.userName, varList.bitAmount)
+            reloadASingleIcon(2)
+            showAndHideZeldaBox();
+            createZeldaTextBox('Thank you for the bits @', varList.userName)
+        }
+
+        else if (eventName === "Alerts_showDonationEvent") {
+
+            updateDonation(varList.userName, varList.donationAmount);
+            reloadASingleIcon(3)
+            showAndHideZeldaBox();
+            createZeldaTextBox('Thank you so much for the Donation ', varList.userName)
+            //showDonation()
+        }
+        
+
         else if (eventName === "Alerts_Init") {
+
             initAlerts(varList.followName, varList.subName, varList.subAmount, varList.bitsName, varList.bitsAmount, varList.donationName, varList.donationAmount);
         }
 
         else if (eventName === "Alerts_ChangeUI_Position") {
+
             changeUIPosition(varList.newPosition)
         }
+
+        else if (eventName === "updateGameIcons") {
+
+            updateGameIcons(varList.currentGame)
+        }     
     }
 
+    function showAndHideZeldaBox() {
+
+        document.getElementsByClassName("dialogue-box")[0].style.visibility = 'Visible';
+
+        sleep(15000).then(() => {
+            document.getElementsByClassName("dialogue-box")[0].style.visibility = 'Hidden';
+        });
+        
+    }
 
     function changeUIPosition(newPosition) {
 
@@ -274,12 +412,12 @@
         else if (newPosition == "BotLeft") {
             document.getElementById('AlertUI').style = 'left:0;right:unset;top:unset;bot:0;width: 470px;';
             document.getElementById('follow').style = 'padding-left:unset';
-            
+
         }
         else if (newPosition == "Top") {
             document.getElementById('AlertUI').style = 'left:unset;right:unset;bot:unset;top:0;width: unset;';
             document.getElementById('follow').style = 'padding-left:40px';
-            
+
         }
         else if (newPosition == "Bot") {
             document.getElementById('AlertUI').style = 'left:unset;right:unset;bot:0;top:unset;width: unset;';
@@ -292,8 +430,7 @@
 
     }
 
-    function initAlerts(followName, subName, subAmount, bitsName, bitsAmount, donationName, donationAmount)
-    {
+    function initAlerts(followName, subName, subAmount, bitsName, bitsAmount, donationName, donationAmount) {
         followNameSpan = document.getElementById('followName');
         followNameSpan.innerHTML = followName;
 
@@ -301,11 +438,11 @@
         subNameSpan.innerHTML = subName + " " + subAmount + "x";
 
         bitsNameSpan = document.getElementById('bitsName');
-        bitsNameSpan.innerHTML = + bitsAmount + " " + bitsName  ;
+        bitsNameSpan.innerHTML = + bitsAmount + " " + bitsName;
 
         donationNameSpan = document.getElementById('donationName');
-        donationNameSpan.innerHTML = donationAmount + " " + donationName ;
-    }   
+        donationNameSpan.innerHTML = donationAmount + " " + donationName;
+    }
 
     function updateFollow(followerUsername) {
 
@@ -314,17 +451,57 @@
 
     }
 
-    function updateSub(subUsername,subAmount) {
+    function updateSub(subUsername, subAmount) {
 
         subNameSpan = document.getElementById('subName');
         subNameSpan.innerHTML = subUsername + " " + subAmount + "x";
 
     }
 
-    function showDonation(donationName, donationAmount) {
+    function updateBits(bitUsername, bitAmount) {
+
+        subNameSpan = document.getElementById('bitsName');
+        subNameSpan.innerHTML = bitUsername + " " + bitAmount ;
+
+    }
+
+    function updateDonation(donationUserName, donationAmount) {
+
+        followNameSpan = document.getElementById('donationName');
+        followNameSpan.innerHTML = donationUserName + " " + donationAmount + "€";;
+
+    }
+
+    function showDonation() {
+
+        /*
+        <video id="donationVideo" autoplay width="1920" height="1035">
+            <source src="video/Ring-Drop-Dono-Vid.webm" type="video/webm">
+        </video>
+        */
+
+        videoFrame = document.getElementById('donationVideoFrame');
+        var vidElemement = document.createElement("video");
+
+        var sourceNew = document.createElement("source");
+        sourceNew.type = "video/mp4";
+        sourceNew.src = 'video/Ring-Drop-Dono-Vid.webm';
+        sourceNew.autobuffer = true;
+
+        vidElemement.id = "donationVideo";
+        vidElemement.width = 1920;
+        vidElemement.height = 1035;
+        vidElemement.volume = 0;
+        //vidElemement1.autoplay = true;
+
+        videoFrame.appendChild(vidElemement);
+        vidElemement.appendChild(sourceNew);
+
         var video = document.getElementById("donationVideo");
-        video .playbackRate = 0.4;
-        video .play();
+        video.playbackRate = 0.4;
+        video.play();
+
+        /*
         var AudioCoin = document.getElementById("slotDrop");
         sleep(4000).then(() => {
 
@@ -332,14 +509,69 @@
             AudioCoin.play();
             //AudioCoin.loop = true;
         });
+        */
         //sleep(8000).then(() => {
 
         //    AudioCoin.loop = false;
         //});
     }
 
-</script >
+    function updateGameIcons(currentGame)
+    {
+
+        var eventName = ['followIcon', 'subIcon', 'bitsIcon', 'donationIcon'];
+        var eventIcon = ['followIconAnimation', 'subIconAnimation', 'bitsIconAnimation', 'donationIconAnimation'];
+
+        if (currentGame == 'Zelda Ocarania of time') {
+
+            var videoFiles = ['shroom.webm', 'star.webm', 'boo.webm', 'coin.webm'];
+        }
+
+        else {
+
+            var videoFiles = ['shroom.webm', 'star.webm', 'boo.webm', 'coin.webm'];
+        }
+        
+        x = 0
+        while(x < 4){
+
+            document.getElementById(eventIcon[x]).remove();
+
+            videoFrame = document.getElementById(eventName[x]);
+            var vidElemementNew = document.createElement("video");
+
+            var sourceNew = document.createElement("source");
+            sourceNew.type = "video/mp4";
+            sourceNew.src = 'video/' + videoFiles[x];
+            sourceNew.autobuffer = true;
+
+            vidElemementNew.id = eventIcon[x];
+            vidElemementNew.width = 36;
+            vidElemementNew.height = 36;
+            vidElemementNew.volume = 0;
+
+            videoFrame.appendChild(vidElemementNew);
+            vidElemementNew.appendChild(sourceNew);
+
+            playVideoAuto = document.getElementById(eventIcon[x]);
+            playVideoAuto.play();
+
+            x += 1
+        }
+
+    
+        }
+
+    function reloadASingleIcon(eventNumber) {
+
+        var eventIcon = ['followIconAnimation', 'subIconAnimation', 'bitsIconAnimation', 'donationIconAnimation'];
+
+        document.getElementById(eventIcon[eventNumber]).load();
+
+    }
+
+    </script>
 
 
-</body >
+</body>
 </html >

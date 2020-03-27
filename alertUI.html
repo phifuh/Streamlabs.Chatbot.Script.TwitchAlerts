@@ -19,10 +19,6 @@
 
     <style>
 
-        /*
-           2D2D2D
-           1C1C1C
-        */
         #AlertUI {
             /*width: 460px;
 
@@ -163,10 +159,10 @@
             /*display: flex;
             flex-direction: column;
             justify-content: space-between;*/
-            padding-left: 710px;
-            padding-top: 440px;
-            height: 200px;
-            width: 480px;
+
+            /*background-color: blue;*/
+            height: 1060px;
+            width: 1920px;
         }
 
         @font-face { font-family: 'MyFont'; src: url('ZeldaTextBox/ZeldaOracles.ttf') format('truetype'); }
@@ -174,13 +170,41 @@
 
 
         .dialogue-box {
+
+            /*background-color: red;*/
             display: flex;
-            visibility:hidden;
+            visibility: hidden;
             flex-direction: column;
             justify-content: space-around;
-            height: 200px;
             margin: 1px;
             opacity: 0.9;
+            position: absolute;
+            /*half of the width and height*/
+            /* center position */
+            width: 400px;
+            height: 200px;
+            left: 960px;
+            bottom: 540px;
+            margin-left: -200px;
+            margin-bottom: -100px;
+            /* bottom news
+
+            width: 1920px;
+            height: 50px;
+            left: 0;
+            bottom: 0;
+            margin-left: 0;
+            margin-bottom: 0;
+            */
+            /* bottomLeft news */
+            /*
+            width: 470px;
+            height: 200px;
+            left: 0;
+            bottom: 0;
+            margin-left: 0;
+            margin-bottom: 0;
+            */
         }
 
         .item {
@@ -269,6 +293,11 @@
 
         </span>
 
+            <!--
+        <button onclick="createZeldaTextBox('Thanks for the Follow ','Username')"> Activate</button>
+        <button  onclick="changePositionZelda('Bot')"> Bot</button>
+        <button  onclick="changePositionZelda('Left')"> LeftBot</button>
+            -->
 
         <div class="wrapper">
             <span class="dialogue-box">
@@ -282,17 +311,17 @@
             </span>
 
             <!--
-        <button onclick="createZeldaTextBox('Thanks for the Follow ','Username')">go</button>
-    -->
+            <button onclick="createZeldaTextBox('Thanks for the Follow ','Username')">go</button>
+        -->
 
         </div>
 
         <span id="AlertUI">
             <span id="follow">
-                <span id="followIcon">                   
+                <span id="followIcon">
                     <video id="followIconAnimation" muted Autoplay=autoplay width="36" height="36">
                         <source src="video/shroom.webm" type="video/webm">
-                    </video>                  
+                    </video>
                 </span>
                 <span id="followPrefix">Follow: </span>
                 <span id="followName"></span>
@@ -327,6 +356,22 @@
 
 <script>
 
+    function changePositionZelda(pos) {
+
+        if (pos == "Bot") {
+
+            document.getElementById('dialogue-box').style = 'left:unset;right:0;top:unset;bot:0;width: 470px;';
+
+
+        }
+        else {
+
+            document.getElementById('AlertUI').style = 'left:unset;right:0;top:unset;bot:0;width: 470px;';
+            document.getElementById('follow').style = 'padding-left:unset';
+
+        }
+
+    }
 
     function recieveArray(dataArray) {
 
@@ -376,7 +421,6 @@
             //showDonation()
         }
         
-
         else if (eventName === "Alerts_Init") {
 
             initAlerts(varList.followName, varList.subName, varList.subAmount, varList.bitsName, varList.bitsAmount, varList.donationName, varList.donationAmount);
@@ -417,6 +461,11 @@
         else if (newPosition == "Top") {
             document.getElementById('AlertUI').style = 'left:unset;right:unset;bot:unset;top:0;width: unset;';
             document.getElementById('follow').style = 'padding-left:40px';
+
+        }
+        else if (newPosition == "TopLeft") {
+            document.getElementById('AlertUI').style = 'left:0;right:unset;top:0;bot:unset;width: 470px;';
+            document.getElementById('follow').style = 'padding-left:unset';
 
         }
         else if (newPosition == "Bot") {

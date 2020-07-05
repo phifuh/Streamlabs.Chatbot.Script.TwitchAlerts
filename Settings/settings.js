@@ -3,7 +3,7 @@
   "followMessage": "@{0} Thank you for the Follow!",
   "newSubMessage": "We got a new Squirrel in the Family. Thank You {0} for your support!",
   "reSubMessage": "Resub test!",
-  "wbSubMessage": "Resub test!",
+  "wbSubMessage": "Resub test2!",
   "bitsMessage": "Bits Test",
   "hostMessage": "Host Test",
   "raidMessage": "Raid Test",

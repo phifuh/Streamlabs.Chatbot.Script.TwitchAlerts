@@ -32,7 +32,7 @@ from basicFunctions import *
 ScriptName = "Notifications"
 Website = "twitch.tv/kobiqq"
 Description = "Alert Notifications"
-Creator = "KobiQQ"
+Creator = "Global | KobiQQ"
 Version = "1.2"
 
 #---------------------------------------
@@ -203,10 +203,18 @@ def EventReceiverEvent(sender, args):
 
                 if message.SubType == "resub":
 
+                    Parent.Log(ScriptName,"resub streak 0")
+
                     if MySettings.activateSubscribeMessage:
                         basic.streamMessage(Parent,str(MySettings.reSubMessage.format(message.Name)))
-                        basic.streamWhisper(Parent,"kobiqq",str("subscription", "{0} resubscribed for {1} months total!".format(message.Name, message.Months)))
+                        #I think there was a bug in the basic.Whispermessage
+                        Parent.Log(ScriptName,str("subscription", "{0} resubscribed for {1} months total!".format(message.Name, message.Months)))
+                        basic.streamWhisper(Parent,"kobiqq",str("subscription {0} resubscribed for {1} months Test!".format(message.Name, message.Months)))
 
+                        Parent.Log(ScriptName,"resub streak 1")
+
+
+                    Parent.Log(ScriptName,"resub streak 2")
 
                     updateLatestNotification("sub",message.Name,message.Months)
                     subName = message.Name
@@ -221,16 +229,25 @@ def EventReceiverEvent(sender, args):
 
                     Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
 
+                    Parent.Log(ScriptName,"resub streak 3")
+
                     userID = twitchFuncs.getTwitchUserID(Parent,str(message.Name))
                     insertProfileData(userID,str(subName),"sub",str(message.Months))
 
+                    Parent.Log(ScriptName,"resub streak 4")
 
                 elif message.SubType == "subscriber" and message.Months >= 1:
 
                     #welcome back sub?
+                    Parent.Log(ScriptName,"resub 0")
+
                     if MySettings.activateSubscribeMessage:
                         basic.streamMessage(Parent,str(MySettings.wbSubMessage.format(message.Name)))
-                        basic.streamWhisper(Parent,"kobiqq",str("subscription", "{0} resubscribed for {1} months Test!".format(message.Name, message.Months)))
+
+                        Parent.Log(ScriptName,str("subscription", "{0} resubscribed for {1} months total!".format(message.Name, message.Months)))
+                        basic.streamWhisper(Parent,"kobiqq",str("subscription {0} resubscribed for {1} months Test!".format(message.Name, message.Months)))
+
+                        Parent.Log(ScriptName,"resub 1")
                     
                     updateLatestNotification("sub",message.Name,message.Months)
                    
@@ -244,9 +261,13 @@ def EventReceiverEvent(sender, args):
 
                     Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
 
+                    Parent.Log(ScriptName,"resub 2")
+
                     subName = message.Name
                     userID = twitchFuncs.getTwitchUserID(Parent,str(message.Name))
                     insertProfileData(userID,str(subName),"sub",str(message.Months))
+
+                    Parent.Log(ScriptName,"resub 3")
 
                 else:
 
@@ -344,9 +365,18 @@ def EventReceiverEvent(sender, args):
                 raidViewers  = message.Raiders  
 
                 if MySettings.activateRaidMessage:
-                    Parent.SendStreamMessage ("Uii ein Raid mit " + str(raidViewers) + " von " + str(message.Name) + ", Vielen dank!! Wo bleibt das !hype?!" )
-                    Parent.SendStreamWhisper("kobiqq","raid Test" + str(MySettings.raidMessage.format(message.Name)))
+                    Parent.SendStreamMessage ("Oh wow a raid with " + str(raidViewers) + " by " + str(message.Name) + ", get some hype going !hype?!" )
                 updateLatestNotification("raid",raidName,raidViewers)
+
+                eventList = []
+                varList = []
+
+                eventList.append("Alerts_showRaidEvent")
+                varDict = {"userName":message.Name}
+                varList.append(varDict)
+                dict = {"eventList":eventList,"varList":varList} 
+
+                Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
 
 
     elif evntdata and evntdata.For == "streamlabs":
@@ -404,74 +434,6 @@ def updateLatestNotification(eventType,fromName,amount):
 
     return
 
-def getProfileInfo(twitchUserID,userName,hoursWatched):
-
-    conn = sqlite3.connect(os.path.dirname(__file__) + "/../globalFiles/Datenbanken/streamUserData.db")
-    c = conn.cursor()
-    profileMessage = ""
-    profileMessage += str(userName)
-    profileMessage += " "
-
-    try:
-
-        c.execute("SELECT totalSub,totalBits,totalDonation,totalGiftedSubs FROM profileData WHERE twitchID='" + str(twitchUserID) + "'")
-        row = c.fetchone()
-
-        totalSub = row[0]
-        totalBits = row[1]
-        totalDonation = row[2]
-        totalGiftedSubs = row[3]
-
-        if Parent.HasPermission(userName,"subscriber",userName):
-            profileMessage += str(MySettings.isSub)        
-
-        if(totalSub != 0):
-            profileMessage += str(MySettings.subStreak.format(str(totalSub)))
-
-        if(totalDonation != 0):
-            profileMessage += str(MySettings.maxDonation.format(str(totalDonation)))
-
-        if(totalBits != 0):
-            profileMessage += str(MySettings.maxBits.format(str(totalBits)))
-
-        if(totalGiftedSubs != 0):
-            profileMessage += str(MySettings.giftedSubs.format(str(totalGiftedSubs)))
-
-        if(hoursWatched != 0):
-            profileMessage += str("You have been watching the stream for {0} hours!".format(str(hoursWatched)))
-
-        else:
-            profileMessage += str("You have been watching the stream for 0 hours!")
-
-        basic.streamMessage(Parent,str(profileMessage))
-
-
-    except:
-
-        if Parent.HasPermission(userName,"subscriber",userName):
-            profileMessage += str(MySettings.isSub)
-
-            if(hoursWatched != 0):
-                profileMessage += str("You have been watching the stream for {0} hours!".format(str(hoursWatched)))
-
-            else:
-                profileMessage += str("You have been watching the stream for 0 hours!")
-
-            basic.streamMessage(Parent, str(profileMessage))
-        
-        else:
-
-            if(hoursWatched != 0):
-                profileMessage += str("You have been watching the stream for {0} hours!".format(str(hoursWatched)))
-
-            else:
-                profileMessage += str("You have been watching the stream for 0 hours!")
-
-            basic.streamMessage(Parent, str(profileMessage))
-    finally:
-        conn.close()
-
-    return
 
 def insertProfileData(twitchID,userName,supportType,Amount):
 

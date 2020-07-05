@@ -181,7 +181,7 @@
             position: absolute;
             /*half of the width and height*/
             /* center position */
-            width: 400px;
+            width: 450px;
             height: 200px;
             left: 960px;
             bottom: 540px;
@@ -268,6 +268,27 @@
             -ms-user-select: none;
             user-select: none;
         }
+
+
+        #iconBesideBox {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            padding-left: 20px;
+            background-position-x: center;
+            background-repeat:no-repeat;
+            background-image: url(alertImages/Default/bits.png);
+        }
+
+        #alertTextBoxPosition {
+            display: inline-block;
+            min-width: 400px;
+            max-width: 400px;
+            position: absolute;
+            margin-left:50px;
+            text-align:center;
+        }
+
     </style>
 </head>
 
@@ -302,17 +323,23 @@
         <div class="wrapper">
             <span class="dialogue-box">
                 <span class="item">
-                    <p>
+
+                    <span id="iconBesideBox"></span>
+                    <span id="alertTextBoxPosition">
+
+
                         <span id="text_target"></span>
+                        <br />
                         <span id="text_target_userName"></span>
-                    </p>
+
+                    </span>
 
                 </span>
             </span>
 
             <!--
-            <button onclick="createZeldaTextBox('Thanks for the Follow ','Username')">go</button>
-        -->
+                <button onclick="testTheZeldaBox()">go</button>
+            -->
 
         </div>
 
@@ -355,6 +382,13 @@
     </div>
 
 <script>
+
+    function testTheZeldaBox(){
+
+        showAndHideZeldaBox();
+        createZeldaTextBox('Thanks for the Follow ', 'Username')
+
+    }
 
     function changePositionZelda(pos) {
 

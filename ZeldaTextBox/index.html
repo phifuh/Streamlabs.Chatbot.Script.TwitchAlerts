@@ -16,11 +16,11 @@
     <style>
 
         .wrapper {
-            display: flex;
+            /*display: flex;*/
             flex-direction: column;
             justify-content: space-between;
             height: 200px;
-            width: 480px;
+            width: 530px;
         }
 
         @font-face {
@@ -99,23 +99,47 @@
             -ms-user-select: none;
             user-select: none;
         }
+
+        #iconBesideBox {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            padding-left: 20px;
+            background-position-x: center;
+            background-image: url(water56x56.png);
+        }
+        #alertTextBoxPosition {
+            display: inline-block;
+            min-width: 464px;
+            max-width: 464px;
+            position: absolute;
+            padding-left: 65px;
+        }
+
     </style>
 
 </head>
 	<body>
         <div class="wrapper">
+
             <div id="dialogue-box" class="dialogue-box">
+
+
                 <div class="item">
-                    <p>
+                    <span id="iconBesideBox"></span>
+                    <span id="alertTextBoxPosition">
+
 
                         <span id="text_target"></span>
-
+                        <br />
                         <span id="text_target_userName"></span>
-                    </p>
+
+                    </span>
 
                 </div>
             </div>
 
+            <button onclick="createZeldaTextBox('Thanks for the Follow ','Username')">username test</button>
             <button onclick="createZeldaTextBox('Thanks for the Follow ','Username')">go</button>
 
 

@@ -70,7 +70,8 @@ function createZeldaTextBox(text, userName) {
     currentIndex = 0;
     nextCutoff = text.length;
 
-    var colors = ['#ff0000', '#00ff00', '#0000ff', '#F5BD1F'];
+    //Red, Green, LightBlue, Yellow
+    var colors = ['#ff0000', '#00ff00', '#0080ff', '#F5BD1F'];
     var random_color = colors[Math.floor(Math.random() * colors.length)];
     document.getElementById('text_target_userName').style.color = random_color;
 

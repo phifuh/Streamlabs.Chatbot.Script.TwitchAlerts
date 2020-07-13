@@ -23,7 +23,8 @@
             /*width: 460px;
 
             /*background-color: aqua;*/
-            display: block;
+            display: inline-flex;
+            /* display: block; */
             font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
             font-display: block;
             font-size: 33px;
@@ -33,6 +34,7 @@
             color: white;
         }
 
+        /*#region follow css*/
         #follow {
             background-image: linear-gradient(#3E3E3F 50%, #1C1C1C 50%);
             display: inline-block;
@@ -62,8 +64,11 @@
             display: inline-block;
             vertical-align: top;
             padding-top: 4px;
+            color: red;
         }
+        /*#endregion follow css*/
 
+        /*#region subs css*/
         #sub {
             background-image: linear-gradient(#3E3E3F 50%, #1C1C1C 50%);
             display: inline-block;
@@ -92,8 +97,11 @@
             display: inline-block;
             vertical-align: top;
             padding-top: 4px;
+            color: red;
         }
+        /*#endregion subs css*/
 
+        /*#region bits css*/
         #bits {
             background-image: linear-gradient(#3E3E3F 50%, #1C1C1C 50%);
             display: inline-block;
@@ -122,8 +130,11 @@
             display: inline-block;
             vertical-align: top;
             padding-top: 4px;
+            color: red;
         }
+        /*#endregion bits css*/
 
+        /*#region donation css*/
         #donation {
             background-image: linear-gradient(#3E3E3F 50%, #1C1C1C 50%);
             display: inline-block;
@@ -146,13 +157,16 @@
             vertical-align: top;
             padding-top: 6px;
             font-size: 28px;
+            
         }
 
         #donationName {
             display: inline-block;
             vertical-align: top;
             padding-top: 4px;
+            color: red;
         }
+        /*#endregion donation css*/
 
         /*zelda box is streamed in 1280x720*/
         .wrapper {
@@ -160,7 +174,6 @@
             flex-direction: column;
             justify-content: space-between;*/
 
-            /*background-color: blue;*/
             height: 1060px;
             width: 1920px;
         }
@@ -168,10 +181,9 @@
         @font-face { font-family: 'MyFont'; src: url('ZeldaTextBox/ZeldaOracles.ttf') format('truetype'); }
 
 
-
+        /*#region zelda Alert box css*/
         .dialogue-box {
 
-            /*background-color: red;*/
             display: flex;
             visibility: hidden;
             flex-direction: column;
@@ -240,7 +252,6 @@
                 user-select: none;
             }
 
-        /* End marker */
         .item:nth-child(2) {
             width: 50px;
             align-self: center;
@@ -269,15 +280,14 @@
             user-select: none;
         }
 
-
         #iconBesideBox {
             display: inline-block;
             width: 50px;
             height: 50px;
             padding-left: 20px;
             background-position-x: center;
-            background-repeat:no-repeat;
-            background-image: url(alertImages/Default/bits.png);
+            background-repeat: no-repeat;
+            background-image: url(alertImages/DefaultAlerts/bits.png);
         }
 
         #alertTextBoxPosition {
@@ -288,6 +298,7 @@
             margin-left:50px;
             text-align:center;
         }
+        /*#endregion  zelda Alert box ending*/
 
     </style>
 </head>
@@ -314,11 +325,13 @@
 
         </span>
 
-            <!--
-        <button onclick="createZeldaTextBox('Thanks for the Follow ','Username')"> Activate</button>
-        <button  onclick="changePositionZelda('Bot')"> Bot</button>
-        <button  onclick="changePositionZelda('Left')"> LeftBot</button>
-            -->
+        <!--
+            <button onclick="createZeldaTextBox('Thanks for the Follow ','Username')"> Activate</button>
+            <button onclick="changePositionZelda('Bot')"> Bot</button>
+            <button onclick="changePositionZelda('Left')"> LeftBot</button>
+            <button onclick="changePositionZelda('Left')"> LeftBot</button>
+        -->
+
 
         <div class="wrapper">
             <span class="dialogue-box">
@@ -338,7 +351,8 @@
             </span>
 
             <!--
-                <button onclick="testTheZeldaBox()">go</button>
+            <button onclick="testTheZeldaBox()">go</button>
+            <button onclick="testTheZeldaBox2()">go</button>
             -->
 
         </div>
@@ -352,7 +366,8 @@
                 </span>
                 <span id="followPrefix">Follow: </span>
                 <span id="followName"></span>
-            </span><span id="sub">
+            </span>
+            <span id="sub">
                 <span id="subIcon">
                     <video id="subIconAnimation" muted Autoplay=autoplay width="36" height="36">
                         <source src="video/star.webm" type="video/webm">
@@ -360,7 +375,8 @@
                 </span>
                 <span id="subPrefix">Sub: </span>
                 <span id="subName"></span>
-            </span><span id="bits">
+            </span>
+            <span id="bits">
                 <span id="bitsIcon">
                     <video id="bitsIconAnimation" muted Autoplay=autoplay width="36" height="36">
                         <source src="video/boo.webm" type="video/mp4">
@@ -368,7 +384,8 @@
                 </span>
                 <span id="bitsPrefix">Bits: </span>
                 <span id="bitsName"></span>
-            </span><span id="donation">
+            </span>
+            <span id="donation">
                 <span id="donationIcon">
                     <video id="donationIconAnimation" muted Autoplay=autoplay width="36" height="36">
                         <source src="video/coin.webm" type="video/mp4">
@@ -383,12 +400,129 @@
 
 <script>
 
+    function sleep(time) {
+        return new Promise((resolve) => setTimeout(resolve, time));
+    }
+
+    function recieveArray(dataArray) {
+
+        splittIncomingEvent(dataArray)
+    }
+
+    function webSocketEvent(eventName, varList) {
+
+        if (eventName === "Alerts_showFollowEvent") {
+
+            sliceUsername(varList.userName);
+            updateFollow(varList.userName);
+            reloadASingleIcon(0)
+            toggleAlertBox("alertImages/DefaultAlerts/shroom.png");
+            createZeldaTextBox('Thanks for the Follow ', varList.userName)
+            //displayFollowAlert();
+        }
+
+        else if (eventName === "Alerts_showSubEvent") {
+
+            sliceUsername(varList.userName);
+            updateSub(varList.userName, varList.subAmount)
+            reloadASingleIcon(1)
+            toggleAlertBox("alertImages/DefaultAlerts/star.png");
+            createZeldaTextBox('Welcome to the Family @', varList.userName)
+            //Gif animation video or  what ever. Currently Zelda txt box displaySubAlert();
+        }
+
+        else if (eventName === "Alerts_showBitEvent") {
+
+            sliceUsername(varList.userName);
+            updateBits(varList.userName, varList.bitAmount)
+            reloadASingleIcon(2)
+            toggleAlertBox("alertImages/DefaultAlerts/bits.png");
+            createZeldaTextBox('Thank you for the bits @', varList.userName)
+        }
+
+        else if (eventName === "Alerts_showDonationEvent") {
+
+            sliceUsername(varList.userName);
+            updateDonation(varList.userName, varList.donationAmount);
+            reloadASingleIcon(3)
+            toggleAlertBox("alertImages/DefaultAlerts/coin.png");
+            createZeldaTextBox('Thank you very much for the Donation ', varList.userName)
+            //showDonation()
+        }
+
+        else if (eventName === "Alerts_showHostEvent") {
+
+            toggleAlertBox("alertImages/DefaultAlerts/bits.png");
+            createZeldaTextBox('Thank you for the Host @', varList.userName)
+        }
+
+        else if (eventName === "Alerts_showRaidEvent") {
+
+            toggleAlertBox("alertImages/DefaultAlerts/bits.png");
+            createZeldaTextBox('Thank you for the Raid @', varList.userName)
+        }
+
+        else if (eventName === "Alerts_Init") {
+
+            if (varList.followName.length > 18) {
+                varList.followName = varList.followName.slice(0, 18);
+            }
+
+            if (varList.subName.length > 18) {
+                varList.subName = varList.subName.slice(0, 18);
+            }
+
+            if (varList.bitsName.length > 18) {
+                varList.bitsName = varList.bitsName.slice(0, 18);
+            }
+
+            if (varList.donationName.length > 18) {
+                varList.donationName = varList.donationName.slice(0, 18);
+            }
+
+            initAlerts(varList.followName, varList.subName, varList.subAmount, varList.bitsName, varList.bitsAmount, varList.donationName, varList.donationAmount);
+        }
+
+        else if (eventName === "Alerts_ChangeUI_Position") {
+
+            changeUIPosition(varList.newPosition)
+        }
+
+        else if (eventName === "ChannelPoints_Redemption")
+        {
+            toggleAlertBox(varList.imagePath);
+            createZeldaTextBox(varList.redemtionText)
+        }
+
+        else if (eventName === "updateGameIcons") {
+
+            updateGameIcons(varList.currentGame)
+        }
+    }
+
+    function sliceUsername(userName) {
+
+        if (userName > 18) {
+            varList.userName = userName.slice(0, 18);
+        }
+
+    }
+
     function testTheZeldaBox(){
 
-        showAndHideZeldaBox();
+        toggleAlertBox("ChannelPoints/water56x56.png");
         createZeldaTextBox('Thanks for the Follow ', 'Username')
 
     }
+
+    /*
+    function testTheZeldaBox2() {
+
+        toggleAlertBox("ChannelPoints/emoteOnly56x56.png");
+        createZeldaTextBox('Thanks for the Sub ', 'Username')
+
+    }
+    */
 
     function changePositionZelda(pos) {
 
@@ -405,77 +539,40 @@
 
     }
 
-    function recieveArray(dataArray) {
+    //this will be the dynamic UI fading
+    function fadeInAndOutUIDisplay() {
 
-        splittIncomingEvent(dataArray)
+        //if a new alert happens slide in
+        //if game is in loading / menu show perma
+        //else hide
+        //loop and check position
+
+
+        document.getElementById('AlertUI').style.transition.delay = sleepArray[100];
+        document.getElementById('AlertUI').style.transition = 'all ' + transitionTimeArray[5] + 's ease-in-out';
+        document.getElementById('AlertUI').style.transform = 'translateY(360px)';
+
+        //document.getElementById('AlertUI').style = 'height:' + heightArray[50] + 'px; width:' + widthtArray[50] + 'px;background-size: contain; background-repeat: no-repeat;float: left;';
+
+
+
+        sleep(15000).then(() => {
+
+
+            document.getElementById('rang').style.transition = 'all 7s ease-in-out';
+            document.getElementById('rang').style.transform = 'translateY(-360px)';
+
+            
+        });
+
+
     }
 
-    function webSocketEvent(eventName, varList) {
+    function toggleAlertBox(ImagePath) {
 
-        if (eventName === "Alerts_showFollowEvent") {
+        document.getElementById('iconBesideBox').style.backgroundImage = 'url(alertImages/' + ImagePath +')';
 
-            updateFollow(varList.userName);
-            reloadASingleIcon(0)
-            showAndHideZeldaBox();
-            createZeldaTextBox('Thanks for the Follow ', varList.userName)
-            //displayFollowAlert();
-        }
-
-        else if (eventName === "Alerts_showSubEvent") {
-
-            updateSub(varList.userName, varList.subAmount)
-            reloadASingleIcon(1)
-            showAndHideZeldaBox();
-            createZeldaTextBox('Welcome to the Family @', varList.userName)
-            //Gif animation video or  what ever. Currently Zelda txt box displaySubAlert();
-        }
-
-        else if (eventName === "Alerts_showHostEvent") {
-
-            showAndHideZeldaBox();
-            createZeldaTextBox('Thank you for the Host @', varList.userName)
-        }
-
-        else if (eventName === "Alerts_showRaidEvent") {
-
-            showAndHideZeldaBox();
-            createZeldaTextBox('Thank you for the Raid @', varList.userName)
-        }
-
-        else if (eventName === "Alerts_showBitEvent") {
-
-            updateBits(varList.userName, varList.bitAmount)
-            reloadASingleIcon(2)
-            showAndHideZeldaBox();
-            createZeldaTextBox('Thank you for the bits @', varList.userName)
-        }
-
-        else if (eventName === "Alerts_showDonationEvent") {
-
-            updateDonation(varList.userName, varList.donationAmount);
-            reloadASingleIcon(3)
-            showAndHideZeldaBox();
-            createZeldaTextBox('Thank you so much for the Donation ', varList.userName)
-            //showDonation()
-        }
         
-        else if (eventName === "Alerts_Init") {
-
-            initAlerts(varList.followName, varList.subName, varList.subAmount, varList.bitsName, varList.bitsAmount, varList.donationName, varList.donationAmount);
-        }
-
-        else if (eventName === "Alerts_ChangeUI_Position") {
-
-            changeUIPosition(varList.newPosition)
-        }
-
-        else if (eventName === "updateGameIcons") {
-
-            updateGameIcons(varList.currentGame)
-        }     
-    }
-
-    function showAndHideZeldaBox() {
 
         document.getElementsByClassName("dialogue-box")[0].style.visibility = 'Visible';
 

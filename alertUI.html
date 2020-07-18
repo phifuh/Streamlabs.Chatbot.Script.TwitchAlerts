@@ -283,7 +283,7 @@
         #iconBesideBox {
             display: inline-block;
             width: 50px;
-            height: 50px;
+            height: 56px;
             padding-left: 20px;
             background-position-x: center;
             background-repeat: no-repeat;
@@ -306,16 +306,8 @@
 
 <body>
 
-    <audio id="startSoundAndMusic">
-        <source src="audio/newSlotStartMusic.mp3" type="audio/mpeg">
-    </audio>
-
-    <audio id="stopSound">
-        <source src="audio/stopSound.mp3" type="audio/mpeg">
-    </audio>
-
-    <audio id="slotDrop">
-        <source src="audio/slotDrop.wav" type="audio/mpeg">
+    <audio id="drinkWaterAuio">
+        <source src="audio/drinkWaterAudio.mp3" type="audio/mpeg">
     </audio>
 
 
@@ -398,361 +390,365 @@
 
     </div>
 
-<script>
+    <script>
 
-    function sleep(time) {
-        return new Promise((resolve) => setTimeout(resolve, time));
-    }
-
-    function recieveArray(dataArray) {
-
-        splittIncomingEvent(dataArray)
-    }
-
-    function webSocketEvent(eventName, varList) {
-
-        if (eventName === "Alerts_showFollowEvent") {
-
-            sliceUsername(varList.userName);
-            updateFollow(varList.userName);
-            reloadASingleIcon(0)
-            toggleAlertBox("alertImages/DefaultAlerts/shroom.png");
-            createZeldaTextBox('Thanks for the Follow ', varList.userName)
-            //displayFollowAlert();
+        function sleep(time) {
+            return new Promise((resolve) => setTimeout(resolve, time));
         }
 
-        else if (eventName === "Alerts_showSubEvent") {
+        function recieveArray(dataArray) {
 
-            sliceUsername(varList.userName);
-            updateSub(varList.userName, varList.subAmount)
-            reloadASingleIcon(1)
-            toggleAlertBox("alertImages/DefaultAlerts/star.png");
-            createZeldaTextBox('Welcome to the Family @', varList.userName)
-            //Gif animation video or  what ever. Currently Zelda txt box displaySubAlert();
+            splittIncomingEvent(dataArray)
         }
 
-        else if (eventName === "Alerts_showBitEvent") {
+        function webSocketEvent(eventName, varList) {
 
-            sliceUsername(varList.userName);
-            updateBits(varList.userName, varList.bitAmount)
-            reloadASingleIcon(2)
-            toggleAlertBox("alertImages/DefaultAlerts/bits.png");
-            createZeldaTextBox('Thank you for the bits @', varList.userName)
-        }
+            if (eventName === "Alerts_showFollowEvent") {
 
-        else if (eventName === "Alerts_showDonationEvent") {
-
-            sliceUsername(varList.userName);
-            updateDonation(varList.userName, varList.donationAmount);
-            reloadASingleIcon(3)
-            toggleAlertBox("alertImages/DefaultAlerts/coin.png");
-            createZeldaTextBox('Thank you very much for the Donation ', varList.userName)
-            //showDonation()
-        }
-
-        else if (eventName === "Alerts_showHostEvent") {
-
-            toggleAlertBox("alertImages/DefaultAlerts/bits.png");
-            createZeldaTextBox('Thank you for the Host @', varList.userName)
-        }
-
-        else if (eventName === "Alerts_showRaidEvent") {
-
-            toggleAlertBox("alertImages/DefaultAlerts/bits.png");
-            createZeldaTextBox('Thank you for the Raid @', varList.userName)
-        }
-
-        else if (eventName === "Alerts_Init") {
-
-            if (varList.followName.length > 18) {
-                varList.followName = varList.followName.slice(0, 18);
+                sliceUsername(varList.userName);
+                updateFollow(varList.userName);
+                reloadASingleIcon(0)
+                toggleAlertBox("DefaultAlerts/shroom.png");
+                createZeldaTextBox('Thanks for the Follow ', varList.userName)
+                //displayFollowAlert();
             }
 
-            if (varList.subName.length > 18) {
-                varList.subName = varList.subName.slice(0, 18);
+            else if (eventName === "Alerts_showSubEvent") {
+
+                sliceUsername(varList.userName);
+                updateSub(varList.userName, varList.subAmount)
+                reloadASingleIcon(1)
+                toggleAlertBox("DefaultAlerts/star.png");
+                createZeldaTextBox('Welcome to the Family @', varList.userName)
+                //Gif animation video or  what ever. Currently Zelda txt box displaySubAlert();
             }
 
-            if (varList.bitsName.length > 18) {
-                varList.bitsName = varList.bitsName.slice(0, 18);
+            else if (eventName === "Alerts_showBitEvent") {
+
+                sliceUsername(varList.userName);
+                updateBits(varList.userName, varList.bitAmount)
+                reloadASingleIcon(2)
+                toggleAlertBox("DefaultAlerts/bits.png");
+                createZeldaTextBox('Thank you for the bits @', varList.userName)
             }
 
-            if (varList.donationName.length > 18) {
-                varList.donationName = varList.donationName.slice(0, 18);
+            else if (eventName === "Alerts_showDonationEvent") {
+
+                sliceUsername(varList.userName);
+                updateDonation(varList.userName, varList.donationAmount);
+                reloadASingleIcon(3)
+                toggleAlertBox("DefaultAlerts/coin.png");
+                createZeldaTextBox('Thank you very much for the Donation ', varList.userName)
+                //showDonation()
             }
 
-            initAlerts(varList.followName, varList.subName, varList.subAmount, varList.bitsName, varList.bitsAmount, varList.donationName, varList.donationAmount);
+            else if (eventName === "Alerts_showHostEvent") {
+
+                toggleAlertBox("DefaultAlerts/bits.png");
+                createZeldaTextBox('Thank you for the Host @', varList.userName)
+            }
+
+            else if (eventName === "Alerts_showRaidEvent") {
+
+                toggleAlertBox("DefaultAlerts/bits.png");
+                createZeldaTextBox('Thank you for the Raid @', varList.userName)
+            }
+
+            else if (eventName === "Alerts_Init") {
+
+                if (varList.followName.length > 18) {
+                    varList.followName = varList.followName.slice(0, 18);
+                }
+
+                if (varList.subName.length > 18) {
+                    varList.subName = varList.subName.slice(0, 18);
+                }
+
+                if (varList.bitsName.length > 18) {
+                    varList.bitsName = varList.bitsName.slice(0, 18);
+                }
+
+                if (varList.donationName.length > 18) {
+                    varList.donationName = varList.donationName.slice(0, 18);
+                }
+
+                initAlerts(varList.followName, varList.subName, varList.subAmount, varList.bitsName, varList.bitsAmount, varList.donationName, varList.donationAmount);
+            }
+
+            else if (eventName === "Alerts_ChangeUI_Position") {
+
+                changeUIPosition(varList.newPosition)
+            }
+
+            else if (eventName === "ChannelPoints_Redemption") {
+
+                toggleAlertBox(varList.imagePath);
+                createZeldaTextBox(varList.redemtionText)
+
+                if (varList.redemtionTitle == "Drink Water") {
+
+                    document.getElementById('drinkWaterAuio').play();
+                }
+            }
+
+            else if (eventName === "updateGameIcons") {
+
+                updateGameIcons(varList.currentGame)
+            }
         }
 
-        else if (eventName === "Alerts_ChangeUI_Position") {
+        function sliceUsername(userName) {
 
-            changeUIPosition(varList.newPosition)
-        }
-
-        else if (eventName === "ChannelPoints_Redemption")
-        {
-            toggleAlertBox(varList.imagePath);
-            createZeldaTextBox(varList.redemtionText)
-        }
-
-        else if (eventName === "updateGameIcons") {
-
-            updateGameIcons(varList.currentGame)
-        }
-    }
-
-    function sliceUsername(userName) {
-
-        if (userName > 18) {
-            varList.userName = userName.slice(0, 18);
-        }
-
-    }
-
-    function testTheZeldaBox(){
-
-        toggleAlertBox("ChannelPoints/water56x56.png");
-        createZeldaTextBox('Thanks for the Follow ', 'Username')
-
-    }
-
-    /*
-    function testTheZeldaBox2() {
-
-        toggleAlertBox("ChannelPoints/emoteOnly56x56.png");
-        createZeldaTextBox('Thanks for the Sub ', 'Username')
-
-    }
-    */
-
-    function changePositionZelda(pos) {
-
-        if (pos == "Bot") {
-
-            document.getElementById('dialogue-box').style = 'left:unset;right:0;top:unset;bot:0;width: 470px;';
+            if (userName > 18) {
+                varList.userName = userName.slice(0, 18);
+            }
 
         }
-        else {
 
-            document.getElementById('AlertUI').style = 'left:unset;right:0;top:unset;bot:0;width: 470px;';
-            document.getElementById('follow').style = 'padding-left:unset';
-        }
+        function testTheZeldaBox() {
 
-    }
-
-    //this will be the dynamic UI fading
-    function fadeInAndOutUIDisplay() {
-
-        //if a new alert happens slide in
-        //if game is in loading / menu show perma
-        //else hide
-        //loop and check position
-
-
-        document.getElementById('AlertUI').style.transition.delay = sleepArray[100];
-        document.getElementById('AlertUI').style.transition = 'all ' + transitionTimeArray[5] + 's ease-in-out';
-        document.getElementById('AlertUI').style.transform = 'translateY(360px)';
-
-        //document.getElementById('AlertUI').style = 'height:' + heightArray[50] + 'px; width:' + widthtArray[50] + 'px;background-size: contain; background-repeat: no-repeat;float: left;';
-
-
-
-        sleep(15000).then(() => {
-
-
-            document.getElementById('rang').style.transition = 'all 7s ease-in-out';
-            document.getElementById('rang').style.transform = 'translateY(-360px)';
-
-            
-        });
-
-
-    }
-
-    function toggleAlertBox(ImagePath) {
-
-        document.getElementById('iconBesideBox').style.backgroundImage = 'url(alertImages/' + ImagePath +')';
-
-        
-
-        document.getElementsByClassName("dialogue-box")[0].style.visibility = 'Visible';
-
-        sleep(15000).then(() => {
-            document.getElementsByClassName("dialogue-box")[0].style.visibility = 'Hidden';
-        });
-        
-    }
-
-    function changeUIPosition(newPosition) {
-
-        if (newPosition == "BotRight") {
-            document.getElementById('AlertUI').style = 'left:unset;right:0;top:unset;bot:0;width: 470px;';
-            document.getElementById('follow').style = 'padding-left:unset';
-        }
-        else if (newPosition == "BotLeft") {
-            document.getElementById('AlertUI').style = 'left:0;right:unset;top:unset;bot:0;width: 470px;';
-            document.getElementById('follow').style = 'padding-left:unset';
+            toggleAlertBox("ChannelPoints/water56x56.png");
+            createZeldaTextBox('Thanks for the Follow ', 'Username')
 
         }
-        else if (newPosition == "Top") {
-            document.getElementById('AlertUI').style = 'left:unset;right:unset;bot:unset;top:0;width: unset;';
-            document.getElementById('follow').style = 'padding-left:40px';
-
-        }
-        else if (newPosition == "TopLeft") {
-            document.getElementById('AlertUI').style = 'left:0;right:unset;top:0;bot:unset;width: 470px;';
-            document.getElementById('follow').style = 'padding-left:unset';
-
-        }
-        else if (newPosition == "Bot") {
-            document.getElementById('AlertUI').style = 'left:unset;right:unset;bot:0;top:unset;width: unset;';
-            document.getElementById('follow').style = 'padding-left:40px';
-        }
-        else {
-            document.getElementById('AlertUI').style = 'left:unset;right:unset;bot:unset;top:0;width: unset;';
-            document.getElementById('follow').style = 'padding-left:40px';
-        }
-
-    }
-
-    function initAlerts(followName, subName, subAmount, bitsName, bitsAmount, donationName, donationAmount) {
-        followNameSpan = document.getElementById('followName');
-        followNameSpan.innerHTML = followName;
-
-        subNameSpan = document.getElementById('subName');
-        subNameSpan.innerHTML = subName + " " + subAmount + "x";
-
-        bitsNameSpan = document.getElementById('bitsName');
-        bitsNameSpan.innerHTML = + bitsAmount + " " + bitsName;
-
-        donationNameSpan = document.getElementById('donationName');
-        donationNameSpan.innerHTML = donationAmount + " " + donationName;
-    }
-
-    function updateFollow(followerUsername) {
-
-        followNameSpan = document.getElementById('followName');
-        followNameSpan.innerHTML = followerUsername;
-
-    }
-
-    function updateSub(subUsername, subAmount) {
-
-        subNameSpan = document.getElementById('subName');
-        subNameSpan.innerHTML = subUsername + " " + subAmount + "x";
-
-    }
-
-    function updateBits(bitUsername, bitAmount) {
-
-        subNameSpan = document.getElementById('bitsName');
-        subNameSpan.innerHTML = bitUsername + " " + bitAmount ;
-
-    }
-
-    function updateDonation(donationUserName, donationAmount) {
-
-        followNameSpan = document.getElementById('donationName');
-        followNameSpan.innerHTML = donationUserName + " " + donationAmount + "€";;
-
-    }
-
-    function showDonation() {
 
         /*
-        <video id="donationVideo" autoplay width="1920" height="1035">
-            <source src="video/Ring-Drop-Dono-Vid.webm" type="video/webm">
-        </video>
+        function testTheZeldaBox2() {
+
+            toggleAlertBox("ChannelPoints/emoteOnly56x56.png");
+            createZeldaTextBox('Thanks for the Sub ', 'Username')
+
+        }
         */
 
-        videoFrame = document.getElementById('donationVideoFrame');
-        var vidElemement = document.createElement("video");
+        function changePositionZelda(pos) {
 
-        var sourceNew = document.createElement("source");
-        sourceNew.type = "video/mp4";
-        sourceNew.src = 'video/Ring-Drop-Dono-Vid.webm';
-        sourceNew.autobuffer = true;
+            if (pos == "Bot") {
 
-        vidElemement.id = "donationVideo";
-        vidElemement.width = 1920;
-        vidElemement.height = 1035;
-        vidElemement.volume = 0;
-        //vidElemement1.autoplay = true;
+                document.getElementById('dialogue-box').style = 'left:unset;right:0;top:unset;bot:0;width: 470px;';
 
-        videoFrame.appendChild(vidElemement);
-        vidElemement.appendChild(sourceNew);
+            }
+            else {
 
-        var video = document.getElementById("donationVideo");
-        video.playbackRate = 0.4;
-        video.play();
+                document.getElementById('AlertUI').style = 'left:unset;right:0;top:unset;bot:0;width: 470px;';
+                document.getElementById('follow').style = 'padding-left:unset';
+            }
 
-        /*
-        var AudioCoin = document.getElementById("slotDrop");
-        sleep(4000).then(() => {
-
-            AudioCoin.playbackRate = 0.8;
-            AudioCoin.play();
-            //AudioCoin.loop = true;
-        });
-        */
-        //sleep(8000).then(() => {
-
-        //    AudioCoin.loop = false;
-        //});
-    }
-
-    function updateGameIcons(currentGame)
-    {
-
-        var eventName = ['followIcon', 'subIcon', 'bitsIcon', 'donationIcon'];
-        var eventIcon = ['followIconAnimation', 'subIconAnimation', 'bitsIconAnimation', 'donationIconAnimation'];
-
-        if (currentGame == 'Zelda Ocarania of time') {
-
-            var videoFiles = ['shroom.webm', 'star.webm', 'boo.webm', 'coin.webm'];
         }
 
-        else {
+        //this will be the dynamic UI fading
+        function fadeInAndOutUIDisplay() {
 
-            var videoFiles = ['shroom.webm', 'star.webm', 'boo.webm', 'coin.webm'];
+            //if a new alert happens slide in
+            //if game is in loading / menu show perma
+            //else hide
+            //loop and check position
+
+
+            document.getElementById('AlertUI').style.transition.delay = sleepArray[100];
+            document.getElementById('AlertUI').style.transition = 'all ' + transitionTimeArray[5] + 's ease-in-out';
+            document.getElementById('AlertUI').style.transform = 'translateY(360px)';
+
+            //document.getElementById('AlertUI').style = 'height:' + heightArray[50] + 'px; width:' + widthtArray[50] + 'px;background-size: contain; background-repeat: no-repeat;float: left;';
+
+
+
+            sleep(15000).then(() => {
+
+
+                document.getElementById('rang').style.transition = 'all 7s ease-in-out';
+                document.getElementById('rang').style.transform = 'translateY(-360px)';
+
+
+            });
+
+
         }
-        
-        x = 0
-        while(x < 4){
 
-            document.getElementById(eventIcon[x]).remove();
+        function toggleAlertBox(ImagePath) {
 
-            videoFrame = document.getElementById(eventName[x]);
-            var vidElemementNew = document.createElement("video");
+            document.getElementById('iconBesideBox').style.backgroundImage = 'url(alertImages/' + ImagePath + ')';
+
+
+
+            document.getElementsByClassName("dialogue-box")[0].style.visibility = 'Visible';
+
+            sleep(15000).then(() => {
+                document.getElementsByClassName("dialogue-box")[0].style.visibility = 'Hidden';
+            });
+
+        }
+
+        function changeUIPosition(newPosition) {
+
+            if (newPosition == "BotRight") {
+                document.getElementById('AlertUI').style = 'left:unset;right:0;top:unset;bot:0;width: 470px;';
+                document.getElementById('follow').style = 'padding-left:unset';
+            }
+            else if (newPosition == "BotLeft") {
+                document.getElementById('AlertUI').style = 'left:0;right:unset;top:unset;bot:0;width: 470px;';
+                document.getElementById('follow').style = 'padding-left:unset';
+
+            }
+            else if (newPosition == "Top") {
+                document.getElementById('AlertUI').style = 'left:unset;right:unset;bot:unset;top:0;width: unset;';
+                document.getElementById('follow').style = 'padding-left:40px';
+
+            }
+            else if (newPosition == "TopLeft") {
+                document.getElementById('AlertUI').style = 'left:0;right:unset;top:0;bot:unset;width: 470px;';
+                document.getElementById('follow').style = 'padding-left:unset';
+
+            }
+            else if (newPosition == "Bot") {
+                document.getElementById('AlertUI').style = 'left:unset;right:unset;bot:0;top:unset;width: unset;';
+                document.getElementById('follow').style = 'padding-left:40px';
+            }
+            else {
+                document.getElementById('AlertUI').style = 'left:unset;right:unset;bot:unset;top:0;width: unset;';
+                document.getElementById('follow').style = 'padding-left:40px';
+            }
+
+        }
+
+        function initAlerts(followName, subName, subAmount, bitsName, bitsAmount, donationName, donationAmount) {
+            followNameSpan = document.getElementById('followName');
+            followNameSpan.innerHTML = followName;
+
+            subNameSpan = document.getElementById('subName');
+            subNameSpan.innerHTML = subName + " " + subAmount + "x";
+
+            bitsNameSpan = document.getElementById('bitsName');
+            bitsNameSpan.innerHTML = + bitsAmount + " " + bitsName;
+
+            donationNameSpan = document.getElementById('donationName');
+            donationNameSpan.innerHTML = donationAmount + " " + donationName;
+        }
+
+        function updateFollow(followerUsername) {
+
+            followNameSpan = document.getElementById('followName');
+            followNameSpan.innerHTML = followerUsername;
+
+        }
+
+        function updateSub(subUsername, subAmount) {
+
+            subNameSpan = document.getElementById('subName');
+            subNameSpan.innerHTML = subUsername + " " + subAmount + "x";
+
+        }
+
+        function updateBits(bitUsername, bitAmount) {
+
+            subNameSpan = document.getElementById('bitsName');
+            subNameSpan.innerHTML = bitUsername + " " + bitAmount;
+
+        }
+
+        function updateDonation(donationUserName, donationAmount) {
+
+            followNameSpan = document.getElementById('donationName');
+            followNameSpan.innerHTML = donationUserName + " " + donationAmount + "€";;
+
+        }
+
+        function showDonation() {
+
+            /*
+            <video id="donationVideo" autoplay width="1920" height="1035">
+                <source src="video/Ring-Drop-Dono-Vid.webm" type="video/webm">
+            </video>
+            */
+
+            videoFrame = document.getElementById('donationVideoFrame');
+            var vidElemement = document.createElement("video");
 
             var sourceNew = document.createElement("source");
             sourceNew.type = "video/mp4";
-            sourceNew.src = 'video/' + videoFiles[x];
+            sourceNew.src = 'video/Ring-Drop-Dono-Vid.webm';
             sourceNew.autobuffer = true;
 
-            vidElemementNew.id = eventIcon[x];
-            vidElemementNew.width = 36;
-            vidElemementNew.height = 36;
-            vidElemementNew.volume = 0;
+            vidElemement.id = "donationVideo";
+            vidElemement.width = 1920;
+            vidElemement.height = 1035;
+            vidElemement.volume = 0;
+            //vidElemement1.autoplay = true;
 
-            videoFrame.appendChild(vidElemementNew);
-            vidElemementNew.appendChild(sourceNew);
+            videoFrame.appendChild(vidElemement);
+            vidElemement.appendChild(sourceNew);
 
-            playVideoAuto = document.getElementById(eventIcon[x]);
-            playVideoAuto.play();
+            var video = document.getElementById("donationVideo");
+            video.playbackRate = 0.4;
+            video.play();
 
-            x += 1
+            /*
+            var AudioCoin = document.getElementById("slotDrop");
+            sleep(4000).then(() => {
+
+                AudioCoin.playbackRate = 0.8;
+                AudioCoin.play();
+                //AudioCoin.loop = true;
+            });
+            */
+            //sleep(8000).then(() => {
+
+            //    AudioCoin.loop = false;
+            //});
         }
 
-    
+        function updateGameIcons(currentGame) {
+
+            var eventName = ['followIcon', 'subIcon', 'bitsIcon', 'donationIcon'];
+            var eventIcon = ['followIconAnimation', 'subIconAnimation', 'bitsIconAnimation', 'donationIconAnimation'];
+
+            if (currentGame == 'Zelda Ocarania of time') {
+
+                var videoFiles = ['shroom.webm', 'star.webm', 'boo.webm', 'coin.webm'];
+            }
+
+            else {
+
+                var videoFiles = ['shroom.webm', 'star.webm', 'boo.webm', 'coin.webm'];
+            }
+
+            x = 0
+            while (x < 4) {
+
+                document.getElementById(eventIcon[x]).remove();
+
+                videoFrame = document.getElementById(eventName[x]);
+                var vidElemementNew = document.createElement("video");
+
+                var sourceNew = document.createElement("source");
+                sourceNew.type = "video/mp4";
+                sourceNew.src = 'video/' + videoFiles[x];
+                sourceNew.autobuffer = true;
+
+                vidElemementNew.id = eventIcon[x];
+                vidElemementNew.width = 36;
+                vidElemementNew.height = 36;
+                vidElemementNew.volume = 0;
+
+                videoFrame.appendChild(vidElemementNew);
+                vidElemementNew.appendChild(sourceNew);
+
+                playVideoAuto = document.getElementById(eventIcon[x]);
+                playVideoAuto.play();
+
+                x += 1
+            }
+
+
         }
 
-    function reloadASingleIcon(eventNumber) {
+        function reloadASingleIcon(eventNumber) {
 
-        var eventIcon = ['followIconAnimation', 'subIconAnimation', 'bitsIconAnimation', 'donationIconAnimation'];
+            var eventIcon = ['followIconAnimation', 'subIconAnimation', 'bitsIconAnimation', 'donationIconAnimation'];
 
-        document.getElementById(eventIcon[eventNumber]).load();
+            document.getElementById(eventIcon[eventNumber]).load();
 
-    }
+        }
 
     </script>
 

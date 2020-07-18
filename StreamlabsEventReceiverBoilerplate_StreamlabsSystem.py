@@ -147,8 +147,6 @@ def Execute(data):
 
     if data.IsChatMessage() and data.GetParam(0).lower() == "!b":
         
-
-
         donationName = "Kobi QQ"
         donationAmount = 20
         eventList = []

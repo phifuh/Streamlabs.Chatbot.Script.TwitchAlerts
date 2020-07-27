@@ -581,31 +581,29 @@
 
         function changeUIPosition(newPosition) {
 
-            if (newPosition == "BotRight") {
-                document.getElementById('AlertUI').style = 'left:unset;right:0;top:unset;bot:0;width: 470px;';
+            if (newPosition == "botright") {
+                document.getElementById('AlertUI').style = 'left:unset;right:0;top:unset;bot:0;width: 470px;  display:unset';
                 document.getElementById('follow').style = 'padding-left:unset';
             }
-            else if (newPosition == "BotLeft") {
-                document.getElementById('AlertUI').style = 'left:0;right:unset;top:unset;bot:0;width: 470px;';
+            else if (newPosition == "botleft") {
+                document.getElementById('AlertUI').style = 'left:0;right:unset;top:unset;bot:0;width: 470px;  display:unset';
                 document.getElementById('follow').style = 'padding-left:unset';
-
             }
-            else if (newPosition == "Top") {
-                document.getElementById('AlertUI').style = 'left:unset;right:unset;bot:unset;top:0;width: unset;';
+            else if (newPosition == "topleft") {
+                document.getElementById('AlertUI').style = 'left:0; right:unset; top:0; bot:unset; width: 470px; display:unset';
+                document.getElementById('follow').style = 'padding-left:unset';
+            }
+            else if (newPosition == "top") {
+                document.getElementById('AlertUI').style = 'left:unset;right:unset;bot:unset;top:0;width: 470px;height:47px; display:inline-flex ';
                 document.getElementById('follow').style = 'padding-left:40px';
-
             }
-            else if (newPosition == "TopLeft") {
-                document.getElementById('AlertUI').style = 'left:0;right:unset;top:0;bot:unset;width: 470px;';
-                document.getElementById('follow').style = 'padding-left:unset';
 
-            }
-            else if (newPosition == "Bot") {
-                document.getElementById('AlertUI').style = 'left:unset;right:unset;bot:0;top:unset;width: unset;';
+            else if (newPosition == "bot") {
+                document.getElementById('AlertUI').style = 'left:unset;right:unset;bot:0;top:unset;width: unset;  display:inline-flex ';
                 document.getElementById('follow').style = 'padding-left:40px';
             }
             else {
-                document.getElementById('AlertUI').style = 'left:unset;right:unset;bot:unset;top:0;width: unset;';
+                document.getElementById('AlertUI').style = 'left:unset;right:unset;bot:unset;top:0;width: 470px;height:47px; display:inline-flex ';
                 document.getElementById('follow').style = 'padding-left:40px';
             }
 

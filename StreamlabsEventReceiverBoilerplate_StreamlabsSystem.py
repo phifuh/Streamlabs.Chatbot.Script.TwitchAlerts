@@ -66,9 +66,9 @@ class Settings:
             self.reSubMessage = "Resub!"
             self.wbSubMessage = "Welcome Back Sub!"
             self.activateBitMessage = True
-            self.bitsMessage = "Bits Test"
+            self.bitsMessage = "Thanks a lot for Bits {0}"
             self.activateHostMessage = True
-            self.hostMessage = "Host Test"
+            self.hostMessage = "Thanks a lot for the Host {0}"
             self.activateRaidMessage = True
             self.raidMessage = "Raid Test"
             self.activateDonationMessage = True

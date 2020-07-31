@@ -22,7 +22,7 @@ import sqlite3
 clr.AddReferenceToFileAndPath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "StreamlabsEventReceiver.dll"))
 from StreamlabsEventReceiver import StreamlabsEventClient
 
-clr.AddReferenceToFileAndPath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "../Moduls/basicFunctionality/bin/Debug/netstandard2.0/basicFunctionality.dll"))
+clr.AddReferenceToFileAndPath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "../globalFiles/Moduls/basicFunctionality/bin/Debug/netstandard2.0/basicFunctionality.dll"))
 from basicFunctions import *
 
 
@@ -145,7 +145,7 @@ def Init():
 
 def Execute(data):
 
-    if data.IsChatMessage() and data.GetParam(0).lower() == "!b":
+    if data.IsChatMessage() and data.GetParam(0).lower() == "!testb":
         
         donationName = "Kobi QQ"
         donationAmount = 20
@@ -159,7 +159,7 @@ def Execute(data):
 
         Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
 
-	return
+    return
 
 def Tick():
 	return

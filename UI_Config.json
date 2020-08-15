@@ -48,7 +48,7 @@
   "reSubMessage": {
     "type": "textbox",
     "label": "Resub",
-    "value": "Thank you for your continious support! @{0}",
+    "value": "Thank you for your continuous support! @{0}",
     "tooltip": "{0} = userName \nSend a Stream Message to the chat because of first Subscribe",
     "group": "Sub"
   },

@@ -159,6 +159,15 @@ def Execute(data):
 
         Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
 
+    if data.IsChatMessage() and data.GetParam(0).lower() == "!testc":
+        
+        Name = "Kobi QQ"
+        Months = 20
+
+
+        Parent.Log(ScriptName,str("subscription", "{0} resubscribed for {1} months total!" .format(Name, Months)))
+        basic.streamWhisper(Parent,"kobiqq",str("subscription {0} resubscribed for {1} months Test!".format(Name, Months)))
+
     return
 
 def Tick():
@@ -204,12 +213,14 @@ def EventReceiverEvent(sender, args):
                     Parent.Log(ScriptName,"resub streak 0")
 
                     if MySettings.activateSubscribeMessage:
-                        basic.streamMessage(Parent,str(MySettings.reSubMessage.format(message.Name)))
-                        #I think there was a bug in the basic.Whispermessage
-                        Parent.Log(ScriptName,str("subscription", "{0} resubscribed for {1} months total!".format(message.Name, message.Months)))
-                        basic.streamWhisper(Parent,"kobiqq",str("subscription {0} resubscribed for {1} months Test!".format(message.Name, message.Months)))
 
-                        Parent.Log(ScriptName,"resub streak 1")
+                        basic.streamMessage(Parent,str(MySettings.reSubMessage.format(message.Name)))
+
+                        #I think there was a bug in the basic.Whispermessage
+                        #Parent.Log(ScriptName,str("subscription", "{0} resubscribed for {1} months total!".format(message.Name, message.Months)))
+                        #basic.streamWhisper(Parent,"kobiqq",str("subscription {0} resubscribed for {1} months Test!".format(message.Name, message.Months)))
+                        
+                        #Parent.Log(ScriptName,"resub streak 1")
 
 
                     Parent.Log(ScriptName,"resub streak 2")
@@ -233,6 +244,7 @@ def EventReceiverEvent(sender, args):
                     insertProfileData(userID,str(subName),"sub",str(message.Months))
 
                     Parent.Log(ScriptName,"resub streak 4")
+                    Parent.Log(ScriptName,str(message.Months))
 
                 elif message.SubType == "subscriber" and message.Months >= 1:
 
@@ -240,10 +252,10 @@ def EventReceiverEvent(sender, args):
                     Parent.Log(ScriptName,"resub 0")
 
                     if MySettings.activateSubscribeMessage:
-                        basic.streamMessage(Parent,str(MySettings.wbSubMessage.format(message.Name)))
+                        basic.streamMessage(Parent,str(MySettings.wbSubMessage.format(message.Name, message.Months)))
 
-                        Parent.Log(ScriptName,str("subscription", "{0} resubscribed for {1} months total!".format(message.Name, message.Months)))
-                        basic.streamWhisper(Parent,"kobiqq",str("subscription {0} resubscribed for {1} months Test!".format(message.Name, message.Months)))
+                        #Parent.Log(ScriptName,str("subscription", "{0} resubscribed for {1} months total!".format(message.Name, message.Months)))
+                        #basic.streamWhisper(Parent,"kobiqq",str("subscription {0} resubscribed for {1} months Test!".format(message.Name, message.Months)))
 
                         Parent.Log(ScriptName,"resub 1")
                     

@@ -1,10 +1,6 @@
 ﻿<!DOCTYPE HTML>
-<html>
-<head>
 
-    <audio id="audio-source1" src="ZeldaTextBox/BlipV1.wav" preload="auto" volume="0.0"></audio>
-    <audio id="audio-source2" src="ZeldaTextBox/BlipV1.wav" preload="auto" volume="0.0"></audio>
-    <audio id="audio-source3" src="ZeldaTextBox/BlipV1.wav" preload="auto" volume="0.0"></audio>
+<head>
 
     <meta charset="UTF-8">
     <title>UI</title>
@@ -16,9 +12,7 @@
     <script src="../globalFiles/commonUsedFunctions.js"></script>
     <script src="ZeldaTextBox/dialogue.js"></script>
 
-
     <style>
-
         #AlertUI {
             /*width: 460px;
 
@@ -157,7 +151,6 @@
             vertical-align: top;
             padding-top: 6px;
             font-size: 28px;
-            
         }
 
         #donationName {
@@ -173,17 +166,18 @@
             /*display: flex;
             flex-direction: column;
             justify-content: space-between;*/
-
             height: 1060px;
             width: 1920px;
         }
 
-        @font-face { font-family: 'MyFont'; src: url('ZeldaTextBox/ZeldaOracles.ttf') format('truetype'); }
+        @font-face {
+            font-family: 'MyFont';
+            src: url('ZeldaTextBox/ZeldaOracles.ttf') format('truetype');
+        }
 
 
         /*#region zelda Alert box css*/
         .dialogue-box {
-
             display: flex;
             visibility: hidden;
             flex-direction: column;
@@ -295,21 +289,22 @@
             min-width: 400px;
             max-width: 400px;
             position: absolute;
-            margin-left:50px;
-            text-align:center;
+            margin-left: 50px;
+            text-align: center;
         }
         /*#endregion  zelda Alert box ending*/
 
     </style>
 </head>
 
+<audio id="audio-source1" src="ZeldaTextBox/BlipV1.wav" preload="auto" volume="0.0"></audio>
+<audio id="audio-source2" src="ZeldaTextBox/BlipV1.wav" preload="auto" volume="0.0"></audio>
+<audio id="audio-source3" src="ZeldaTextBox/BlipV1.wav" preload="auto" volume="0.0"></audio>
+
+<audio id="drinkWaterAudio" src="audio/drinkWaterAudio.mp3"></audio>
+
 
 <body>
-
-    <audio id="drinkWaterAuio">
-        <source src="audio/drinkWaterAudio.mp3" type="audio/mpeg">
-    </audio>
-
 
     <div id="MainFrame" style="width:1900px;height:1060px;display:block;">
 
@@ -391,6 +386,7 @@
     </div>
 
     <script>
+
 
         function sleep(time) {
             return new Promise((resolve) => setTimeout(resolve, time));
@@ -480,6 +476,11 @@
                 changeUIPosition(varList.newPosition)
             }
 
+            else if (eventName === "changeUIVisibility") {
+
+                UIVisability(varList.UIvisibility)
+            }
+
             else if (eventName === "ChannelPoints_Redemption") {
 
                 toggleAlertBox(varList.imagePath);
@@ -487,7 +488,9 @@
 
                 if (varList.redemtionTitle == "Drink Water") {
 
-                    document.getElementById('drinkWaterAuio').play();
+                    var audio = document.getElementById('drinkWaterAudio');
+                    audio.volume = 0.2;
+                    audio.play();
                 }
             }
 
@@ -502,14 +505,12 @@
             if (userName > 18) {
                 varList.userName = userName.slice(0, 18);
             }
-
         }
 
         function testTheZeldaBox() {
 
             toggleAlertBox("ChannelPoints/water56x56.png");
             createZeldaTextBox('Thanks for the Follow ', 'Username')
-
         }
 
         /*
@@ -526,24 +527,24 @@
             if (pos == "Bot") {
 
                 document.getElementById('dialogue-box').style = 'left:unset;right:0;top:unset;bot:0;width: 470px;';
-
             }
             else {
 
                 document.getElementById('AlertUI').style = 'left:unset;right:0;top:unset;bot:0;width: 470px;';
                 document.getElementById('follow').style = 'padding-left:unset';
             }
+        }
 
+        function UIVisability(UIvisibility) {
+
+            document.getElementById('AlertUI-box').style.visibility = UIvisibility;
         }
 
         //this will be the dynamic UI fading
         function fadeInAndOutUIDisplay() {
 
             //if a new alert happens slide in
-            //if game is in loading / menu show perma
-            //else hide
             //loop and check position
-
 
             document.getElementById('AlertUI').style.transition.delay = sleepArray[100];
             document.getElementById('AlertUI').style.transition = 'all ' + transitionTimeArray[5] + 's ease-in-out';
@@ -551,14 +552,10 @@
 
             //document.getElementById('AlertUI').style = 'height:' + heightArray[50] + 'px; width:' + widthtArray[50] + 'px;background-size: contain; background-repeat: no-repeat;float: left;';
 
-
-
             sleep(15000).then(() => {
-
 
                 document.getElementById('rang').style.transition = 'all 7s ease-in-out';
                 document.getElementById('rang').style.transform = 'translateY(-360px)';
-
 
             });
 
@@ -752,4 +749,3 @@
 
 
 </body>
-</html >

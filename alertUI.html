@@ -476,10 +476,11 @@
                 changeUIPosition(varList.newPosition)
             }
 
-            else if (eventName === "changeUIVisibility") {
+            else if (eventName === "Alerts_ToggleUI_Visibility") {
 
-                UIVisability(varList.UIvisibility)
+                toggleUIvisibilit(varList.UIvisibility)
             }
+
 
             else if (eventName === "ChannelPoints_Redemption") {
 
@@ -535,9 +536,10 @@
             }
         }
 
-        function UIVisability(UIvisibility) {
+        function toggleUIvisibilit(visibility) {
 
-            document.getElementById('AlertUI-box').style.visibility = UIvisibility;
+
+            document.getElementById('AlertUI').style.visibility = visibility;
         }
 
         //this will be the dynamic UI fading

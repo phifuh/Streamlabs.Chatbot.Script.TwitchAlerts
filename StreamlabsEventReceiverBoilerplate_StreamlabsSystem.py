@@ -25,7 +25,7 @@ from StreamlabsEventReceiver import StreamlabsEventClient
 clr.AddReferenceToFileAndPath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "../globalFiles/Moduls/basicFunctionality/bin/Debug/netstandard2.0/basicFunctionality.dll"))
 from basicFunctions import *
 
-
+from datetime import datetime
 #---------------------------------------
 # Script Information
 #---------------------------------------
@@ -177,16 +177,21 @@ def Tick():
 # Script Functions
 #---------------------------------------
 def EventReceiverConnected(sender, args):
-	#Parent.Log(ScriptName, "Connected 22")
-	return
+    now = datetime.now()
+    current_time = now.strftime("%H:%M:%S")
+    Parent.Log(ScriptName, "Connected at " + str(current_time))
+    return
 
 def EventReceiverDisconnected(senmder, args):
-	Parent.Log(ScriptName, "Disconnected")
+    now = datetime.now()
+    current_time = now.strftime("%H:%M:%S")
+    Parent.Log(ScriptName, "Disconnected at " + str(current_time))
 
 def EventReceiverEvent(sender, args):
     evntdata = args.Data
 
     if evntdata and evntdata.For == "twitch_account":
+
         if evntdata.Type == "follow":
             for message in evntdata.Message:
 
@@ -302,11 +307,6 @@ def EventReceiverEvent(sender, args):
                     userID = twitchFuncs.getTwitchUserID(Parent,str(message.Name))
                     insertProfileData(userID,str(subName),"sub",str(1))
 
-                    # FIX 
-                    #deutsch + englisch message  && #alle sub perks auf meiner website + link
-                    #Parent.SendStreamWhisper(message.Name,"Hey, Willkommen im Sub-Club. Ich hoffe, du wirst Freude an deinen neuen Emotes haben! kobiqqLove kobiqqChampion kobiqqGG. Vergiss nicht dein Discord mit Twitch zu verknuepfen, um alle Sub-perks nutzen zu koennen. Kobi!")
-                    
-
         elif evntdata.Type == "bits":
 
             for message in evntdata.Message:
@@ -342,9 +342,7 @@ def EventReceiverEvent(sender, args):
                     
                 userID = twitchFuncs.getTwitchUserID(Parent,str(message.Name))
                 insertProfileData(userID,str(message.Name),"bits",str(bitAmount))
-
-                
-
+              
         elif evntdata.Type == "host":
 
             for message in evntdata.Message:
@@ -367,7 +365,7 @@ def EventReceiverEvent(sender, args):
                 updateLatestNotification("host",hostName,hostViewers)
                 userID = twitchFuncs.getTwitchUserID(Parent,str(message.Name))
 
-
+        #check iif this is working
         elif evntdata.Type == "raid":
 
             for message in evntdata.Message:
@@ -375,7 +373,7 @@ def EventReceiverEvent(sender, args):
                 raidViewers  = message.Raiders  
 
                 if MySettings.activateRaidMessage:
-                    Parent.SendStreamMessage ("Oh wow a raid with " + str(raidViewers) + " by " + str(message.Name) + ", get some hype going !hype?!" )
+                    Parent.SendStreamMessage ("Woah a raid with " + str(raidViewers) + " by " + str(message.Name) + ", thanks a lot <3!" )
                 updateLatestNotification("raid",raidName,raidViewers)
 
                 eventList = []

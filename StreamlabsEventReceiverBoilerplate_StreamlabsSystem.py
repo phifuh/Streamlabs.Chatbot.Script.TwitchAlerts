@@ -42,8 +42,6 @@ Version = "1.2"
 m_ConfigFile = os.path.join(os.path.dirname(__file__), "Settings/settings.json")
 m_ConfigFileJs = os.path.join(os.path.dirname(__file__), "Settings/settings.js")
 
-PrestigeFile = os.path.join(os.path.dirname(__file__), "testFile.txt")
-
 EventReceiver = None
 #---------------------------------------
 # Classes Tries to load settings from file if given The 'default' variable names need to match UI_Config
@@ -190,7 +188,11 @@ def EventReceiverDisconnected(senmder, args):
 def EventReceiverEvent(sender, args):
     evntdata = args.Data
 
+    Parent.Log("bits",str(evntdata))
+
     if evntdata and evntdata.For == "twitch_account":
+
+        Parent.Log("bits",str(evntdata.Type))
 
         if evntdata.Type == "follow":
             for message in evntdata.Message:
@@ -311,14 +313,20 @@ def EventReceiverEvent(sender, args):
 
             for message in evntdata.Message:
 
+                Parent.Log("bits","0")
                 bitAmount = message.Amount
                 bitMessage = message.Message 
 
+                Parent.Log("bits","1")
+
                 if MySettings.activateBitMessage:
                     basic.streamMessage(Parent,str(MySettings.bitsMessage.format(message.Name)))
-                    basic.streamWhisper(Parent,"kobiqq",str("Bit Test succesfull" + str(MySettings.bitsMessage.format(message.Name))))
+                    Parent.Log("bits","2")
+                    #basic.streamWhisper(Parent,"kobiqq",str("Bit Test succesfull" + str(MySettings.bitsMessage.format(message.Name))))
 
                 updateLatestNotification("bits",message.Name,bitAmount)
+
+                Parent.Log("bits","3")
 
                 if MySettings.banChampWithBits:
 
@@ -395,7 +403,8 @@ def EventReceiverEvent(sender, args):
                 donationName     = message.Name
                 donationAmount = message.Amount
 
-                basic.streamWhisper(Parent,"kobiqq",str(donationName + " " + donationAmount))
+                Parent.Log("dono","2")
+                #basic.streamWhisper(Parent,"kobiqq",str(donationName + " " + donationAmount))
 
 
                 eventList = []
@@ -414,6 +423,8 @@ def EventReceiverEvent(sender, args):
                 Parent.SendStreamWhisper("kobiqq","donation Test" + str(MySettings.donation.format(message.Name)))
                 updateLatestNotification("donation",donationName,donationAmount)
                 insertProfileData(userID,message.Name,"donation",donationAmount)
+
+                updateDonationTracker()
 
 
     return
@@ -582,6 +593,21 @@ def updateGameIconInUIBar():
     eventList.append("updateGameIcons")
     varDict = {"currentGame":game}
     varList.append(varDict)
+    dict = {"eventList":eventList,"varList":varList} 
+
+    Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))   
+
+def updateDonationTracker():
+
+    #run update sql
+
+
+    eventList = []
+    varList = []
+
+    eventList.append("updateDonoBar")
+    dict = {"donationProgress":donationPercentage}
+    varList.append(dict)
     dict = {"eventList":eventList,"varList":varList} 
 
     Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))   

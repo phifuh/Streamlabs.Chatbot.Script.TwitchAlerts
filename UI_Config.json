@@ -1,11 +1,19 @@
 ﻿{
   "output_file": "Settings/settings.json",
+
+  "Zelda_AlertBox": {
+    "type": "checkbox",
+    "label": "No function",
+    "value": true,
+    "tooltip": "This has no function right now",
+    "group": ""
+  },
   "socket_token": {
     "type": "textbox",
     "label": "Streamlabs Socket Token",
-    "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbiI6IkRFMDhFOTQ4QjdFRTFBNzcwRjBBIiwicmVhZF9vbmx5Ijp0cnVlLCJwcmV2ZW50X21hc3RlciI6dHJ1ZSwidHdpdGNoX2lkIjoiMjYxOTc5NTkifQ.0kJX4Rd8USk_UYizxrAXRurFOeGCBgU8Q7C_z5Ccb9",
+    "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbiI6IjVFRjk1MjJBRDU4OTUxOUU5MEE4IiwicmVhZF9vbmx5Ijp0cnVlLCJwcmV2ZW50X21hc3RlciI6dHJ1ZSwidHdpdGNoX2lkIjoiMTIzMjg4MzEzIn0.Fp1lM7cQNSZSXr4-MB7fAyL5b0LiUEtDE6YTV5-53TI",
     "tooltip": "The Streamlabs Socket Token. This can be found on the website via the left-hand side menu -> API Settings -> API Tokens.",
-    "group": ""
+    "group": "Token"
   },
   "TokenWebsite": {
     "type": "button",

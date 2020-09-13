@@ -15,5 +15,6 @@
   "activateHostMessage": true,
   "activateRaidMessage": true,
   "activateDonationMessage": true,
-  "donationMessage": "donation Test"
+  "donationMessage": "donation Test",
+  "Zelda_AlertBox": true
 };

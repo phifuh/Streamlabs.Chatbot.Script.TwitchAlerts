@@ -38,6 +38,21 @@
     "tooltip": "{0} = userName \nSend a Stream Message to the chat",
     "group": "Follow"
   },
+  "activateFollowGoal": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Activate",
+    "tooltip": "Activates the Follow Goal",
+    "group": "Follow"
+  },
+
+  "followerGoal": {
+    "type": "numberbox",
+    "label": "Goal",
+    "value": 10,
+    "tooltip": "How many Followers daily",
+    "group": "Follow"
+  },
   "activateSubscribeMessage": {
     "type": "checkbox",
     "value": true,
@@ -67,7 +82,21 @@
     "tooltip": "{0} = userName \nSend a Stream Message to the chat because of first Subscribe",
     "group": "Sub"
   },
+  "activateSubGoal": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Activate",
+    "tooltip": "Activates the Sub Goal",
+    "group": "Sub"
+  },
 
+  "subGoal": {
+    "type": "numberbox",
+    "label": "Goal",
+    "value": 1,
+    "tooltip": "How many Subs daily",
+    "group": "Sub"
+  },
   "activateBitMessage": {
     "type": "checkbox",
     "value": true,
@@ -87,6 +116,21 @@
     "label": "Bits Message",
     "value": "Bit Test",
     "tooltip": "{0} = userName \nSend a Stream Message to the chat because of Bits",
+    "group": "Bits"
+  },
+  "activateBitGoal": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Activate",
+    "tooltip": "Activates the Sub Goal",
+    "group": "Bits"
+  },
+
+  "bitGoal": {
+    "type": "numberbox",
+    "label": "Goal",
+    "value": 50,
+    "tooltip": "How many Bits daily",
     "group": "Bits"
   },
   "activateHostMessage": {
@@ -131,6 +175,151 @@
     "tooltip": "{0} = userName \nSend a Stream Message to the chat because of a donation",
     "group": "Donation"
   },
+  "activateDonationGoal": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Activate",
+    "tooltip": "Activates the Donation Goal",
+    "group": "Donation"
+  },
+
+  "donationGoal": {
+    "type": "numberbox",
+    "label": "Goal",
+    "value": 1,
+    "tooltip": "How much Donation daily",
+    "group": "Donation"
+  },
+
+  "changeUI": {
+    "type": "textbox",
+    "value": "!ui",
+    "label": "Command Name",
+    "tooltip": "Change the Alert Bar",
+    "group": "AlertBar"
+  },
+  "UI_Position": {
+    "type": "dropdown",
+    "value": "Stream Both",
+    "items": [
+      "Bot",
+      "Top",
+      "TopLeft",
+      "BotLeft",
+      "BotRight"
+    ],
+    "label": "Change Ui position",
+    "tooltip": "change the alertbox ui position",
+    "group": "AlertBar"
+  },
+  "UI_Button": {
+    "type": "button",
+    "label": "Ui per Btn",
+    "tooltip": "Change the UI with button click",
+    "function": "changeUIPositionBtn",
+    "wsevent": "",
+    "group": "AlertBar"
+  },
+
+  "OauthToken": {
+    "type": "textbox",
+    "value": "OAuth xfm9bgudqadd53a5bfwqhm7gqw12l4",
+    "label": "Ouath Token",
+    "tooltip": "Kobi´s Ouath",
+    "group": "General"
+  },
+  "runADCommand": {
+    "type": "textbox",
+    "value": "!ad",
+    "label": "Command Name",
+    "tooltip": "Make a Commercial",
+    "group": "Commercial"
+  },
+  "ADInterval": {
+    "type": "slider",
+    "label": "AD length",
+    "value": 30,
+    "min": 30,
+    "max": 180,
+    "ticks": 30,
+    "tooltip": "",
+    "group": "Commercial"
+  },
+  "commercialButton": {
+    "type": "button",
+    "label": "Run the Commercial",
+    "tooltip": "Automaticly run the Commercial",
+    "function": "runADfromUI",
+    "wsevent": "",
+    "group": "Commercial"
+  },
+  "titlePreset1": {
+    "type": "textbox",
+    "value": "Diamond  | TFT + LoL | Say hello",
+    "label": "Command Name",
+    "tooltip": "Make a Commercial",
+    "group": "Preset1"
+  },
+  "gamePreset1": {
+    "type": "textbox",
+    "value": "League of Legends",
+    "label": "Game Title",
+    "tooltip": "Make a Commercial",
+    "group": "Preset1"
+  },
+  "updateButtonPreset1": {
+    "type": "button",
+    "label": "Update Game/Title",
+    "tooltip": "Updates the game and title with Preset 1",
+    "function": "presetOne",
+    "wsevent": "",
+    "group": "Preset1"
+  },
+  "titlePreset2": {
+    "type": "textbox",
+    "value": "Diamond  | TFT + LoL | Say hello",
+    "label": "Command Name",
+    "tooltip": "Make a Commercial",
+    "group": "Preset2"
+  },
+  "gamePreset2": {
+    "type": "textbox",
+    "value": "League of Legends",
+    "label": "Game Title",
+    "tooltip": "Make a Commercial",
+    "group": "Preset2"
+  },
+  "updateButtonPreset2": {
+    "type": "button",
+    "label": "Update Game/Title",
+    "tooltip": "Updates the game and title with Preset 2",
+    "function": "presetTwo",
+    "wsevent": "",
+    "group": "Preset2"
+  },
+  "titlePreset3": {
+    "type": "textbox",
+    "value": "Diamond  | TFT + LoL | Say hello",
+    "label": "Command Name",
+    "tooltip": "Make a Commercial",
+    "group": "Preset3"
+  },
+  "gamePreset3": {
+    "type": "textbox",
+    "value": "League of Legends",
+    "label": "Game Title",
+    "tooltip": "Make a Commercial",
+    "group": "Preset3"
+  },
+  "updateButtonPreset3": {
+    "type": "button",
+    "label": "Update Game/Title",
+    "tooltip": "Updates the game and title with Preset 3",
+    "function": "presetThree",
+    "wsevent": "",
+    "group": "Preset3"
+  },
+
   "button_readme": {
     "type": "button",
     "label": "Open ReadMe File",

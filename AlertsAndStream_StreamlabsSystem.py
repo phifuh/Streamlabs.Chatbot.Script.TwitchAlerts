@@ -22,16 +22,23 @@ import sqlite3
 clr.AddReferenceToFileAndPath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "StreamlabsEventReceiver.dll"))
 from StreamlabsEventReceiver import StreamlabsEventClient
 
-clr.AddReferenceToFileAndPath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "../globalFiles/Moduls/basicFunctionality/bin/Debug/netstandard2.0/basicFunctionality.dll"))
+clr.AddReferenceToFileAndPath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "../globalFiles/Moduls/personalDll/basicFunctionality/bin/Debug/netstandard2.0/basicFunctionality.dll"))
 from basicFunctions import *
 
+clr.AddReferenceToFileAndPath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "../globalFiles/Moduls/personalDll/twitchAPI/bin/Debug/netstandard2.0/twitchAPI.dll"))
+from twitchRestAPI import *
+
+sys.path.append(os.path.join(os.path.dirname(__file__), "../globalFiles/Moduls/pythonClasses"))
+from OBSRemoteParameters import *
+
 from datetime import datetime
+from datetime import date
 #---------------------------------------
 # Script Information
 #---------------------------------------
 ScriptName = "Notifications"
 Website = "twitch.tv/kobiqq"
-Description = "Alert Notifications"
+Description = "Stream controls + Notification"
 Creator = "Global | KobiQQ"
 Version = "1.2"
 
@@ -73,6 +80,10 @@ class Settings:
             self.donation = "donation test"
             self.banChampWithBits = False
 
+            self.runADCommand = "!ad"
+            self.changeUI = "!ui"
+            self.UI_Position = "Bot"
+
 
     # Reload settings on save through UI
     def ReloadSettings(self, data):
@@ -99,15 +110,22 @@ CopyrightFile = os.path.join(os.path.dirname(__file__), "Copyright.txt")
 def Init():
 	
     """Required tick function"""
-    # Globals
-    global MySettings
-    MySettings = Settings()
 
-    global basic
-    basic = getBasicFunctions()
+    #Moduls/classes
+    global MySettings, basic, twitchAPICalls, obsRemote
     
+    MySettings = Settings()
+    basic = getBasicFunctions()
+    twitchAPICalls = StandartAPICalls()
+    obsRemote = obsRemoteClass()
+
+    global commercialActive
+    commercialActive = False
+
+    #init alert UI
     initAlerts()
     updateGameIconInUIBar()
+    initNotficationGoals()
 
 
     if not os.path.isfile(m_ConfigFile):
@@ -143,33 +161,130 @@ def Init():
 
 def Execute(data):
 
-    if data.IsChatMessage() and data.GetParam(0).lower() == "!testb":
+    if data.IsChatMessage() :
+        #and (Parent.IsLive() or not MySettings.OnlyLive)
+        userName = Parent.GetDisplayName(data.User) 
+
+        if data.GetParam(0).lower() == MySettings.runADCommand and Parent.HasPermission(data.User,"caster",userName) == True:
+
+            global adLenght
+
+            if (data.GetParam(1).lower() != None):
+                adLenght = data.GetParam(1)
+            else:
+                adLenght = 30
+
+            channelID = "26197959"
+            twitchAPICalls.runAD(Parent,str(channelID), str(adLenght))
+
+            #runAD(adLenght)
+
+            commercialActive = True
+
+            #basicFuncs.clientEvent(Parent,"sendEvent",  str(myDict))
+
+            eventList = []
+            varList = []
+
+            eventList.append("Commercial_Run")
+            dict = {}
+            varList.append(dict)
+            dict = {"eventList":eventList,"varList":varList} 
+
+            Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
+
+            obsRemote.changeToScene(Parent,"Commercial", 0)
+
+        elif data.GetParam(0).lower() == MySettings.runADCommand and Parent.HasPermission(data.User,"subscriber",userName) == True and data.GetParam(1).lower() != None:
+
+            adViewerEngageMent = data.GetParam(1)
+
+            #basicFuncs.clientEvent(Parent,"sendEvent",  str(myDict))
+
+            eventList = []
+            varList = []
+
+            eventList.append("Commercial_Run")
+            dict = {"viewerChoice":adViewerEngageMent}
+            varList.append(dict)
+            dict = {"eventList":eventList,"varList":varList} 
+
+            Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
+
+        elif data.GetParam(0).lower() == MySettings.changeUI and Parent.HasPermission(data.User,"caster",userName) == True:
+
+            UIPosition = data.GetParam(1).lower()
+
+            eventList = []
+            varList = []
+
+            eventList.append("Alerts_ChangeUI_Position")
+            dict = {"newPosition":UIPosition}
+            varList.append(dict)
+            dict = {"eventList":eventList,"varList":varList} 
+
+            Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
         
-        donationName = "Kobi QQ"
-        donationAmount = 20
-        eventList = []
-        varList = []
 
-        eventList.append("Alerts_showDonationEvent")
-        varDict = {"userName":donationName,"donationAmount":donationAmount}
-        varList.append(varDict)
-        dict = {"eventList":eventList,"varList":varList} 
-
-        Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
-
-    if data.IsChatMessage() and data.GetParam(0).lower() == "!testc":
+        elif data.GetParam(0).lower() == "!testb":
         
-        Name = "Kobi QQ"
-        Months = 20
+            donationName = "Kobi QQ"
+            donationAmount = 20
+            eventList = []
+            varList = []
+
+            eventList.append("Alerts_showDonationEvent")
+            varDict = {"userName":donationName,"donationAmount":donationAmount}
+            varList.append(varDict)
+            dict = {"eventList":eventList,"varList":varList} 
+
+            Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
+
+        elif data.GetParam(0).lower() == "!testc":
+        
+            Name = "Kobi QQ"
+            Months = 20
 
 
-        Parent.Log(ScriptName,str("subscription", "{0} resubscribed for {1} months total!" .format(Name, Months)))
-        basic.streamWhisper(Parent,"kobiqq",str("subscription {0} resubscribed for {1} months Test!".format(Name, Months)))
+            Parent.Log(ScriptName,str("subscription", "{0} resubscribed for {1} months total!" .format(Name, Months)))
+            basic.streamWhisper(Parent,"kobiqq",str("subscription {0} resubscribed for {1} months Test!".format(Name, Months)))
+
+        elif data.GetParam(0).lower() == "!uiupdate":
+
+            if (data.GetParam(1).lower() != None):
+                game = data.GetParam(1)
+            else:
+                game = "default"
+
+
+            eventList = []
+            varList = []
+
+            #TTS alert with streak
+            eventList.append("Alerts_changeUIDesign")
+            dict = {"game":game}
+            varList.append(dict)
+            dict = {"eventList":eventList,"varList":varList} 
+
+            Parent.BroadcastWsEvent("sendEvent", json.dumps(dict, ensure_ascii=False).encode('utf8'))
 
     return
 
 def Tick():
-	return
+
+    global commercialActive
+
+    if commercialActive:
+
+        #play music or minigame function which is not definied
+        if time.time() - tournyRegistrationPeriodStart < adLenght:
+            pass
+
+        else:
+            commercialActive = False
+            obsRemote.changeToScene(Parent,"Switch ingame", 0)
+
+    return
 
 #---------------------------------------
 # Script Functions
@@ -188,11 +303,9 @@ def EventReceiverDisconnected(senmder, args):
 def EventReceiverEvent(sender, args):
     evntdata = args.Data
 
-    Parent.Log("bits",str(evntdata))
-
     if evntdata and evntdata.For == "twitch_account":
 
-        Parent.Log("bits",str(evntdata.Type))
+        Parent.Log("Event type",str(evntdata.Type))
 
         if evntdata.Type == "follow":
             for message in evntdata.Message:
@@ -211,6 +324,8 @@ def EventReceiverEvent(sender, args):
                 dict = {"eventList":eventList,"varList":varList} 
 
                 Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
+
+                #updateGoal()
 
         elif evntdata.Type == "subscription":
             for message in evntdata.Message:
@@ -453,6 +568,46 @@ def updateLatestNotification(eventType,fromName,amount):
 
     return
 
+def initNotficationGoals():
+
+    rightNow = datetime.strptime(""+str(datetime.now().day)+"/"+str(datetime.now().month)+"/"+str(datetime.now().year), "%d/%m/%Y")
+
+    conn = sqlite3.connect(os.path.dirname(__file__) + "/../globalFiles/Datenbanken/streamMetaData.db")
+    c = conn.cursor()
+    try:        
+        c.execute("SELECT dailyTimestamp FROM notficationGoals WHERE id='1'")
+        row = c.fetchone()
+        
+        lastUpdatedDate  =  row[0]
+
+    except:
+        Parent.Log(ScriptName, "DB not setup? Find Code 148123")
+    finally:
+        conn.close()
+
+    comparissionDate = datetime.strptime(lastUpdatedDate, "%d/%m/%Y")
+    stringDate = ""+str(datetime.now().day)+"/"+str(datetime.now().month)+"/"+str(datetime.now().year)+""
+
+    if (rightNow - comparissionDate).days >= 1:
+
+        resetDailyGoals(stringDate)
+
+    return
+
+def resetDailyGoals(stringDate):
+
+    conn = sqlite3.connect(os.path.dirname(__file__) + "/../globalFiles/Datenbanken/streamMetaData.db")
+    c = conn.cursor()
+    try:        
+        c.execute("UPDATE notficationGoals SET dailyFollowers ='0', dailySubs ='0', dailyBits ='0', dailyDonation ='0', dailyTimestamp ='" + str(stringDate) + "' WHERE id='1'")
+        conn.commit()
+
+    except:
+        Parent.Log(ScriptName, "DB not setup? Find Code 148124")
+    finally:
+        conn.close()
+
+    return
 
 def insertProfileData(twitchID,userName,supportType,Amount):
 
@@ -611,6 +766,47 @@ def updateDonationTracker():
     dict = {"eventList":eventList,"varList":varList} 
 
     Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))   
+
+def changeUIPositionBtn():
+
+    UIPosition = MySettings.UI_Position.lower()
+
+    #basicFuncs.clientEvent(Parent,"sendEvent",  str(myDict))
+
+    eventList = []
+    varList = []
+
+    eventList.append("Alerts_ChangeUI_Position")
+    dict = {"newPosition":UIPosition}
+    varList.append(dict)
+    dict = {"eventList":eventList,"varList":varList} 
+
+    Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
+
+    return
+
+def runADfromUI():
+
+    twitchAPICalls.runAD(Parent,str(MySettings.OauthToken), str(MySettings.ADInterval))
+
+    return
+
+def presetOne():
+	
+	return
+
+def presetTwo():
+	
+	return
+
+def presetThree():
+	
+	return
+
+def updateTwitchTitleAndGame():
+
+
+    return
 
 def OpenReadMe():
 	""" Open the script readme file in users default .txt application. """

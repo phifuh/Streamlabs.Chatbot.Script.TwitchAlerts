@@ -3,7 +3,7 @@
 
   "Zelda_AlertBox": {
     "type": "checkbox",
-    "label": "No function",
+    "label": "Zelda Alert box Not implemented",
     "value": true,
     "tooltip": "This has no function right now",
     "group": ""
@@ -23,6 +23,7 @@
     "wsevent": "",
     "group": "Token"
   },
+
   "activateFollowMessage": {
     "type": "checkbox",
     "value": true,
@@ -30,7 +31,6 @@
     "tooltip": "Activates the Follow message",
     "group": "Follow"
   },
-
   "followMessage": {
     "type": "textbox",
     "label": "Message on Follow",
@@ -45,7 +45,6 @@
     "tooltip": "Activates the Follow Goal",
     "group": "Follow"
   },
-
   "followerGoal": {
     "type": "numberbox",
     "label": "Goal",
@@ -53,6 +52,7 @@
     "tooltip": "How many Followers daily",
     "group": "Follow"
   },
+
   "activateSubscribeMessage": {
     "type": "checkbox",
     "value": true,
@@ -60,7 +60,6 @@
     "tooltip": "Activates the Sub messages",
     "group": "Sub"
   },
-
   "newSubMessage": {
     "type": "textbox",
     "label": "Message on First Sub",
@@ -89,7 +88,6 @@
     "tooltip": "Activates the Sub Goal",
     "group": "Sub"
   },
-
   "subGoal": {
     "type": "numberbox",
     "label": "Goal",
@@ -97,6 +95,7 @@
     "tooltip": "How many Subs daily",
     "group": "Sub"
   },
+
   "activateBitMessage": {
     "type": "checkbox",
     "value": true,
@@ -125,7 +124,6 @@
     "tooltip": "Activates the Sub Goal",
     "group": "Bits"
   },
-
   "bitGoal": {
     "type": "numberbox",
     "label": "Goal",
@@ -133,6 +131,7 @@
     "tooltip": "How many Bits daily",
     "group": "Bits"
   },
+
   "activateHostMessage": {
     "type": "checkbox",
     "value": true,
@@ -147,6 +146,7 @@
     "tooltip": "{0} = userName \nSend a Stream Message to the chat because of a Host",
     "group": "Host"
   },
+
   "activateRaidMessage": {
     "type": "checkbox",
     "value": true,
@@ -161,6 +161,7 @@
     "tooltip": "{0} = userName \nSend a Stream Message to the chat because of a Raid",
     "group": "Raid"
   },
+
   "activateDonationMessage": {
     "type": "checkbox",
     "value": true,
@@ -182,7 +183,6 @@
     "tooltip": "Activates the Donation Goal",
     "group": "Donation"
   },
-
   "donationGoal": {
     "type": "numberbox",
     "label": "Goal",
@@ -191,6 +191,46 @@
     "group": "Donation"
   },
 
+  "donationBarActive": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Activate",
+    "tooltip": "Activates the Donation Bar",
+    "group": "DonationBar"
+  },
+  "donationBarCDTime": {
+    "type": "numberbox",
+    "value": 45,
+    "label": "Intervall between sliding in",
+    "tooltip": "After x Seconds the Donation bar is sliding in",
+    "group": "DonationBar"
+  },
+  "donationBarVisibleTime": {
+    "type": "numberbox",
+    "value": 30,
+    "label": "Intervall how long the donation bar is shown",
+    "tooltip": "After x Seconds the Donation bar is sliding out",
+    "group": "DonationBar"
+  },
+  "donationVisibility": {
+    "type": "dropdown",
+    "value": "visible",
+    "items": [
+      "visible",
+      "Hidden"
+    ],
+    "label": "Donationbar Visibility",
+    "tooltip": "Should the bar be visible?",
+    "group": "DonationBar"
+  },
+  "donationVisibilityBtn": {
+    "type": "button",
+    "label": "Donation Visibility",
+    "tooltip": "Change the Donationbar visibility",
+    "function": "donationVisibilityBtn",
+    "wsevent": "",
+    "group": "DonationBar"
+  },
   "changeUI": {
     "type": "textbox",
     "value": "!ui",

@@ -18,7 +18,7 @@
   "donationMessage": "donation Test",
   "Zelda_AlertBox": true,
   "changeUI": "!ui",
-  "UI_Position": "Bot",
+  "UI_Position": "Top",
   "OauthToken": "OAuth xfm9bgudqadd53a5bfwqhm7gqw12l4",
   "runADCommand": "!ad",
   "ADInterval": 30.0,
@@ -35,5 +35,9 @@
   "activateBitGoal": true,
   "bitGoal": 50,
   "activateDonationGoal": true,
-  "donationGoal": 1
+  "donationGoal": 1,
+  "donationBarCDTime": 180,
+  "donationBarVisibleTime": 20,
+  "donationBarActive": false,
+  "donationVisibility": "Hidden"
 };

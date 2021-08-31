@@ -22,11 +22,14 @@ import sqlite3
 clr.AddReferenceToFileAndPath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "StreamlabsEventReceiver.dll"))
 from StreamlabsEventReceiver import StreamlabsEventClient
 
-clr.AddReferenceToFileAndPath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "../globalFiles/Moduls/personalDll/basicFunctionality/bin/Debug/netstandard2.0/basicFunctionality.dll"))
-from basicFunctions import *
+clr.AddReferenceToFileAndPath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "../globalFiles/Moduls/personalDll/basicBotFunctionality/bin/Debug/netstandard2.0/coreFunctions.dll"))
+from cBotDll import *
 
 clr.AddReferenceToFileAndPath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "../globalFiles/Moduls/personalDll/twitchAPI/bin/Debug/netstandard2.0/twitchAPI.dll"))
 from twitchRestAPI import *
+
+
+
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "../globalFiles/Moduls/pythonClasses"))
 from OBSRemoteParameters import *
@@ -115,17 +118,21 @@ def Init():
     global MySettings, basic, twitchAPICalls, obsRemote
     
     MySettings = Settings()
-    basic = getBasicFunctions()
+
+    basic = cBotFunctions()
     twitchAPICalls = StandartAPICalls()
     obsRemote = obsRemoteClass()
 
     global commercialActive
     commercialActive = False
 
-    #init alert UI
-    initAlerts()
+    initEventAlertBar()
+    initDonationBar()
     updateGameIconInUIBar()
     initNotficationGoals()
+
+    #check if OBS is connected 
+    testOBSConnection()
 
 
     if not os.path.isfile(m_ConfigFile):
@@ -154,6 +161,11 @@ def Init():
     ## Auto Connect if key is given in settings
     if MySettings.socket_token:
         EventReceiver.Connect(MySettings.socket_token)
+
+    global lastTimestamp,donationBarIsHidden
+    lastTimestamp = time.time()
+
+    donationBarIsHidden = True
 
     # End of Init
     return
@@ -213,41 +225,52 @@ def Execute(data):
 
         elif data.GetParam(0).lower() == MySettings.changeUI and Parent.HasPermission(data.User,"caster",userName) == True:
 
-            UIPosition = data.GetParam(1).lower()
+            changeUI = data.GetParam(1).lower()
 
             eventList = []
             varList = []
 
-            eventList.append("Alerts_ChangeUI_Position")
-            dict = {"newPosition":UIPosition}
+            if changeUI == "on" or changeUI == "visible" or changeUI == "off" or changeUI == "hide" or changeUI == "hidden":
+
+                if changeUI == "on" or changeUI == "visible":
+                    changeUI = "Visible"
+                else:
+                    changeUI = "Hidden"
+
+                eventList.append("Alerts_ToggleUI_Visibility")
+                dict = {"UIvisibility":changeUI}
+                varList.append(dict)
+                dict = {"eventList":eventList,"varList":varList} 
+
+            else:
+
+                eventList.append("Alerts_ChangeUI_Position")
+                dict = {"UIPosition":changeUI}
+                varList.append(dict)
+                dict = {"eventList":eventList,"varList":varList} 
+
+            Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
+        
+        elif data.GetParam(0).lower() == "!dono" and Parent.HasPermission(data.User,"caster",userName) == True:
+
+            changeUI = data.GetParam(1).lower()
+
+            eventList = []
+            varList = []
+
+
+            if changeUI == "on" or changeUI == "visible":
+                changeUI = "Visible"
+            else:
+                changeUI = "Hidden"
+
+            eventList.append("Alerts_ToggleDonationUI_Visibility")
+            dict = {"donationBarvisibility":changeUI}
             varList.append(dict)
             dict = {"eventList":eventList,"varList":varList} 
 
-            Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
-        
-
-        elif data.GetParam(0).lower() == "!testb":
-        
-            donationName = "Kobi QQ"
-            donationAmount = 20
-            eventList = []
-            varList = []
-
-            eventList.append("Alerts_showDonationEvent")
-            varDict = {"userName":donationName,"donationAmount":donationAmount}
-            varList.append(varDict)
-            dict = {"eventList":eventList,"varList":varList} 
 
             Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
-
-        elif data.GetParam(0).lower() == "!testc":
-        
-            Name = "Kobi QQ"
-            Months = 20
-
-
-            Parent.Log(ScriptName,str("subscription", "{0} resubscribed for {1} months total!" .format(Name, Months)))
-            basic.streamWhisper(Parent,"kobiqq",str("subscription {0} resubscribed for {1} months Test!".format(Name, Months)))
 
         elif data.GetParam(0).lower() == "!uiupdate":
 
@@ -272,8 +295,9 @@ def Execute(data):
 
 def Tick():
 
-    global commercialActive
+    global commercialActive,lastTimestamp,donationBarIsHidden
 
+    #Not implemented
     if commercialActive:
 
         #play music or minigame function which is not definied
@@ -283,12 +307,50 @@ def Tick():
         else:
             commercialActive = False
             obsRemote.changeToScene(Parent,"Switch ingame", 0)
+            
+    #Sliding the donation bar in after the Intervall is done
+    if MySettings.donationBarActive:
+
+        #Parent.Log(ScriptName, str(MySettings.donationBarActive))
+
+        if time.time() - lastTimestamp > MySettings.donationBarCDTime + MySettings.donationBarVisibleTime and donationBarIsHidden == True :
+
+            lastTimestamp = time.time()
+            
+            donationBarIsHidden = False
+
+            eventList = []
+            varList = []
+
+            eventList.append("donationBarSlide")
+            dict = {"slideStatus":"slideIn"}
+            varList.append(dict)
+            dict = {"eventList":eventList,"varList":varList} 
+
+            Parent.BroadcastWsEvent("sendEvent", json.dumps(dict, ensure_ascii=False).encode('utf8'))
+
+        elif time.time() - lastTimestamp > MySettings.donationBarVisibleTime and donationBarIsHidden == False:
+
+            donationBarIsHidden = True
+
+            eventList = []
+            varList = []
+
+            eventList.append("donationBarSlide")
+            dict = {"slideStatus":"slideOut"}
+            varList.append(dict)
+            dict = {"eventList":eventList,"varList":varList} 
+
+            Parent.BroadcastWsEvent("sendEvent", json.dumps(dict, ensure_ascii=False).encode('utf8'))
 
     return
 
 #---------------------------------------
 # Script Functions
 #---------------------------------------
+
+#Event Reciever Code Block
+#region
 def EventReceiverConnected(sender, args):
     now = datetime.now()
     current_time = now.strftime("%H:%M:%S")
@@ -543,6 +605,103 @@ def EventReceiverEvent(sender, args):
 
 
     return
+#endregion
+
+def testOBSConnection():
+
+    eventList = []
+    varList = []
+
+    eventList.append("Alerts_showFollowEvent")
+    varDict = {"userName":"-"}
+    varList.append(varDict)
+    dict = {"eventList":eventList,"varList":varList} 
+
+    Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
+
+def initEventAlertBar():
+    
+    conn = sqlite3.connect(os.path.dirname(__file__) + "/../globalFiles/Datenbanken/streamMetaData.db")
+    c = conn.cursor()
+
+    try:
+
+        c.execute("SELECT fromViewer,amount FROM latestNotifications WHERE alertType='follow'")
+        row = c.fetchone()
+
+        followName = row[0]
+
+        c.execute("SELECT fromViewer,amount FROM latestNotifications WHERE alertType='sub'")
+        row = c.fetchone()
+
+        subName = row[0]
+        subAmount = row[1]
+
+        c.execute("SELECT fromViewer,amount FROM latestNotifications WHERE alertType='bits'")
+        row = c.fetchone()
+
+        bitsName = row[0]
+        bitsAmount = row[1]
+
+        c.execute("SELECT fromViewer,amount FROM latestNotifications WHERE alertType='donation'")
+        row = c.fetchone()
+
+        donationName = row[0]
+        donationAmount = row[1]
+
+        eventList = []
+        varList = []
+
+        eventList.append("Alerts_Init")
+        dict = {"followName":followName,"subName":subName,"subAmount":subAmount,"bitsName":bitsName,"bitsAmount":bitsAmount,"donationName":donationName,"donationAmount":donationAmount}
+        varList.append(dict)
+        dict = {"eventList":eventList,"varList":varList} 
+
+        Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
+
+    except:
+
+        pass
+
+    finally:
+        conn.close()
+
+    return
+
+def initDonationBar():
+
+    conn = sqlite3.connect(os.path.dirname(__file__) + "/../globalFiles/Datenbanken/streamMetaData.db")
+    c = conn.cursor()
+
+    try:
+
+        c.execute("SELECT artikel,amount,bereitsGespendet,endDate FROM donation ORDER BY ranking ASC LIMIT 1")
+        row = c.fetchone()
+
+        artikel = row[0]
+        neededAmount = row[1]
+        bereitsGespendet = row[2]
+        endDate = row[3]
+
+        eventList = []
+        varList = []
+
+        eventList.append("Init_Donationbar")
+        dict = {"artikel":artikel,"neededAmount":neededAmount,"bereitsGespendet":bereitsGespendet,"endDate":endDate}
+        varList.append(dict)
+        dict = {"eventList":eventList,"varList":varList} 
+
+        Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
+
+    except:
+
+        pass
+
+    finally:
+        conn.close()
+
+    return
+
 
 def updateLatestNotification(eventType,fromName,amount):
 
@@ -676,55 +835,6 @@ def insertProfileData(twitchID,userName,supportType,Amount):
 
     return
 
-def initAlerts():
-    
-    conn = sqlite3.connect(os.path.dirname(__file__) + "/../globalFiles/Datenbanken/streamMetaData.db")
-    c = conn.cursor()
-
-    try:
-
-        c.execute("SELECT fromViewer,amount FROM latestNotifications WHERE alertType='follow'")
-        row = c.fetchone()
-
-        followName = row[0]
-
-        c.execute("SELECT fromViewer,amount FROM latestNotifications WHERE alertType='sub'")
-        row = c.fetchone()
-
-        subName = row[0]
-        subAmount = row[1]
-
-        c.execute("SELECT fromViewer,amount FROM latestNotifications WHERE alertType='bits'")
-        row = c.fetchone()
-
-        bitsName = row[0]
-        bitsAmount = row[1]
-
-        c.execute("SELECT fromViewer,amount FROM latestNotifications WHERE alertType='donation'")
-        row = c.fetchone()
-
-        donationName = row[0]
-        donationAmount = row[1]
-
-        eventList = []
-        varList = []
-
-        eventList.append("Alerts_Init")
-        dict = {"followName":followName,"subName":subName,"subAmount":subAmount,"bitsName":bitsName,"bitsAmount":bitsAmount,"donationName":donationName,"donationAmount":donationAmount}
-        varList.append(dict)
-        dict = {"eventList":eventList,"varList":varList} 
-
-        Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
-
-    except:
-
-        pass
-
-    finally:
-        conn.close()
-
-    return
-
 def updateGameIconInUIBar():
 
     conn = sqlite3.connect(os.path.dirname(__file__) + "/../globalFiles/Datenbanken/streamMetaData.db")
@@ -771,13 +881,11 @@ def changeUIPositionBtn():
 
     UIPosition = MySettings.UI_Position.lower()
 
-    #basicFuncs.clientEvent(Parent,"sendEvent",  str(myDict))
-
     eventList = []
     varList = []
 
     eventList.append("Alerts_ChangeUI_Position")
-    dict = {"newPosition":UIPosition}
+    dict = {"UIPosition":UIPosition}
     varList.append(dict)
     dict = {"eventList":eventList,"varList":varList} 
 
@@ -785,6 +893,33 @@ def changeUIPositionBtn():
 
     return
 
+def donationVisibilityBtn():
+
+    changeDonationUI = MySettings.donationVisibility.lower()
+
+    #Parent.Log(ScriptName, str(changeDonationUI))
+
+    eventList = []
+    varList = []
+
+
+    if changeDonationUI == "visible":
+        changeDonationUI = "Visible"
+    else:
+        changeDonationUI = "Hidden"
+
+    eventList.append("Alerts_ToggleDonationUI_Visibility")
+    dict = {"donationBarvisibility":changeDonationUI}
+    varList.append(dict)
+    dict = {"eventList":eventList,"varList":varList} 
+
+    Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
+
+    return
+
+
+#Stream Control - Presets and ADS
+#region
 def runADfromUI():
 
     twitchAPICalls.runAD(Parent,str(MySettings.OauthToken), str(MySettings.ADInterval))
@@ -807,7 +942,10 @@ def updateTwitchTitleAndGame():
 
 
     return
+#endregion
 
+#UI Elements - Readme - Copyright - Stream
+#region
 def OpenReadMe():
 	""" Open the script readme file in users default .txt application. """
 	os.startfile(ReadMeFile)
@@ -825,13 +963,8 @@ def OpenStream():
 def OpenSL():
 	os.startfile("https://streamlabs.com/dashboard/#/settings/api-settings")
 	return
+#endregion
 
-
-
-
-#c.execute("DELETE FROM whisperuser WHERE id='" + str(userID) + "'")
-#c.execute("INSERT INTO whisperuser ('name','whisperAttempts') values ('" + viewers + "','" + str(case) + "') ")
-#c.execute("UPDATE viptracking SET VIPPoints ='" + str(VIPPoints) + "' WHERE name='" + str(viewers) + "'")
 
 #Reload Settings
 def ReloadSettings(jsonData):
@@ -860,7 +993,6 @@ def UpdateSettings():
     with open(m_ConfigFile) as ConfigFile:
         MySettings.__dict__ = json.load(ConfigFile)
     return
-
 
 def Unload():
 

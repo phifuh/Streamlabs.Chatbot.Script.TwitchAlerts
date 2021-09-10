@@ -121,7 +121,7 @@ def Init():
 
     basic = cBotFunctions()
     twitchAPICalls = StandartAPICalls()
-    obsRemote = obsRemoteClass()
+    obsRemote = obsRemoteClass(Parent)
 
     global commercialActive
     commercialActive = False
@@ -205,7 +205,7 @@ def Execute(data):
 
             Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
 
-            obsRemote.changeToScene(Parent,"Commercial", 0)
+            obsRemote.changeToScene("Commercial", 0)
 
         elif data.GetParam(0).lower() == MySettings.runADCommand and Parent.HasPermission(data.User,"subscriber",userName) == True and data.GetParam(1).lower() != None:
 
@@ -306,7 +306,7 @@ def Tick():
 
         else:
             commercialActive = False
-            obsRemote.changeToScene(Parent,"Switch ingame", 0)
+            obsRemote.changeToScene("Switch ingame", 0)
             
     #Sliding the donation bar in after the Intervall is done
     if MySettings.donationBarActive:

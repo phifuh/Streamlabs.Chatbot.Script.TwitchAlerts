@@ -2,9 +2,7 @@
 # -*- coding: utf-8 -*-
 
 
-#---------------------------------------
-# Script Import Libraries
-#---------------------------------------
+#1022 lines of code before
 import sys
 import json
 import os
@@ -18,108 +16,52 @@ clr.AddReference("IronPython.SQLite.dll")
 clr.AddReference("IronPython.Modules.dll")
 
 import sqlite3
+import traceback
 
 clr.AddReferenceToFileAndPath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "StreamlabsEventReceiver.dll"))
 from StreamlabsEventReceiver import StreamlabsEventClient
 
-clr.AddReferenceToFileAndPath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "../globalFiles/Moduls/personalDll/basicBotFunctionality/bin/Debug/netstandard2.0/coreFunctions.dll"))
-from cBotDll import *
+sys.path.append(os.path.join(os.path.dirname(__file__), "../globalFiles/Moduls/pythonWrapper"))
+import cBotWrapper
 
 clr.AddReferenceToFileAndPath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "../globalFiles/Moduls/personalDll/twitchAPI/bin/Debug/netstandard2.0/twitchAPI.dll"))
 from twitchRestAPI import *
 
 
-
-
 sys.path.append(os.path.join(os.path.dirname(__file__), "../globalFiles/Moduls/pythonClasses"))
 from OBSRemoteParameters import *
+import streamlabsSettingClass
 
 from datetime import datetime
 from datetime import date
-#---------------------------------------
-# Script Information
-#---------------------------------------
+
+
 ScriptName = "Notifications"
 Website = "twitch.tv/kobiqq"
 Description = "Stream controls + Notification"
 Creator = "Global | KobiQQ"
 Version = "1.2"
 
-#---------------------------------------
-# Variables
-#---------------------------------------
-
-m_ConfigFile = os.path.join(os.path.dirname(__file__), "Settings/settings.json")
-m_ConfigFileJs = os.path.join(os.path.dirname(__file__), "Settings/settings.js")
-
 EventReceiver = None
-#---------------------------------------
-# Classes Tries to load settings from file if given The 'default' variable names need to match UI_Config
-#---------------------------------------
-class Settings:
-	"""" Loads settings from file if file is found if not uses default values"""
 
-	# The 'default' variable names need to match UI_Config
-	def __init__(self, settingsFile=None):
-		if settingsFile and os.path.isfile(settingsFile):
-			with codecs.open(settingsFile, encoding='utf-8-sig', mode='r') as f:
-				self.__dict__ = json.load(f, encoding='utf-8-sig')
-		 
-		else: #set variables if no settings file
-			self.socket_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbiI6IkRFMDhFOTQ4QjdFRTFBNzcwRjBBIiwicmVhZF9vbmx5Ijp0cnVlLCJwcmV2ZW50X21hc3RlciI6dHJ1ZSwidHdpdGNoX2lkIjoiMjYxOTc5NTkifQ.0kJX4Rd8USk_UYizxrAXRurFOeGCBgU8Q7C_z5Ccb9I"
-			self.activateFollowMessage = True
-			self.followMessage = "@{0} Thank you for the Follow!"
-			self.activateSubscribeMessage = True
-			self.newSubMessage = "We got a new Squirrel in the Family. Thank You {0} for your support!"
-			self.reSubMessage = "Resub!"
-			self.wbSubMessage = "Welcome Back Sub!"
-			self.activateBitMessage = True
-			self.bitsMessage = "Thanks a lot for Bits {0}"
-			self.activateHostMessage = True
-			self.hostMessage = "Thanks a lot for the Host {0}"
-			self.activateRaidMessage = True
-			self.raidMessage = "Raid Test"
-			self.activateDonationMessage = True
-			self.donation = "donation test"
-			self.banChampWithBits = False
-
-			self.runADCommand = "!ad"
-			self.changeUI = "!ui"
-			self.UI_Position = "Bot"
-
-
-	# Reload settings on save through UI
-	def ReloadSettings(self, data):
-		"""Reload settings on save through UI"""
-		self.__dict__ = json.loads(data, encoding='utf-8-sig')
-		return
-
-	# Save settings to files (json and js)
-	def SaveSettings(self, settingsFile):
-		"""Save settings to files (json and js)"""
-		with codecs.open(settingsFile, encoding='utf-8-sig', mode='w+') as f:
-			json.dump(self.__dict__, f, encoding='utf-8-sig')
-		with codecs.open(settingsFile.replace("json", "js"), encoding='utf-8-sig', mode='w+') as f:
-			f.write("var settings = {0};".format(json.dumps(self.__dict__, encoding='utf-8-sig', ensure_ascii=False)))
-		return
-
-MySettings = Settings()
 ReadMeFile = os.path.join(os.path.dirname(__file__), "ReadMe.txt")
 CopyrightFile = os.path.join(os.path.dirname(__file__), "Copyright.txt")
 
-#---------------------------------------
-# Chatbot Initialize Function
-#---------------------------------------
 def Init():
 	
-	"""Required tick function"""
 
 	#Moduls/classes
-	global MySettings, basic, twitchAPICalls, obsRemote
-	
-	MySettings = Settings()
+	global twitchAPICalls, obsRemote,donationBarIsHidden
 
-	basic = cBotFunctions()
+	donationBarIsHidden = True
+	
+	global ScriptSettings
+	SettingsFile = os.path.join(os.path.dirname(__file__), "Settings/settings.json")
+	ScriptSettings = streamlabsSettingClass.scriptSettings(SettingsFile)
+
+	global wrapper
+	wrapper = cBotWrapper.CBotWrapperClass(Parent)
+
 	twitchAPICalls = StandartAPICalls()
 	obsRemote = obsRemoteClass(Parent)
 
@@ -135,22 +77,6 @@ def Init():
 	testOBSConnection()
 
 
-	if not os.path.isfile(m_ConfigFile):
-		text_file = codecs.open(m_ConfigFile, encoding='utf-8-sig', mode='w')
-		out = json.dumps(MySettings.__dict__, encoding="utf-8-sig")
-		text_file.write(out)
-		text_file.close()
-	else:
-		with codecs.open(m_ConfigFile,encoding='utf-8-sig', mode='r') as ConfigFile:
-			MySettings.__dict__ = json.load(ConfigFile)
-
-	if not os.path.isfile(m_ConfigFileJs):
-		text_file = codecs.open(m_ConfigFileJs, encoding='utf-8-sig', mode='w')
-		jsFile = "var settings =" + json.dumps(MySettings.__dict__, encoding="utf-8-sig") + ";"
-		text_file.write(jsFile)
-		text_file.close()
-
-
 	## Init the Streamlabs Event Receiver
 	global EventReceiver
 	EventReceiver = StreamlabsEventClient()
@@ -159,25 +85,22 @@ def Init():
 	EventReceiver.StreamlabsSocketEvent += EventReceiverEvent
 
 	## Auto Connect if key is given in settings
-	if MySettings.socket_token:
-		EventReceiver.Connect(MySettings.socket_token)
+	if ScriptSettings.socket_token:
+		EventReceiver.Connect(ScriptSettings.socket_token)
 
-	global lastTimestamp,donationBarIsHidden
+	global lastTimestamp
 	lastTimestamp = time.time()
 
-	donationBarIsHidden = True
-
-	# End of Init
 	return
 
 
 def Execute(data):
 
 	if data.IsChatMessage() :
-		#and (Parent.IsLive() or not MySettings.OnlyLive)
+		#and (Parent.IsLive() or not ScriptSettings.OnlyLive)
 		userName = Parent.GetDisplayName(data.User) 
 
-		if data.GetParam(0).lower() == MySettings.runADCommand and Parent.HasPermission(data.User,"caster",userName) == True:
+		if data.GetParam(0).lower() == ScriptSettings.runADCommand and Parent.HasPermission(data.User,"caster",userName) == True:
 
 			global adLenght
 
@@ -193,42 +116,17 @@ def Execute(data):
 
 			commercialActive = True
 
-			#basicFuncs.clientEvent(Parent,"sendEvent",  str(myDict))
-
-			eventList = []
-			varList = []
-
-			eventList.append("Commercial_Run")
-			dict = {}
-			varList.append(dict)
-			dict = {"eventList":eventList,"varList":varList} 
-
-			Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
-
+			wrapper.sendSocketEvents(["Commercial_Run"],[{"":""}])
 			obsRemote.changeToScene("Commercial", 0)
 
-		elif data.GetParam(0).lower() == MySettings.runADCommand and Parent.HasPermission(data.User,"subscriber",userName) == True and data.GetParam(1).lower() != None:
+		elif data.GetParam(0).lower() == ScriptSettings.runADCommand and Parent.HasPermission(data.User,"subscriber",userName) == True and data.GetParam(1).lower() != None:
 
 			adViewerEngageMent = data.GetParam(1)
+			wrapper.sendSocketEvents(["Commercial_Run"],[{"viewerChoice":adViewerEngageMent}])
 
-			#basicFuncs.clientEvent(Parent,"sendEvent",  str(myDict))
-
-			eventList = []
-			varList = []
-
-			eventList.append("Commercial_Run")
-			dict = {"viewerChoice":adViewerEngageMent}
-			varList.append(dict)
-			dict = {"eventList":eventList,"varList":varList} 
-
-			Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
-
-		elif data.GetParam(0).lower() == MySettings.changeUI and Parent.HasPermission(data.User,"caster",userName) == True:
+		elif data.GetParam(0).lower() == ScriptSettings.changeUI and Parent.HasPermission(data.User,"caster",userName) == True:
 
 			changeUI = data.GetParam(1).lower()
-
-			eventList = []
-			varList = []
 
 			if changeUI == "on" or changeUI == "visible" or changeUI == "off" or changeUI == "hide" or changeUI == "hidden":
 
@@ -237,40 +135,22 @@ def Execute(data):
 				else:
 					changeUI = "Hidden"
 
-				eventList.append("Alerts_ToggleUI_Visibility")
-				dict = {"UIvisibility":changeUI}
-				varList.append(dict)
-				dict = {"eventList":eventList,"varList":varList} 
+				wrapper.sendSocketEvents(["Alerts_ToggleUI_Visibility"],[{"UIvisibility":changeUI}])
 
 			else:
 
-				eventList.append("Alerts_ChangeUI_Position")
-				dict = {"UIPosition":changeUI}
-				varList.append(dict)
-				dict = {"eventList":eventList,"varList":varList} 
-
-			Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
+				wrapper.sendSocketEvents(["Alerts_ChangeUI_Position"],[{"UIPosition":changeUI}])
 		
 		elif data.GetParam(0).lower() == "!dono" and Parent.HasPermission(data.User,"caster",userName) == True:
 
 			changeUI = data.GetParam(1).lower()
-
-			eventList = []
-			varList = []
-
 
 			if changeUI == "on" or changeUI == "visible":
 				changeUI = "Visible"
 			else:
 				changeUI = "Hidden"
 
-			eventList.append("Alerts_ToggleDonationUI_Visibility")
-			dict = {"donationBarvisibility":changeUI}
-			varList.append(dict)
-			dict = {"eventList":eventList,"varList":varList} 
-
-
-			Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
+			wrapper.sendSocketEvents(["Alerts_ToggleDonationUI_Visibility"],[{"donationBarvisibility":changeUI}])
 
 		elif data.GetParam(0).lower() == "!uiupdate":
 
@@ -291,6 +171,7 @@ def Execute(data):
 
 			Parent.BroadcastWsEvent("sendEvent", json.dumps(dict, ensure_ascii=False).encode('utf8'))
 
+
 	return
 
 def Tick():
@@ -309,45 +190,24 @@ def Tick():
 			obsRemote.changeToScene("Switch ingame", 0)
 			
 	#Sliding the donation bar in after the Intervall is done
-	if MySettings.donationBarActive:
+	if ScriptSettings.donationBarActive:
 
-		#Parent.Log(ScriptName, str(MySettings.donationBarActive))
+		#Parent.Log(ScriptName, str(ScriptSettings.donationBarActive))
 
-		if time.time() - lastTimestamp > MySettings.donationBarCDTime + MySettings.donationBarVisibleTime and donationBarIsHidden == True :
+		if time.time() - lastTimestamp > ScriptSettings.donationBarCDTime + ScriptSettings.donationBarVisibleTime and donationBarIsHidden == True :
 
 			lastTimestamp = time.time()
 			
 			donationBarIsHidden = False
+			wrapper.sendSocketEvents(["donationBarSlide"],	[{"slideStatus":"slideIn"}])
 
-			eventList = []
-			varList = []
-
-			eventList.append("donationBarSlide")
-			dict = {"slideStatus":"slideIn"}
-			varList.append(dict)
-			dict = {"eventList":eventList,"varList":varList} 
-
-			Parent.BroadcastWsEvent("sendEvent", json.dumps(dict, ensure_ascii=False).encode('utf8'))
-
-		elif time.time() - lastTimestamp > MySettings.donationBarVisibleTime and donationBarIsHidden == False:
+		elif time.time() - lastTimestamp > ScriptSettings.donationBarVisibleTime and donationBarIsHidden == False:
 
 			donationBarIsHidden = True
-
-			eventList = []
-			varList = []
-
-			eventList.append("donationBarSlide")
-			dict = {"slideStatus":"slideOut"}
-			varList.append(dict)
-			dict = {"eventList":eventList,"varList":varList} 
-
-			Parent.BroadcastWsEvent("sendEvent", json.dumps(dict, ensure_ascii=False).encode('utf8'))
+			wrapper.sendSocketEvents(["donationBarSlide"],	[{"slideStatus":"slideOut"}])
 
 	return
 
-#---------------------------------------
-# Script Functions
-#---------------------------------------
 
 #Event Reciever Code Block
 #region
@@ -370,22 +230,15 @@ def EventReceiverEvent(sender, args):
 		Parent.Log("Event type",str(evntdata.Type))
 
 		if evntdata.Type == "follow":
+
 			for message in evntdata.Message:
 
-				if MySettings.activateFollowMessage:
-					basic.streamMessage(Parent,str(MySettings.followMessage.format(message.Name)))
+				if ScriptSettings.activateFollowMessage:
+
+					wrapper.streamMessage(str(ScriptSettings.followMessage.format(message.Name)))
 
 				updateLatestNotification("follow",message.Name,"0")
-
-				eventList = []
-				varList = []
-
-				eventList.append("Alerts_showFollowEvent")
-				varDict = {"userName":message.Name}
-				varList.append(varDict)
-				dict = {"eventList":eventList,"varList":varList} 
-
-				Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
+				wrapper.sendSocketEvents(["Alerts_showFollowEvent"],	[{"userName":message.Name}])
 
 				#updateGoal()
 
@@ -394,35 +247,21 @@ def EventReceiverEvent(sender, args):
 
 				if message.SubType == "resub":
 
-					Parent.Log(ScriptName,"resub streak 0")
+					Parent.Log(ScriptName,"resub streak 00")
 
-					if MySettings.activateSubscribeMessage:
+					if ScriptSettings.activateSubscribeMessage:
 
-						basic.streamMessage(Parent,str(MySettings.reSubMessage.format(message.Name)))
+						wrapper.streamMessage(str(ScriptSettings.reSubMessage.format(message.Name)))
+						wrapper.printLog("resub streak 11")
 
-						#I think there was a bug in the basic.Whispermessage
-						#Parent.Log(ScriptName,str("subscription", "{0} resubscribed for {1} months total!".format(message.Name, message.Months)))
-						#basic.streamWhisper(Parent,"kobiqq",str("subscription {0} resubscribed for {1} months Test!".format(message.Name, message.Months)))
-						
-						#Parent.Log(ScriptName,"resub streak 1")
-
-
-					Parent.Log(ScriptName,"resub streak 2")
+					wrapper.printLog("resub streak 22")
 
 					updateLatestNotification("sub",message.Name,message.Months)
 					subName = message.Name
 
-					eventList = []
-					varList = []
+					wrapper.sendSocketEvents(["Alerts_showSubEvent"],	[{"userName":message.Name,"subAmount":message.Months}])
 
-					eventList.append("Alerts_showSubEvent")
-					varDict = {"userName":message.Name,"subAmount":message.Months}
-					varList.append(varDict)
-					dict = {"eventList":eventList,"varList":varList} 
-
-					Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
-
-					Parent.Log(ScriptName,"resub streak 3")
+					wrapper.printLog("resub streak 33")
 
 					userID = twitchFuncs.getTwitchUserID(Parent,str(message.Name))
 					insertProfileData(userID,str(subName),"sub",str(message.Months))
@@ -433,54 +272,33 @@ def EventReceiverEvent(sender, args):
 				elif message.SubType == "subscriber" and message.Months >= 1:
 
 					#welcome back sub?
-					Parent.Log(ScriptName,"resub 0")
+					wrapper.printLog("resub 00")
 
-					if MySettings.activateSubscribeMessage:
-						basic.streamMessage(Parent,str(MySettings.wbSubMessage.format(message.Name, message.Months)))
+					if ScriptSettings.activateSubscribeMessage:
 
-						#Parent.Log(ScriptName,str("subscription", "{0} resubscribed for {1} months total!".format(message.Name, message.Months)))
-						#basic.streamWhisper(Parent,"kobiqq",str("subscription {0} resubscribed for {1} months Test!".format(message.Name, message.Months)))
-
-						Parent.Log(ScriptName,"resub 1")
+						wrapper.streamMessage(str(ScriptSettings.wbSubMessage.format(message.Name, message.Months)))
+						wrapper.printLog("resub 1111")
 					
 					updateLatestNotification("sub",message.Name,message.Months)
 					
-					eventList = []
-					varList = []
-
-					eventList.append("Alerts_showSubEvent")
-					dict = {"userName":message.Name,"subAmount":message.Months}
-					varList.append(dict)
-					dict = {"eventList":eventList,"varList":varList} 
-
-					Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
-
-					Parent.Log(ScriptName,"resub 2")
+					wrapper.sendSocketEvents(["Alerts_showSubEvent"],	[{"userName":message.Name,"subAmount":message.Months}])
+					wrapper.printLog("resub 2222")
 
 					subName = message.Name
 					userID = twitchFuncs.getTwitchUserID(Parent,str(message.Name))
 					insertProfileData(userID,str(subName),"sub",str(message.Months))
 
-					Parent.Log(ScriptName,"resub 3")
+					wrapper.printLog("resub 3333")
 
 				else:
 
-					if MySettings.activateSubscribeMessage:
+					if ScriptSettings.activateSubscribeMessage:
 
-						basic.streamMessage(Parent,str(MySettings.newSubMessage.format(message.Name)))
-						basic.streamWhisper(Parent,"kobiqq",str("first sub test"))
+						wrapper.streamMessage(str(ScriptSettings.newSubMessage.format(message.Name)))
 
 					updateLatestNotification("sub",message.Name,"0")
 
-					eventList = []
-					varList = []
-
-					eventList.append("Alerts_showSubEvent")
-					dict = {"userName":message.Name,"subAmount":message.Months}
-					varList.append(dict)
-					dict = {"eventList":eventList,"varList":varList} 
-
-					Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
+					wrapper.sendSocketEvents(["Alerts_showSubEvent"],	[{"userName":message.Name,"subAmount":message.Months}])
 
 					subName = message.Name
 					userID = twitchFuncs.getTwitchUserID(Parent,str(message.Name))
@@ -493,47 +311,29 @@ def EventReceiverEvent(sender, args):
 				bitAmount = message.Amount
 				bitMessage = message.Message 
 
-				if MySettings.activateBitMessage:
-					basic.streamMessage(Parent,str(MySettings.bitsMessage.format(message.Name)))
-					#basic.streamWhisper(Parent,"kobiqq",str("Bit Test succesfull" + str(MySettings.bitsMessage.format(message.Name))))
+				if ScriptSettings.activateBitMessage:
+					wrapper.streamMessage(str(ScriptSettings.bitsMessage.format(message.Name)))
+
 
 				updateLatestNotification("bits",message.Name,bitAmount)
 
-				eventList = []
-				varList = []
 
-				eventList.append("Alerts_showBitEvent")
-				dict = {"userName":message.Name,"bitAmount":bitAmount}
-				varList.append(dict)
-				dict = {"eventList":eventList,"varList":varList} 
-
-				if MySettings.banChampWithBits:
+				if ScriptSettings.banChampWithBits:
 
 					splitted = bitMessage.split()
 					BanWord1 = splitted[1].lower()
 					BanWord2 = splitted[2].lower()
 					Parent.Log("bits",str(message.Name))
 
-					eventList.append("Alert_Ban_Slot")
-					dict = {"userName":message.Name,"bitAmount":bitAmount,"BanWord1":BanWord1,"BanWord2":BanWord2}
-					varList.append(dict)
-					dict = {"eventList":eventList,"varList":varList} 
+					wrapper.sendSocketEvents(["Alerts_showBitEvent","Alert_Ban_Slot"],	[{"userName":message.Name,"bitAmount":bitAmount},{"userName":message.Name,"bitAmount":bitAmount,"BanWord1":BanWord1,"BanWord2":BanWord2}])
 
-				else:
-
-					eventList.append("Alert_Bit_Slot")
-					dict = {"userName":message.Name,"bitAmount":bitAmount}
-					varList.append(dict)
-					dict = {"eventList":eventList,"varList":varList} 
-
-
-				Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
+				else:					
+					wrapper.sendSocketEvents(["Alert_Bit_Slot"],	[{"userName":message.Name,"bitAmount":bitAmount}])
 
 
 					
 				userID = twitchFuncs.getTwitchUserID(Parent,str(message.Name))
 				insertProfileData(userID,str(message.Name),"bits",str(bitAmount))
-
 
 		elif evntdata.Type == "host":
 
@@ -541,18 +341,10 @@ def EventReceiverEvent(sender, args):
 				hostName     = message.Name
 				hostViewers  = message.Viewers  
 
-				if MySettings.activateHostMessage:
-					basic.streamMessage(Parent,str(MySettings.hostMessage.format(message.Name)))
+				if ScriptSettings.activateHostMessage:
+					wrapper.streamMessage(str(ScriptSettings.hostMessage.format(message.Name)))
 
-				eventList = []
-				varList = []
-
-				eventList.append("Alerts_showHostEvent")
-				varDict = {"userName":hostName,"hostAmount":hostViewers}
-				varList.append(varDict)
-				dict = {"eventList":eventList,"varList":varList} 
-
-				Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
+				wrapper.sendSocketEvents(["Alerts_showHostEvent"],	[{"userName":hostName,"hostAmount":hostViewers}])
 
 				updateLatestNotification("host",hostName,hostViewers)
 				userID = twitchFuncs.getTwitchUserID(Parent,str(message.Name))
@@ -564,19 +356,12 @@ def EventReceiverEvent(sender, args):
 				raidName     = message.Name
 				raidViewers  = message.Raiders  
 
-				if MySettings.activateRaidMessage:
-					Parent.SendStreamMessage ("Woah a raid with " + str(raidViewers) + " by " + str(message.Name) + ", thanks a lot <3!" )
+				if ScriptSettings.activateRaidMessage:
+					wrapper.streamMessage("Cho cho incoming. A raid with " + str(raidViewers) + " by " + str(message.Name) + ", thanks a lot!" )
+
 				updateLatestNotification("raid",raidName,raidViewers)
 
-				eventList = []
-				varList = []
-
-				eventList.append("Alerts_showRaidEvent")
-				varDict = {"userName":message.Name}
-				varList.append(varDict)
-				dict = {"eventList":eventList,"varList":varList} 
-
-				Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
+				wrapper.sendSocketEvents(["Alerts_showRaidEvent"],	[{"userName":message.Name}])
 
 
 	elif evntdata and evntdata.For == "streamlabs":
@@ -587,169 +372,115 @@ def EventReceiverEvent(sender, args):
 				donationName     = message.Name
 				donationAmount = message.Amount
 
-				Parent.Log("dono","2")
-				#basic.streamWhisper(Parent,"kobiqq",str(donationName + " " + donationAmount))
+				wrapper.printLog("dono came through")
+				wrapper.sendSocketEvents(["Alerts_showDonationEvent"],	[{"userName":donationName,"donationAmount":donationAmount}])
 
-
-				eventList = []
-				varList = []
-
-				eventList.append("Alerts_showDonationEvent")
-				varDict = {"userName":donationName,"donationAmount":donationAmount}
-				varList.append(varDict)
-				dict = {"eventList":eventList,"varList":varList} 
-
-				Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
-
-				#dict = {"donationName":donationName,"donationAmount":donationAmount}
-				#Parent.BroadcastWsEvent("EVENT_SHOW_DONATION", json.dumps(dict))
-
-				Parent.SendStreamWhisper("kobiqq","donation Test" + str(MySettings.donation.format(message.Name)))
+				Parent.SendStreamWhisper("kobiqq","donation Test" + str(ScriptSettings.donation.format(message.Name)))
 				updateLatestNotification("donation",donationName,donationAmount)
 				insertProfileData(userID,message.Name,"donation",donationAmount)
 
 				updateDonationTracker()
 
-
 	return
 #endregion
 
+def dbConnection(dbName):
+	
+
+	"""Documentation: Decorater (Generic template function)\n
+Arguments:	DB name - to select the correct Database		
+Description:	Send a SQL querry to the decorator.
+Return Value:	None\n
+Notes: If I would define the dbName == "marioMaker": / conn 
+in this scope, then its only called once at the creation of the decorator class. 
+It was working fine in testing because its always called a new instance, but when apps are running we have to change the 
+db name inside of the inner scope 
+	"""
+
+	path = "../../globalFiles/Datenbanken/" + str(dbName) + ".db"
+
+	def dbConnector(fn):
+
+		def invokeSQLQuerry(*args):
+
+			conn = sqlite3.connect(os.path.abspath(os.path.join(__file__ , path)), check_same_thread=False)
+			c = conn.cursor()
+
+			try:
+				result = fn(c,*args)
+
+			except Exception as err:
+				Parent.Log(ScriptName,"\nTraceback Error \n" + str(traceback.format_exc()))
+				Parent.Log(ScriptName,"Query Failed in: " + str(fn) + " with the Error " + str(err) + "the absolute path of the DB" + str(path))
+			else: 
+				conn.commit()              
+				return result          
+			finally:
+				conn.close()
+
+		return invokeSQLQuerry
+
+	return dbConnector
+
 def testOBSConnection():
 
-	eventList = []
-	varList = []
+	wrapper.sendSocketEvents(["Alerts_showFollowEvent"],	[{"userName":"-"}])
 
-	eventList.append("Alerts_showFollowEvent")
-	varDict = {"userName":"-"}
-	varList.append(varDict)
-	dict = {"eventList":eventList,"varList":varList} 
-
-	Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
-
-def initEventAlertBar():
+@dbConnection("streamMetaData")
+def initEventAlertBar(c):
 	
-	conn = sqlite3.connect(os.path.dirname(__file__) + "/../globalFiles/Datenbanken/streamMetaData.db")
-	c = conn.cursor()
+	c.execute("SELECT fromViewer,amount FROM latestNotifications WHERE alertType='follow'")
+	row = c.fetchone()
 
-	try:
+	followName = row[0]
 
-		c.execute("SELECT fromViewer,amount FROM latestNotifications WHERE alertType='follow'")
-		row = c.fetchone()
+	c.execute("SELECT fromViewer,amount FROM latestNotifications WHERE alertType='sub'")
+	row = c.fetchone()
 
-		followName = row[0]
+	subName = row[0]
+	subAmount = row[1]
 
-		c.execute("SELECT fromViewer,amount FROM latestNotifications WHERE alertType='sub'")
-		row = c.fetchone()
+	c.execute("SELECT fromViewer,amount FROM latestNotifications WHERE alertType='bits'")
+	row = c.fetchone()
 
-		subName = row[0]
-		subAmount = row[1]
+	bitsName = row[0]
+	bitsAmount = row[1]
 
-		c.execute("SELECT fromViewer,amount FROM latestNotifications WHERE alertType='bits'")
-		row = c.fetchone()
+	c.execute("SELECT fromViewer,amount FROM latestNotifications WHERE alertType='donation'")
+	row = c.fetchone()
 
-		bitsName = row[0]
-		bitsAmount = row[1]
+	donationName = row[0]
+	donationAmount = row[1]
 
-		c.execute("SELECT fromViewer,amount FROM latestNotifications WHERE alertType='donation'")
-		row = c.fetchone()
-
-		donationName = row[0]
-		donationAmount = row[1]
-
-		eventList = []
-		varList = []
-
-		eventList.append("Alerts_Init")
-		dict = {"followName":followName,"subName":subName,"subAmount":subAmount,"bitsName":bitsName,"bitsAmount":bitsAmount,"donationName":donationName,"donationAmount":donationAmount}
-		varList.append(dict)
-		dict = {"eventList":eventList,"varList":varList} 
-
-		Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
-
-	except:
-
-		pass
-
-	finally:
-		conn.close()
+	wrapper.sendSocketEvents(["Alerts_Init"],	[{"followName":followName,"subName":subName,"subAmount":subAmount,"bitsName":bitsName,"bitsAmount":bitsAmount,"donationName":donationName,"donationAmount":donationAmount}])
 
 	return
 
-def initDonationBar():
+@dbConnection("streamMetaData")
+def initDonationBar(c):
 
-	conn = sqlite3.connect(os.path.dirname(__file__) + "/../globalFiles/Datenbanken/streamMetaData.db")
-	c = conn.cursor()
+	c.execute("SELECT artikel,amount,bereitsGespendet,endDate FROM donation ORDER BY ranking ASC LIMIT 1")
+	row = c.fetchone()
 
-	try:
+	artikel = row[0]
+	neededAmount = row[1]
+	bereitsGespendet = row[2]
+	endDate = row[3]
 
-		c.execute("SELECT artikel,amount,bereitsGespendet,endDate FROM donation ORDER BY ranking ASC LIMIT 1")
-		row = c.fetchone()
+	wrapper.sendSocketEvents(["Init_Donationbar"],	[{"artikel":artikel,"neededAmount":neededAmount,"bereitsGespendet":bereitsGespendet,"endDate":endDate}])
 
-		artikel = row[0]
-		neededAmount = row[1]
-		bereitsGespendet = row[2]
-		endDate = row[3]
-
-		eventList = []
-		varList = []
-
-		eventList.append("Init_Donationbar")
-		dict = {"artikel":artikel,"neededAmount":neededAmount,"bereitsGespendet":bereitsGespendet,"endDate":endDate}
-		varList.append(dict)
-		dict = {"eventList":eventList,"varList":varList} 
-
-		Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
-
-	except:
-
-		pass
-
-	finally:
-		conn.close()
 
 	return
 
-
-def updateLatestNotification(eventType,fromName,amount):
-
-	conn = sqlite3.connect(os.path.dirname(__file__) + "/../globalFiles/Datenbanken/streamMetaData.db")
-	c = conn.cursor()
-
-	try:
-		c.execute("SELECT fromViewer FROM latestNotifications WHERE alertType='" + str(eventType) + "'")
-		row = c.fetchone()
-
-		xoxo = row[0]
-
-		c.execute("UPDATE latestNotifications SET fromViewer ='" + str(fromName) + "',amount ='" + str(amount) + "' WHERE alertType='" + str(eventType) + "'")
-		conn.commit()
-
-	except:
-		c.execute("INSERT INTO latestNotifications ('alertType','fromViewer','amount') values ('" + str(eventType) + "','" + str(fromName) + "','" + str(amount) + "') ")
-		conn.commit()
-
-	finally:
-		conn.close()
-	
-
-	return
-
-def initNotficationGoals():
+@dbConnection("streamMetaData")
+def initNotficationGoals(c):
 
 	rightNow = datetime.strptime(""+str(datetime.now().day)+"/"+str(datetime.now().month)+"/"+str(datetime.now().year), "%d/%m/%Y")
 
-	conn = sqlite3.connect(os.path.dirname(__file__) + "/../globalFiles/Datenbanken/streamMetaData.db")
-	c = conn.cursor()
-	try:        
-		c.execute("SELECT dailyTimestamp FROM notficationGoals WHERE id='1'")
-		row = c.fetchone()
+	c.execute("SELECT dailyTimestamp FROM notficationGoals WHERE id='1'")
+	row = c.fetchone()
 		
-		lastUpdatedDate  =  row[0]
-
-	except:
-		Parent.Log(ScriptName, "DB not setup? Find Code 148123")
-	finally:
-		conn.close()
+	lastUpdatedDate  =  row[0]
 
 	comparissionDate = datetime.strptime(lastUpdatedDate, "%d/%m/%Y")
 	stringDate = ""+str(datetime.now().day)+"/"+str(datetime.now().month)+"/"+str(datetime.now().year)+""
@@ -760,31 +491,33 @@ def initNotficationGoals():
 
 	return
 
-def resetDailyGoals(stringDate):
+@dbConnection("streamMetaData")
+def updateLatestNotification(c,eventType,fromName,amount):
 
-	conn = sqlite3.connect(os.path.dirname(__file__) + "/../globalFiles/Datenbanken/streamMetaData.db")
-	c = conn.cursor()
-	try:        
-		c.execute("UPDATE notficationGoals SET dailyFollowers ='0', dailySubs ='0', dailyBits ='0', dailyDonation ='0', dailyTimestamp ='" + str(stringDate) + "' WHERE id='1'")
-		conn.commit()
+	c.execute("SELECT fromViewer FROM latestNotifications WHERE alertType=?",(eventType,))
+	row = c.fetchone()
+	if row:
 
-	except:
-		Parent.Log(ScriptName, "DB not setup? Find Code 148124")
-	finally:
-		conn.close()
+		c.execute("UPDATE latestNotifications SET fromViewer =? ,amount =? WHERE alertType=?",(fromName,amount,eventType,))
+
+	else:
+		c.execute("INSERT INTO latestNotifications ('alertType','fromViewer','amount') values (?,?,?) ",(eventType,fromName,amount,))
 
 	return
 
-def insertProfileData(twitchID,userName,supportType,Amount):
+@dbConnection("streamMetaData")
+def resetDailyGoals(c,stringDate):
 
+	c.execute("UPDATE notficationGoals SET dailyFollowers ='0', dailySubs ='0', dailyBits ='0', dailyDonation ='0', dailyTimestamp =? WHERE id='1'",(stringDate,))
 
-	conn = sqlite3.connect(os.path.dirname(__file__) + "/../globalFiles/Datenbanken/streamUserData.db")
-	c = conn.cursor()
+	return
 
-	try:
+@dbConnection("streamUserData")
+def insertProfileData(c,twitchID,userName,supportType,Amount):
 
-		c.execute("SELECT totalSub,totalBits,totalDonation,totalGiftedSubs FROM profileData WHERE twitchID='" + str(twitchID) + "'")
-		row = c.fetchone()
+	c.execute("SELECT totalSub,totalBits,totalDonation,totalGiftedSubs FROM profileData WHERE twitchID=?",(twitchID,))
+	row = c.fetchone()
+	if row:
 
 		totalSub = row[0]
 		totalBits = row[1]
@@ -794,133 +527,77 @@ def insertProfileData(twitchID,userName,supportType,Amount):
 		if supportType == "sub":
 
 			newTotalSub = int(Amount) 
-			c.execute("UPDATE profileData SET userName ='" + str(userName) + "',totalSub ='" + str(newTotalSub) + "' WHERE twitchID='" + str(twitchID) + "'")
-			conn.commit()
+			c.execute("UPDATE profileData SET userName =?,totalSub =? WHERE twitchID=?",(userName,newTotalSub,twitchID,))
 
 		elif supportType == "bits":
 
 			newTotalBits = int(totalBits) + int(Amount) 
-			c.execute("UPDATE profileData SET userName ='" + str(userName) + "', totalBits ='" + str(newTotalBits) + "' WHERE twitchID='" + str(twitchID) + "'")
-			conn.commit()
+			c.execute("UPDATE profileData SET userName =?, totalBits =? WHERE twitchID=?",(userName,newTotalBits,twitchID,))
 
 		elif supportType == "donation":
 
 			newTotalDonation = int(totalDonation) + int(Amount) 
-			c.execute("UPDATE profileData SET userName ='" + str(userName) + "',totalDonation ='" + str(newTotalDonation) + "' WHERE twitchID='" + str(twitchID) + "'")
-			conn.commit()
+			c.execute("UPDATE profileData SET userName =?,totalDonation =? WHERE twitchID=?",(userName,newTotalDonation,twitchID,))
 
 		elif supportType == "giftedSub":
 
 			newTotalGiftesSubs = int(totalGiftedSubs) + int(Amount) 
-			c.execute("UPDATE profileData SET userName ='" + str(userName) + "',totalGiftedSubs ='" + str(newTotalGiftesSubs) + "' WHERE twitchID='" + str(twitchID) + "'")
-			conn.commit()
+			c.execute("UPDATE profileData SET userName =? ,totalGiftedSubs =? WHERE twitchID=?",(userName,newTotalGiftesSubs,twitchID,))
 
-	except:
+	else:
 
 		if supportType == "sub":
 
-			c.execute("INSERT INTO profileData ('twitchID','userName','totalSub','totalBits','totalDonation','totalGiftedSubs') values ('" + str(twitchID) + "','" + str(userName) + "','" + str(Amount) + "','0','0','0') ")
-			conn.commit()
+			c.execute("INSERT INTO profileData ('twitchID','userName','totalSub','totalBits','totalDonation','totalGiftedSubs') values (?,?,?,?,?,?) ",(twitchID,userName,Amount,0,0,0,))
 
 		elif supportType == "bits":
 
-			c.execute("INSERT INTO profileData ('twitchID','userName','totalSub','totalBits','totalDonation','totalGiftedSubs') values ('" + str(twitchID) + "','" + str(userName) + "','0','" + str(Amount) + "','0','0') ")
-			conn.commit()
+			c.execute("INSERT INTO profileData ('twitchID','userName','totalSub','totalBits','totalDonation','totalGiftedSubs') values (?,?,?,?,?,?) ",(twitchID,userName,0,Amount,0,0,))
 
 		elif supportType == "donation":
 
-			c.execute("INSERT INTO profileData ('twitchID','userName','totalSub','totalBits','totalDonation','totalGiftedSubs') values ('" + str(twitchID) + "','" + str(userName) + "','0','0','" + str(Amount) + "','0') ")
-			conn.commit()
+			c.execute("INSERT INTO profileData ('twitchID','userName','totalSub','totalBits','totalDonation','totalGiftedSubs') values (?,?,?,?,?,?) ",(twitchID,userName,0,0,Amount,0,))
 		
 		elif supportType == "giftedSub":
 
-			c.execute("INSERT INTO profileData ('twitchID','userName','totalSub','totalBits','totalDonation','totalGiftedSubs') values ('" + str(twitchID) + "','" + str(userName) + "','0','0','0','"+ str(Amount) +"') ")
-			conn.commit()
-
-	finally:
-		conn.close()
+			c.execute("INSERT INTO profileData ('twitchID','userName','totalSub','totalBits','totalDonation','totalGiftedSubs') values (?,?,?,?,?,?) ",(twitchID,userName,0,0,0,Amount,))
 
 	return
 
-def updateGameIconInUIBar():
+@dbConnection("streamMetaData")
+def updateGameIconInUIBar(c):
 
-	conn = sqlite3.connect(os.path.dirname(__file__) + "/../globalFiles/Datenbanken/streamMetaData.db")
-	c = conn.cursor()
+	c.execute("SELECT game FROM gameStats WHERE id='1'")
+	row = c.fetchone()
+	game = row[0]
 
-	try:
+	wrapper.sendSocketEvents(["updateGameIcons"],	[{"currentGame":game}])
 
-		c.execute("SELECT game FROM gameStats WHERE id='1'")
-		row = c.fetchone()
-		game = row[0]
-
-	except:
-		basicFuncs.printLog(Parent,str(ScriptName), "Error couldnt Open DB or find a game on ID 1")
-
-	finally:
-		conn.close()
-
-	eventList = []
-	varList = []
-
-	eventList.append("updateGameIcons")
-	varDict = {"currentGame":game}
-	varList.append(varDict)
-	dict = {"eventList":eventList,"varList":varList} 
-
-	Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))   
 
 def updateDonationTracker():
 
 	#run update sql
-
-
-	eventList = []
-	varList = []
-
-	eventList.append("updateDonoBar")
-	dict = {"donationProgress":donationPercentage}
-	varList.append(dict)
-	dict = {"eventList":eventList,"varList":varList} 
-
-	Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))   
+	wrapper.sendSocketEvents(["updateDonoBar"],	[{"donationProgress":donationPercentage}])
 
 def changeUIPositionBtn():
 
-	UIPosition = MySettings.UI_Position.lower()
-
-	eventList = []
-	varList = []
-
-	eventList.append("Alerts_ChangeUI_Position")
-	dict = {"UIPosition":UIPosition}
-	varList.append(dict)
-	dict = {"eventList":eventList,"varList":varList} 
-
-	Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
+	UIPosition = ScriptSettings.UI_Position.lower()
+	wrapper.sendSocketEvents(["Alerts_ChangeUI_Position"],	[{"UIPosition":UIPosition}])
 
 	return
 
 def donationVisibilityBtn():
 
-	changeDonationUI = MySettings.donationVisibility.lower()
+	changeDonationUI = ScriptSettings.donationVisibility.lower()
 
-	#Parent.Log(ScriptName, str(changeDonationUI))
-
-	eventList = []
-	varList = []
-
+	wrapper.printLog(str(changeDonationUI))
 
 	if changeDonationUI == "visible":
 		changeDonationUI = "Visible"
 	else:
 		changeDonationUI = "Hidden"
 
-	eventList.append("Alerts_ToggleDonationUI_Visibility")
-	dict = {"donationBarvisibility":changeDonationUI}
-	varList.append(dict)
-	dict = {"eventList":eventList,"varList":varList} 
-
-	Parent.BroadcastWsEvent("sendEvent", json.dumps(dict))
+	wrapper.sendSocketEvents(["Alerts_ToggleDonationUI_Visibility"],	[{"donationBarvisibility":changeDonationUI}])
 
 	return
 
@@ -929,7 +606,7 @@ def donationVisibilityBtn():
 #region
 def runADfromUI():
 
-	twitchAPICalls.runAD(Parent,str(MySettings.OauthToken), str(MySettings.ADInterval))
+	twitchAPICalls.runAD(Parent,str(ScriptSettings.OauthToken), str(ScriptSettings.ADInterval))
 
 	return
 
@@ -973,32 +650,30 @@ def OpenSL():
 #endregion
 
 
-#Reload Settings
-def ReloadSettings(jsonData):
-	MySettings.__dict__ = json.loads(jsonData)
-	Parent.BroadcastWsEvent("EVENT_CURRENCY_RELOAD", jsonData)
-	return
+#SETTINGS functions: save changes in the UI / Reload / deafault
+#region 
+def ReloadSettings(jsondata):
 
-#---------------------------------------
-# Reload Settings on Save
-#---------------------------------------
-def ReloadSettings(jsonData):
-	# Globals
-	global MySettings
+	"""	ReloadSettings is an optional function that gets called once the user clicks on
+		the Save Settings button of the corresponding script in the scripts tab if an
+		user interface has been created for said script. The entire Json object will be
+		passed to the function	so you can load that back	into your settings without
+		having to read the newly saved settings file."""
 
-	# Reload saved settings
-	MySettings.ReloadSettings(jsonData)
+	ScriptSettings.Reload(jsondata)
 
 	if EventReceiver and not EventReceiver.IsConnected:
-		if MySettings.socket_token:
-			EventReceiver.Connect(MySettings.socket_token)
+		if ScriptSettings.socket_token:
+			EventReceiver.Connect(ScriptSettings.socket_token)
 
-	# End of ReloadSettings
 	return
 
-def UpdateSettings():
-	with open(m_ConfigFile) as ConfigFile:
-		MySettings.__dict__ = json.load(ConfigFile)
+def SetDefaults():
+
+	""" SetDefaults Custom User Interface Button """
+	defaultSettings = defaultScriptSettings()
+	defaultSettings.Save()
+
 	return
 
 def Unload():
@@ -1009,5 +684,6 @@ def Unload():
 		EventReceiver.Disconnect()
 	EventReceiver = None
 
-	# End of Unload
 	return
+#endregion
+

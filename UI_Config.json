@@ -23,172 +23,62 @@
     "wsevent": "",
     "group": "Token"
   },
-
-  "activateFollowMessage": {
-    "type": "checkbox",
-    "value": true,
-    "label": "Activate",
-    "tooltip": "Activates the Follow message",
-    "group": "Follow"
-  },
-  "followMessage": {
+  "OauthToken": {
     "type": "textbox",
-    "label": "Message on Follow",
-    "value": "@{0} Thank you for the Follow!",
-    "tooltip": "{0} = userName \nSend a Stream Message to the chat",
-    "group": "Follow"
-  },
-  "activateFollowGoal": {
-    "type": "checkbox",
-    "value": true,
-    "label": "Activate",
-    "tooltip": "Activates the Follow Goal",
-    "group": "Follow"
-  },
-  "followerGoal": {
-    "type": "numberbox",
-    "label": "Goal",
-    "value": 10,
-    "tooltip": "How many Followers daily",
-    "group": "Follow"
+    "value": "OAuth xfm9bgudqadd53a5bfwqhm7gqw12l4",
+    "label": "Ouath Token",
+    "tooltip": "Kobi´s Ouath",
+    "group": "Token"
   },
 
-  "activateSubscribeMessage": {
-    "type": "checkbox",
-    "value": true,
-    "label": "Activate",
-    "tooltip": "Activates the Sub messages",
-    "group": "Sub"
-  },
-  "newSubMessage": {
+  "changeUI": {
     "type": "textbox",
-    "label": "Message on First Sub",
-    "value": "We got a new Squirrel in the Family. Thank You {0} for your support!",
-    "tooltip": "{0} = userName \nSend a Stream Message to the chat because of first Subscribe",
-    "group": "Sub"
+    "value": "!ui",
+    "label": "Command Name",
+    "tooltip": "Change the Alert Bar",
+    "group": "AlertBar"
   },
-  "reSubMessage": {
-    "type": "textbox",
-    "label": "Resub",
-    "value": "Thank you for your continuous support! @{0}",
-    "tooltip": "{0} = userName \nSend a Stream Message to the chat because of first Subscribe",
-    "group": "Sub"
+  "UI_Position": {
+    "type": "dropdown",
+    "value": "Bot",
+    "items": [
+      "Bot",
+      "Top",
+      "TopLeft",
+      "BotLeft",
+      "BotRight"
+    ],
+    "label": "Change Ui position",
+    "tooltip": "change the alertbox ui position",
+    "group": "AlertBar"
   },
-  "wbSubMessage": {
-    "type": "textbox",
-    "label": "wbSub",
-    "value": "WbSub test!",
-    "tooltip": "{0} = userName \nSend a Stream Message to the chat because of first Subscribe",
-    "group": "Sub"
-  },
-  "activateSubGoal": {
-    "type": "checkbox",
-    "value": true,
-    "label": "Activate",
-    "tooltip": "Activates the Sub Goal",
-    "group": "Sub"
-  },
-  "subGoal": {
-    "type": "numberbox",
-    "label": "Goal",
-    "value": 1,
-    "tooltip": "How many Subs daily",
-    "group": "Sub"
+  "UI_Position_Button": {
+    "type": "button",
+    "label": "Change Poisition",
+    "tooltip": "Change the UI with button click",
+    "function": "changeUIPositionBtn",
+    "wsevent": "",
+    "group": "AlertBar"
   },
 
-  "activateBitMessage": {
-    "type": "checkbox",
-    "value": true,
-    "label": "Activate",
-    "tooltip": "Activates the Sub messages",
-    "group": "Bits"
+  "UI_Visibility": {
+    "type": "dropdown",
+    "value": "Hidden",
+    "items": [
+      "Hidden",
+      "Visible"
+    ],
+    "label": "Change Ui Visibility",
+    "tooltip": "Visibility of the ui",
+    "group": "AlertBar"
   },
-  "banChampWithBits": {
-    "type": "checkbox",
-    "value": true,
-    "label": "ban with Bits",
-    "tooltip": "Activates the extra ban feature",
-    "group": "Bits"
-  },
-  "bitsMessage": {
-    "type": "textbox",
-    "label": "Bits Message",
-    "value": "Bit Test",
-    "tooltip": "{0} = userName \nSend a Stream Message to the chat because of Bits",
-    "group": "Bits"
-  },
-  "activateBitGoal": {
-    "type": "checkbox",
-    "value": true,
-    "label": "Activate",
-    "tooltip": "Activates the Sub Goal",
-    "group": "Bits"
-  },
-  "bitGoal": {
-    "type": "numberbox",
-    "label": "Goal",
-    "value": 50,
-    "tooltip": "How many Bits daily",
-    "group": "Bits"
-  },
-
-  "activateHostMessage": {
-    "type": "checkbox",
-    "value": true,
-    "label": "Activate",
-    "tooltip": "Activates the Sub messages",
-    "group": "Host"
-  },
-  "hostMessage": {
-    "type": "textbox",
-    "label": "Host Message",
-    "value": "Host Test",
-    "tooltip": "{0} = userName \nSend a Stream Message to the chat because of a Host",
-    "group": "Host"
-  },
-
-  "activateRaidMessage": {
-    "type": "checkbox",
-    "value": true,
-    "label": "Activate",
-    "tooltip": "Activates the Sub messages",
-    "group": "Raid"
-  },
-  "raidMessage": {
-    "type": "textbox",
-    "label": "raid Message",
-    "value": "rag Test",
-    "tooltip": "{0} = userName \nSend a Stream Message to the chat because of a Raid",
-    "group": "Raid"
-  },
-
-  "activateDonationMessage": {
-    "type": "checkbox",
-    "value": true,
-    "label": "Activate",
-    "tooltip": "Activates the Sub messages",
-    "group": "Donation"
-  },
-  "donationMessage": {
-    "type": "textbox",
-    "label": "donation Message",
-    "value": "donation Test",
-    "tooltip": "{0} = userName \nSend a Stream Message to the chat because of a donation",
-    "group": "Donation"
-  },
-  "activateDonationGoal": {
-    "type": "checkbox",
-    "value": true,
-    "label": "Activate",
-    "tooltip": "Activates the Donation Goal",
-    "group": "Donation"
-  },
-  "donationGoal": {
-    "type": "numberbox",
-    "label": "Goal",
-    "value": 1,
-    "tooltip": "How much Donation daily",
-    "group": "Donation"
+  "UI_Visability_Button": {
+    "type": "button",
+    "label": "Change Visibility",
+    "tooltip": "Change the UI Visibility with button click",
+    "function": "changeUIVisiblityBtn",
+    "wsevent": "",
+    "group": "AlertBar"
   },
 
   "donationBarActive": {
@@ -231,43 +121,175 @@
     "wsevent": "",
     "group": "DonationBar"
   },
-  "changeUI": {
+
+  "activateFollowMessage": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Activate Follow Msg",
+    "tooltip": "Activates the Follow message",
+    "group": "Event Msg"
+  },
+  "followMessage": {
     "type": "textbox",
-    "value": "!ui",
-    "label": "Command Name",
-    "tooltip": "Change the Alert Bar",
-    "group": "AlertBar"
+    "label": "Message on Follow",
+    "value": "@{0} Thank you for the Follow!",
+    "tooltip": "{0} = userName \nSend a Stream Message to the chat",
+    "group": "Event Msg"
   },
-  "UI_Position": {
-    "type": "dropdown",
-    "value": "Stream Both",
-    "items": [
-      "Bot",
-      "Top",
-      "TopLeft",
-      "BotLeft",
-      "BotRight"
-    ],
-    "label": "Change Ui position",
-    "tooltip": "change the alertbox ui position",
-    "group": "AlertBar"
+  "activateFollowGoal": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Toggle follower goal",
+    "tooltip": "Activates the Follow Goal",
+    "group": "Event Goals"
   },
-  "UI_Button": {
-    "type": "button",
-    "label": "Ui per Btn",
-    "tooltip": "Change the UI with button click",
-    "function": "changeUIPositionBtn",
-    "wsevent": "",
-    "group": "AlertBar"
+  "followerGoal": {
+    "type": "numberbox",
+    "label": "Goal",
+    "value": 10,
+    "tooltip": "How many Followers daily",
+    "group": "Event Goals"
   },
 
-  "OauthToken": {
-    "type": "textbox",
-    "value": "OAuth xfm9bgudqadd53a5bfwqhm7gqw12l4",
-    "label": "Ouath Token",
-    "tooltip": "Kobi´s Ouath",
-    "group": "General"
+  "activateSubscribeMessage": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Toggle Sub Msg",
+    "tooltip": "Activates the Sub messages",
+    "group": "Event Msg"
   },
+  "newSubMessage": {
+    "type": "textbox",
+    "label": "Message on First Sub",
+    "value": "We got a new Squirrel in the Family. Thank You {0} for your support!",
+    "tooltip": "{0} = userName \nSend a Stream Message to the chat because of first Subscribe",
+    "group": "Event Msg"
+  },
+  "reSubMessage": {
+    "type": "textbox",
+    "label": "Resub",
+    "value": "Thank you for your continuous support! @{0}",
+    "tooltip": "{0} = userName \nSend a Stream Message to the chat because of first Subscribe",
+    "group": "Event Msg"
+  },
+  "wbSubMessage": {
+    "type": "textbox",
+    "label": "wbSub",
+    "value": "WbSub test!",
+    "tooltip": "{0} = userName \nSend a Stream Message to the chat because of first Subscribe",
+    "group": "Event Msg"
+  },
+  "activateSubGoal": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Activate Sub Goal",
+    "tooltip": "Activates the Sub Goal",
+    "group": "Event Goals"
+  },
+  "subGoal": {
+    "type": "numberbox",
+    "label": "Goal daily Subs",
+    "value": 1,
+    "tooltip": "How many Subs daily",
+    "group": "Event Goals"
+  },
+
+  "activateBitMessage": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Toggle Bit Msg",
+    "tooltip": "Activates the Sub messages",
+    "group": "Event Msg"
+  },
+  "banChampWithBits": {
+    "type": "checkbox",
+    "value": true,
+    "label": "ban with Bits",
+    "tooltip": "Activates the extra ban feature",
+    "group": "Event Msg"
+  },
+  "bitsMessage": {
+    "type": "textbox",
+    "label": "Bits Message",
+    "value": "Bit Test",
+    "tooltip": "{0} = userName \nSend a Stream Message to the chat because of Bits",
+    "group": "Event Msg"
+  },
+  "activateBitGoal": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Toggle Bit goal",
+    "tooltip": "Activates the Bit Goal",
+    "group": "Event Goals"
+  },
+  "bitGoal": {
+    "type": "numberbox",
+    "label": "",
+    "value": 50,
+    "tooltip": "How many Bits daily",
+    "group": "Event Goals"
+  },
+
+  "activateDonationMessage": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Activate Donation msg",
+    "tooltip": "Activates the Sub messages",
+    "group": "Event Msg"
+  },
+  "donationMessage": {
+    "type": "textbox",
+    "label": "donation Message",
+    "value": "donation Test",
+    "tooltip": "{0} = userName \nSend a Stream Message to the chat because of a donation",
+    "group": "Event Msg"
+  },
+  "activateDonationGoal": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Activate Daily goal",
+    "tooltip": "Activates the Donation Goal",
+    "group": "Event Goals"
+  },
+  "donationGoal": {
+    "type": "numberbox",
+    "label": "Daily goal",
+    "value": 1,
+    "tooltip": "How much Donation daily",
+    "group": "Event Goals"
+  },
+
+  "activateHostMessage": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Activate Host Msg",
+    "tooltip": "Activates the Host messages",
+    "group": "Raid/Host"
+  },
+  "hostMessage": {
+    "type": "textbox",
+    "label": "Host Message",
+    "value": "Host Test",
+    "tooltip": "{0} = userName \nSend a Stream Message to the chat because of a Host",
+    "group": "Raid/Host"
+  },
+
+  "activateRaidMessage": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Activate Raid Msg",
+    "tooltip": "Activates the Raid messages",
+    "group": "Raid/Host"
+  },
+  "raidMessage": {
+    "type": "textbox",
+    "label": "raid Message",
+    "value": "Cho cho incoming. A raid with {0}. Thanks a lot @{1}",
+    "tooltip": "{0} = userName \nSend a Stream Message to the chat because of a Raid",
+    "group": "Raid/Host"
+  },
+
+
   "runADCommand": {
     "type": "textbox",
     "value": "!ad",
@@ -296,68 +318,68 @@
   "titlePreset1": {
     "type": "textbox",
     "value": "Diamond  | TFT + LoL | Say hello",
-    "label": "Command Name",
+    "label": "Update Game/Title",
     "tooltip": "Make a Commercial",
-    "group": "Preset1"
+    "group": "Presets"
   },
   "gamePreset1": {
     "type": "textbox",
     "value": "League of Legends",
     "label": "Game Title",
     "tooltip": "Make a Commercial",
-    "group": "Preset1"
+    "group": "Presets"
   },
   "updateButtonPreset1": {
     "type": "button",
-    "label": "Update Game/Title",
+    "label": "Update with Preset 1",
     "tooltip": "Updates the game and title with Preset 1",
     "function": "presetOne",
     "wsevent": "",
-    "group": "Preset1"
+    "group": "Presets"
   },
   "titlePreset2": {
     "type": "textbox",
     "value": "Diamond  | TFT + LoL | Say hello",
     "label": "Command Name",
     "tooltip": "Make a Commercial",
-    "group": "Preset2"
+    "group": "Presets"
   },
   "gamePreset2": {
     "type": "textbox",
     "value": "League of Legends",
     "label": "Game Title",
     "tooltip": "Make a Commercial",
-    "group": "Preset2"
+    "group": "Presets"
   },
   "updateButtonPreset2": {
     "type": "button",
-    "label": "Update Game/Title",
+    "label": "Update with Preset 2",
     "tooltip": "Updates the game and title with Preset 2",
     "function": "presetTwo",
     "wsevent": "",
-    "group": "Preset2"
+    "group": "Presets"
   },
   "titlePreset3": {
     "type": "textbox",
     "value": "Diamond  | TFT + LoL | Say hello",
     "label": "Command Name",
     "tooltip": "Make a Commercial",
-    "group": "Preset3"
+    "group": "Presets"
   },
   "gamePreset3": {
     "type": "textbox",
     "value": "League of Legends",
     "label": "Game Title",
     "tooltip": "Make a Commercial",
-    "group": "Preset3"
+    "group": "Presets"
   },
   "updateButtonPreset3": {
     "type": "button",
-    "label": "Update Game/Title",
+    "label": "Update with Preset 3",
     "tooltip": "Updates the game and title with Preset 3",
     "function": "presetThree",
     "wsevent": "",
-    "group": "Preset3"
+    "group": "Presets"
   },
 
   "button_readme": {

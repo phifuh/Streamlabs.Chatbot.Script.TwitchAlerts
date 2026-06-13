@@ -227,7 +227,7 @@ def EventReceiverEvent(sender, args):
 
 	if evntdata and evntdata.For == "twitch_account":
 
-		Parent.Log("Event type",str(evntdata.Type))
+		#Parent.Log("Event type",str(evntdata.Type))
 
 		if evntdata.Type == "follow":
 
@@ -235,7 +235,7 @@ def EventReceiverEvent(sender, args):
 
 				if ScriptSettings.activateFollowMessage:
 
-					wrapper.streamMessage(str(ScriptSettings.followMessage.format(message.Name)))
+					wrapper.message(str(ScriptSettings.followMessage.format(message.Name)))
 
 				updateLatestNotification("follow",message.Name,"0")
 				wrapper.sendSocketEvents(["Alerts_showFollowEvent"],	[{"userName":message.Name}])
@@ -251,17 +251,17 @@ def EventReceiverEvent(sender, args):
 
 					if ScriptSettings.activateSubscribeMessage:
 
-						wrapper.streamMessage(str(ScriptSettings.reSubMessage.format(message.Name)))
-						wrapper.printLog("resub streak 11")
+						wrapper.message(str(ScriptSettings.reSubMessage.format(message.Name)))
+						wrapper.log("resub streak 11")
 
-					wrapper.printLog("resub streak 22")
+					wrapper.log("resub streak 22")
 
 					updateLatestNotification("sub",message.Name,message.Months)
 					subName = message.Name
 
 					wrapper.sendSocketEvents(["Alerts_showSubEvent"],	[{"userName":message.Name,"subAmount":message.Months}])
 
-					wrapper.printLog("resub streak 33")
+					wrapper.log("resub streak 33")
 
 					userID = twitchFuncs.getTwitchUserID(Parent,str(message.Name))
 					insertProfileData(userID,str(subName),"sub",str(message.Months))
@@ -272,29 +272,29 @@ def EventReceiverEvent(sender, args):
 				elif message.SubType == "subscriber" and message.Months >= 1:
 
 					#welcome back sub?
-					wrapper.printLog("resub 00")
+					wrapper.log("resub 00")
 
 					if ScriptSettings.activateSubscribeMessage:
 
-						wrapper.streamMessage(str(ScriptSettings.wbSubMessage.format(message.Name, message.Months)))
-						wrapper.printLog("resub 1111")
+						wrapper.message(str(ScriptSettings.wbSubMessage.format(message.Name, message.Months)))
+						wrapper.log("resub 1111")
 					
 					updateLatestNotification("sub",message.Name,message.Months)
 					
 					wrapper.sendSocketEvents(["Alerts_showSubEvent"],	[{"userName":message.Name,"subAmount":message.Months}])
-					wrapper.printLog("resub 2222")
+					wrapper.log("resub 2222")
 
 					subName = message.Name
 					userID = twitchFuncs.getTwitchUserID(Parent,str(message.Name))
 					insertProfileData(userID,str(subName),"sub",str(message.Months))
 
-					wrapper.printLog("resub 3333")
+					wrapper.log("resub 3333")
 
 				else:
 
 					if ScriptSettings.activateSubscribeMessage:
 
-						wrapper.streamMessage(str(ScriptSettings.newSubMessage.format(message.Name)))
+						wrapper.message(str(ScriptSettings.newSubMessage.format(message.Name)))
 
 					updateLatestNotification("sub",message.Name,"0")
 
@@ -312,7 +312,7 @@ def EventReceiverEvent(sender, args):
 				bitMessage = message.Message 
 
 				if ScriptSettings.activateBitMessage:
-					wrapper.streamMessage(str(ScriptSettings.bitsMessage.format(message.Name)))
+					wrapper.message(str(ScriptSettings.bitsMessage.format(message.Name)))
 
 
 				updateLatestNotification("bits",message.Name,bitAmount)
@@ -342,7 +342,7 @@ def EventReceiverEvent(sender, args):
 				hostViewers  = message.Viewers  
 
 				if ScriptSettings.activateHostMessage:
-					wrapper.streamMessage(str(ScriptSettings.hostMessage.format(message.Name)))
+					wrapper.message(str(ScriptSettings.hostMessage.format(message.Name)))
 
 				wrapper.sendSocketEvents(["Alerts_showHostEvent"],	[{"userName":hostName,"hostAmount":hostViewers}])
 
@@ -357,7 +357,10 @@ def EventReceiverEvent(sender, args):
 				raidViewers  = message.Raiders  
 
 				if ScriptSettings.activateRaidMessage:
-					wrapper.streamMessage("Cho cho incoming. A raid with " + str(raidViewers) + " by " + str(message.Name) + ", thanks a lot!" )
+					wrapper.message(str(ScriptSettings.raidMessage.format(raidViewers,raidName)))
+
+				if int(raidViewers) > 1:
+					wrapper.message("Attention bois and girls. Check out twitch.tv/" + str(raidName) + " . A follow is free! ")
 
 				updateLatestNotification("raid",raidName,raidViewers)
 
@@ -372,7 +375,7 @@ def EventReceiverEvent(sender, args):
 				donationName     = message.Name
 				donationAmount = message.Amount
 
-				wrapper.printLog("dono came through")
+				wrapper.log("dono came through")
 				wrapper.sendSocketEvents(["Alerts_showDonationEvent"],	[{"userName":donationName,"donationAmount":donationAmount}])
 
 				Parent.SendStreamWhisper("kobiqq","donation Test" + str(ScriptSettings.donation.format(message.Name)))
@@ -385,8 +388,6 @@ def EventReceiverEvent(sender, args):
 #endregion
 
 def dbConnection(dbName):
-	
-
 	"""Documentation: Decorater (Generic template function)\n
 Arguments:	DB name - to select the correct Database		
 Description:	Send a SQL querry to the decorator.
@@ -581,8 +582,13 @@ def updateDonationTracker():
 
 def changeUIPositionBtn():
 
-	UIPosition = ScriptSettings.UI_Position.lower()
-	wrapper.sendSocketEvents(["Alerts_ChangeUI_Position"],	[{"UIPosition":UIPosition}])
+	wrapper.sendSocketEvents(["Alerts_ChangeUI_Position"],	[{"UIPosition":ScriptSettings.UI_Position.lower()}])
+
+	return
+
+def changeUIVisiblityBtn():
+
+	wrapper.sendSocketEvents(["Alerts_ToggleUI_Visibility"],[{"UIvisibility":ScriptSettings.UI_Visibility}])
 
 	return
 
@@ -590,7 +596,7 @@ def donationVisibilityBtn():
 
 	changeDonationUI = ScriptSettings.donationVisibility.lower()
 
-	wrapper.printLog(str(changeDonationUI))
+	#wrapper.log(str(changeDonationUI))
 
 	if changeDonationUI == "visible":
 		changeDonationUI = "Visible"

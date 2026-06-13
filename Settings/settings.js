@@ -6,7 +6,7 @@
   "wbSubMessage": "{0} resubscribed. Welcome back my friend",
   "bitsMessage": "Thanks a lot for Bits {0}",
   "hostMessage": "Thanks a lot for the Host {0}",
-  "raidMessage": "Raid Test",
+  "raidMessage": "Cho cho incoming. A raid with {0}. Thanks a lot @{1}",
   "donation": "donation test",
   "banChampWithBits": false,
   "activateFollowMessage": true,
@@ -18,7 +18,7 @@
   "donationMessage": "donation Test",
   "Zelda_AlertBox": true,
   "changeUI": "!ui",
-  "UI_Position": "Top",
+  "UI_Position": "Bot",
   "OauthToken": "OAuth xfm9bgudqadd53a5bfwqhm7gqw12l4",
   "runADCommand": "!ad",
   "ADInterval": 30.0,
@@ -38,6 +38,7 @@
   "donationGoal": 1,
   "donationBarCDTime": 180,
   "donationBarVisibleTime": 20,
-  "donationBarActive": false,
-  "donationVisibility": "Hidden"
+  "donationBarActive": true,
+  "donationVisibility": "Hidden",
+  "UI_Visibility": "Hidden"
 };

@@ -1,15 +1,17 @@
 var currentIndex = 0;
+/*var delay = 50;*/
 var delay = 100;
 var audioElementChooser = 1;
 
-var showEventText = function (target, message, userName, index, interval)
+var showEventText = function (target, message, userName, index, interval, mode)
 {
+    
 
 	if (currentIndex == nextCutoff) {
 
         currentIndex = 0;
         nextCutoff = userName.length;
-        showName("#text_target_userName", userName.substring(0, nextCutoff), 0, delay);
+        displayText("#text_target_userName", userName.substring(0, nextCutoff), 0, delay, mode);
 
 		return;
 	}
@@ -18,40 +20,88 @@ var showEventText = function (target, message, userName, index, interval)
 	currentIndex++;
 	
 	if (message[index] != " ") {
-		playSound();		
+        playSound(mode);
     }
 
 	setTimeout(function () {
-        showEventText(target, message, userName, index, interval);
+        showEventText(target, message, userName, index, interval, mode);
 	}, interval);
 };
 
-var showName = function (target, nameText, index, interval) {
+var displayText = function (target, nameText, index, interval, mode) {
 
 
     if (currentIndex == nextCutoff) {
 
-        
         return;
     }
 
     $(target).append(nameText[index++]);
     currentIndex++;
 
+
+
+    /*plays a sound everytime a space is*/
     if (nameText[index] != " ") {
-        playSound();
+        playSound(mode);
     }
 
     setTimeout(function () {
-        showName(target, nameText, index, interval);
+        displayText(target, nameText, index, interval, mode);
     }, interval);
 };
 
-var playSound = function() {
-	var targetId = "audio-source" + this.audioElementChooser;
-	var audio = document.getElementById(targetId);
-	audio.volume = 0.1;
-	audio.play();
+var playSound = function (mode) {
+
+
+    
+
+
+    if (mode == 1) {
+
+        var targetId = "audio-source-kroko-" + this.audioElementChooser;
+        var audio = document.getElementById(targetId);
+        audio.volume = 0.1;
+
+        var randomPlayback = (randomInteger(60, 130) / 100);
+
+        audio.playbackRate = randomPlayback;
+
+        //Attempt in radomizing the sounds
+        x = randomInteger(0, 10)
+        if (x > 3) {
+            audio.play();
+        }
+    }
+
+    if (mode == 2) {
+
+        var targetId = "audio-source-banjo-" + this.audioElementChooser;
+        var audio = document.getElementById(targetId);
+        audio.volume = 0.1;
+
+        var randomPlayback = (randomInteger(90, 130) / 100);
+
+        audio.playbackRate = randomPlayback;
+
+        //Attempt in radomizing the sounds
+        x = randomInteger(0, 10)
+        if (x > 2) {
+            audio.play();
+        }
+    }
+
+
+    else {
+
+        var targetId = "audio-source-normal-" + this.audioElementChooser;
+        var audio = document.getElementById(targetId);
+        audio.volume = 0.1;
+
+        //this working perfectly fine for the classic sound
+        audio.play();
+    }
+
 
 	if (this.audioElementChooser < 3) {
 		this.audioElementChooser++;
@@ -60,8 +110,13 @@ var playSound = function() {
 	}
 }
 
+function randomInteger(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 function createZeldaTextBox(text, userName) {
+
+    //update the height of dialogue-box - to match how many lines we will have
 
     //reset the input
     document.getElementById("text_target").innerHTML = "";
@@ -75,7 +130,9 @@ function createZeldaTextBox(text, userName) {
     var random_color = colors[Math.floor(Math.random() * colors.length)];
     document.getElementById('text_target_userName').style.color = random_color;
 
-    showEventText("#text_target", text.substring(0, nextCutoff), userName, 0, delay);
+
+    mode = randomInteger(1, 3)
+    showEventText("#text_target", text.substring(0, nextCutoff), userName, 0, delay, mode);
 
 }
 

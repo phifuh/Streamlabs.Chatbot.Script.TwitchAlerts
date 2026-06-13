@@ -389,13 +389,8 @@ def EventReceiverEvent(sender, args):
 
 def dbConnection(dbName):
 	"""Documentation: Decorater (Generic template function)\n
-Arguments:	DB name - to select the correct Database		
-Description:	Send a SQL querry to the decorator.
-Return Value:	None\n
-Notes: If I would define the dbName == "marioMaker": / conn 
-in this scope, then its only called once at the creation of the decorator class. 
-It was working fine in testing because its always called a new instance, but when apps are running we have to change the 
-db name inside of the inner scope 
+	Decorator arg:	DB name - to select the correct Database		
+	Func Description:	Create a SQL statement with the DB.
 	"""
 
 	path = "../../globalFiles/Datenbanken/" + str(dbName) + ".db"
@@ -403,21 +398,16 @@ db name inside of the inner scope
 	def dbConnector(fn):
 
 		def invokeSQLQuerry(*args):
+			with sqlite3.connect(os.path.abspath(os.path.join(__file__ , path)), check_same_thread=False) as conn:
+				db = conn.cursor()
 
-			conn = sqlite3.connect(os.path.abspath(os.path.join(__file__ , path)), check_same_thread=False)
-			c = conn.cursor()
-
-			try:
-				result = fn(c,*args)
-
-			except Exception as err:
-				Parent.Log(ScriptName,"\nTraceback Error \n" + str(traceback.format_exc()))
-				Parent.Log(ScriptName,"Query Failed in: " + str(fn) + " with the Error " + str(err) + "the absolute path of the DB" + str(path))
-			else: 
-				conn.commit()              
-				return result          
-			finally:
-				conn.close()
+				try:
+					result = fn(db, *args)
+				except Exception as err:
+					Parent.Log(ScriptName,"\nTraceback Error \n" + str(traceback.format_exc()))
+					Parent.Log(ScriptName,"Query Failed in: " + str(fn) + " with the Error " + str(err) + "the absolute path of the DB" + str(path))
+				else: 
+					return result
 
 		return invokeSQLQuerry
 
@@ -428,27 +418,27 @@ def testOBSConnection():
 	wrapper.sendSocketEvents(["Alerts_showFollowEvent"],	[{"userName":"-"}])
 
 @dbConnection("streamMetaData")
-def initEventAlertBar(c):
+def initEventAlertBar(db):
 	
-	c.execute("SELECT fromViewer,amount FROM latestNotifications WHERE alertType='follow'")
-	row = c.fetchone()
+	db.execute("SELECT fromViewer,amount FROM latestNotifications WHERE alertType='follow'")
+	row = db.fetchone()
 
 	followName = row[0]
 
-	c.execute("SELECT fromViewer,amount FROM latestNotifications WHERE alertType='sub'")
-	row = c.fetchone()
+	db.execute("SELECT fromViewer,amount FROM latestNotifications WHERE alertType='sub'")
+	row = db.fetchone()
 
 	subName = row[0]
 	subAmount = row[1]
 
-	c.execute("SELECT fromViewer,amount FROM latestNotifications WHERE alertType='bits'")
-	row = c.fetchone()
+	db.execute("SELECT fromViewer,amount FROM latestNotifications WHERE alertType='bits'")
+	row = db.fetchone()
 
 	bitsName = row[0]
 	bitsAmount = row[1]
 
-	c.execute("SELECT fromViewer,amount FROM latestNotifications WHERE alertType='donation'")
-	row = c.fetchone()
+	db.execute("SELECT fromViewer,amount FROM latestNotifications WHERE alertType='donation'")
+	row = db.fetchone()
 
 	donationName = row[0]
 	donationAmount = row[1]
@@ -458,10 +448,10 @@ def initEventAlertBar(c):
 	return
 
 @dbConnection("streamMetaData")
-def initDonationBar(c):
+def initDonationBar(db):
 
-	c.execute("SELECT artikel,amount,bereitsGespendet,endDate FROM donation ORDER BY ranking ASC LIMIT 1")
-	row = c.fetchone()
+	db.execute("SELECT artikel,amount,bereitsGespendet,endDate FROM donation ORDER BY ranking ASC LIMIT 1")
+	row = db.fetchone()
 
 	artikel = row[0]
 	neededAmount = row[1]
@@ -469,17 +459,17 @@ def initDonationBar(c):
 	endDate = row[3]
 
 	wrapper.sendSocketEvents(["Init_Donationbar"],	[{"artikel":artikel,"neededAmount":neededAmount,"bereitsGespendet":bereitsGespendet,"endDate":endDate}])
-
+	wrapper.sendSocketEvents(["Alerts_ToggleDonationUI_Visibility"],[{"donationBarvisibility":ScriptSettings.donationVisibility}])
 
 	return
 
 @dbConnection("streamMetaData")
-def initNotficationGoals(c):
+def initNotficationGoals(db):
 
 	rightNow = datetime.strptime(""+str(datetime.now().day)+"/"+str(datetime.now().month)+"/"+str(datetime.now().year), "%d/%m/%Y")
 
-	c.execute("SELECT dailyTimestamp FROM notficationGoals WHERE id='1'")
-	row = c.fetchone()
+	db.execute("SELECT dailyTimestamp FROM notficationGoals WHERE id='1'")
+	row = db.fetchone()
 		
 	lastUpdatedDate  =  row[0]
 
@@ -493,31 +483,29 @@ def initNotficationGoals(c):
 	return
 
 @dbConnection("streamMetaData")
-def updateLatestNotification(c,eventType,fromName,amount):
+def updateLatestNotification(db, eventType, fromName, amount):
 
-	c.execute("SELECT fromViewer FROM latestNotifications WHERE alertType=?",(eventType,))
-	row = c.fetchone()
+	db.execute("SELECT fromViewer FROM latestNotifications WHERE alertType=?",(eventType,))
+	row = db.fetchone()
 	if row:
-
-		c.execute("UPDATE latestNotifications SET fromViewer =? ,amount =? WHERE alertType=?",(fromName,amount,eventType,))
-
+		db.execute("UPDATE latestNotifications SET fromViewer =? ,amount =? WHERE alertType=?",(fromName,amount,eventType,))
 	else:
-		c.execute("INSERT INTO latestNotifications ('alertType','fromViewer','amount') values (?,?,?) ",(eventType,fromName,amount,))
+		db.execute("INSERT INTO latestNotifications ('alertType','fromViewer','amount') values (?,?,?) ",(eventType,fromName,amount,))
 
 	return
 
 @dbConnection("streamMetaData")
-def resetDailyGoals(c,stringDate):
+def resetDailyGoals(db,stringDate):
 
-	c.execute("UPDATE notficationGoals SET dailyFollowers ='0', dailySubs ='0', dailyBits ='0', dailyDonation ='0', dailyTimestamp =? WHERE id='1'",(stringDate,))
+	db.execute("UPDATE notficationGoals SET dailyFollowers ='0', dailySubs ='0', dailyBits ='0', dailyDonation ='0', dailyTimestamp =? WHERE id='1'",(stringDate,))
 
 	return
 
 @dbConnection("streamUserData")
-def insertProfileData(c,twitchID,userName,supportType,Amount):
+def insertProfileData(db, twitchID, userName, supportType, Amount):
 
-	c.execute("SELECT totalSub,totalBits,totalDonation,totalGiftedSubs FROM profileData WHERE twitchID=?",(twitchID,))
-	row = c.fetchone()
+	db.execute("SELECT totalSub,totalBits,totalDonation,totalGiftedSubs FROM profileData WHERE twitchID=?",(twitchID,))
+	row = db.fetchone()
 	if row:
 
 		totalSub = row[0]
@@ -528,48 +516,48 @@ def insertProfileData(c,twitchID,userName,supportType,Amount):
 		if supportType == "sub":
 
 			newTotalSub = int(Amount) 
-			c.execute("UPDATE profileData SET userName =?,totalSub =? WHERE twitchID=?",(userName,newTotalSub,twitchID,))
+			db.execute("UPDATE profileData SET userName =?,totalSub =? WHERE twitchID=?",(userName,newTotalSub,twitchID,))
 
 		elif supportType == "bits":
 
 			newTotalBits = int(totalBits) + int(Amount) 
-			c.execute("UPDATE profileData SET userName =?, totalBits =? WHERE twitchID=?",(userName,newTotalBits,twitchID,))
+			db.execute("UPDATE profileData SET userName =?, totalBits =? WHERE twitchID=?",(userName,newTotalBits,twitchID,))
 
 		elif supportType == "donation":
 
 			newTotalDonation = int(totalDonation) + int(Amount) 
-			c.execute("UPDATE profileData SET userName =?,totalDonation =? WHERE twitchID=?",(userName,newTotalDonation,twitchID,))
+			db.execute("UPDATE profileData SET userName =?,totalDonation =? WHERE twitchID=?",(userName,newTotalDonation,twitchID,))
 
 		elif supportType == "giftedSub":
 
 			newTotalGiftesSubs = int(totalGiftedSubs) + int(Amount) 
-			c.execute("UPDATE profileData SET userName =? ,totalGiftedSubs =? WHERE twitchID=?",(userName,newTotalGiftesSubs,twitchID,))
+			db.execute("UPDATE profileData SET userName =? ,totalGiftedSubs =? WHERE twitchID=?",(userName,newTotalGiftesSubs,twitchID,))
 
 	else:
 
 		if supportType == "sub":
 
-			c.execute("INSERT INTO profileData ('twitchID','userName','totalSub','totalBits','totalDonation','totalGiftedSubs') values (?,?,?,?,?,?) ",(twitchID,userName,Amount,0,0,0,))
+			db.execute("INSERT INTO profileData ('twitchID','userName','totalSub','totalBits','totalDonation','totalGiftedSubs') values (?,?,?,?,?,?) ",(twitchID,userName,Amount,0,0,0,))
 
 		elif supportType == "bits":
 
-			c.execute("INSERT INTO profileData ('twitchID','userName','totalSub','totalBits','totalDonation','totalGiftedSubs') values (?,?,?,?,?,?) ",(twitchID,userName,0,Amount,0,0,))
+			db.execute("INSERT INTO profileData ('twitchID','userName','totalSub','totalBits','totalDonation','totalGiftedSubs') values (?,?,?,?,?,?) ",(twitchID,userName,0,Amount,0,0,))
 
 		elif supportType == "donation":
 
-			c.execute("INSERT INTO profileData ('twitchID','userName','totalSub','totalBits','totalDonation','totalGiftedSubs') values (?,?,?,?,?,?) ",(twitchID,userName,0,0,Amount,0,))
+			db.execute("INSERT INTO profileData ('twitchID','userName','totalSub','totalBits','totalDonation','totalGiftedSubs') values (?,?,?,?,?,?) ",(twitchID,userName,0,0,Amount,0,))
 		
 		elif supportType == "giftedSub":
 
-			c.execute("INSERT INTO profileData ('twitchID','userName','totalSub','totalBits','totalDonation','totalGiftedSubs') values (?,?,?,?,?,?) ",(twitchID,userName,0,0,0,Amount,))
+			db.execute("INSERT INTO profileData ('twitchID','userName','totalSub','totalBits','totalDonation','totalGiftedSubs') values (?,?,?,?,?,?) ",(twitchID,userName,0,0,0,Amount,))
 
 	return
 
 @dbConnection("streamMetaData")
-def updateGameIconInUIBar(c):
+def updateGameIconInUIBar(db):
 
-	c.execute("SELECT game FROM gameStats WHERE id='1'")
-	row = c.fetchone()
+	db.execute("SELECT game FROM gameStats WHERE id='1'")
+	row = db.fetchone()
 	game = row[0]
 
 	wrapper.sendSocketEvents(["updateGameIcons"],	[{"currentGame":game}])
@@ -582,30 +570,15 @@ def updateDonationTracker():
 
 def changeUIPositionBtn():
 
-	wrapper.sendSocketEvents(["Alerts_ChangeUI_Position"],	[{"UIPosition":ScriptSettings.UI_Position.lower()}])
-
-	return
+	wrapper.sendSocketEvents(["Alerts_ChangeUI_Position"],[{"UIPosition":ScriptSettings.UI_Position.lower()}])
 
 def changeUIVisiblityBtn():
 
 	wrapper.sendSocketEvents(["Alerts_ToggleUI_Visibility"],[{"UIvisibility":ScriptSettings.UI_Visibility}])
 
-	return
-
 def donationVisibilityBtn():
 
-	changeDonationUI = ScriptSettings.donationVisibility.lower()
-
-	#wrapper.log(str(changeDonationUI))
-
-	if changeDonationUI == "visible":
-		changeDonationUI = "Visible"
-	else:
-		changeDonationUI = "Hidden"
-
-	wrapper.sendSocketEvents(["Alerts_ToggleDonationUI_Visibility"],	[{"donationBarvisibility":changeDonationUI}])
-
-	return
+	wrapper.sendSocketEvents(["Alerts_ToggleDonationUI_Visibility"],[{"donationBarvisibility":ScriptSettings.donationVisibility}])
 
 
 #Stream Control - Presets and ADS

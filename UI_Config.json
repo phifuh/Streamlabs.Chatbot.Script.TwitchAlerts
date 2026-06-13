@@ -104,9 +104,9 @@
   },
   "donationVisibility": {
     "type": "dropdown",
-    "value": "visible",
+    "value": "Visible",
     "items": [
-      "visible",
+      "Visible",
       "Hidden"
     ],
     "label": "Donationbar Visibility",

@@ -1,6 +1,10 @@
 ﻿<!DOCTYPE HTML>
-
+<html>
 <head>
+
+    <audio id="audio-source1" src="ZeldaTextBox/BlipV1.wav" preload="auto" volume="0.0"></audio>
+    <audio id="audio-source2" src="ZeldaTextBox/BlipV1.wav" preload="auto" volume="0.0"></audio>
+    <audio id="audio-source3" src="ZeldaTextBox/BlipV1.wav" preload="auto" volume="0.0"></audio>
 
     <meta charset="UTF-8">
     <title>UI</title>
@@ -12,7 +16,9 @@
     <script src="../globalFiles/commonUsedFunctions.js"></script>
     <script src="ZeldaTextBox/dialogue.js"></script>
 
+
     <style>
+
         #AlertUI {
             /*width: 460px;
 
@@ -21,7 +27,7 @@
             /* display: block; */
             font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
             font-display: block;
-            font-size: 24px;
+            font-size: 33px;
             position: absolute;
             bottom: 0;
             left: 0;
@@ -57,21 +63,9 @@
         #followName {
             display: inline-block;
             vertical-align: top;
-            padding-top: 8px;
+            padding-top: 4px;
             color: red;
         }
-
-        #followGoal {
-            display: inline-block;
-            vertical-align: top;
-            padding-top: 8px;
-            color: White;
-            float: right;
-            padding-right: 10px;
-        }
-
-
-
         /*#endregion follow css*/
 
         /*#region subs css*/
@@ -102,19 +96,9 @@
         #subName {
             display: inline-block;
             vertical-align: top;
-            padding-top: 8px;
+            padding-top: 4px;
             color: red;
         }
-
-        #subGoal {
-            display: inline-block;
-            vertical-align: top;
-            padding-top: 8px;
-            color: White;
-            float: right;
-            padding-right: 10px;
-        }
-
         /*#endregion subs css*/
 
         /*#region bits css*/
@@ -145,19 +129,9 @@
         #bitsName {
             display: inline-block;
             vertical-align: top;
-            padding-top: 8px;
+            padding-top: 4px;
             color: red;
         }
-
-        #bitsGoal {
-            display: inline-block;
-            vertical-align: top;
-            padding-top: 8px;
-            color: White;
-            float: right;
-            padding-right: 10px;
-        }
-
         /*#endregion bits css*/
 
         /*#region donation css*/
@@ -183,24 +157,15 @@
             vertical-align: top;
             padding-top: 6px;
             font-size: 28px;
+            
         }
 
         #donationName {
             display: inline-block;
             vertical-align: top;
-            padding-top: 8px;
+            padding-top: 4px;
             color: red;
         }
-
-        #donationGoal {
-            display: inline-block;
-            vertical-align: top;
-            padding-top: 8px;
-            color: White;
-            float: right;
-            padding-right: 10px;
-        }
-
         /*#endregion donation css*/
 
         /*zelda box is streamed in 1280x720*/
@@ -208,18 +173,17 @@
             /*display: flex;
             flex-direction: column;
             justify-content: space-between;*/
+
             height: 1060px;
             width: 1920px;
         }
 
-        @font-face {
-            font-family: 'MyFont';
-            src: url('ZeldaTextBox/ZeldaOracles.ttf') format('truetype');
-        }
+        @font-face { font-family: 'MyFont'; src: url('ZeldaTextBox/ZeldaOracles.ttf') format('truetype'); }
 
 
         /*#region zelda Alert box css*/
         .dialogue-box {
+
             display: flex;
             visibility: hidden;
             flex-direction: column;
@@ -259,7 +223,10 @@
             display: flex;
             justify-content: center;
             flex-direction: column;
+            text-align: center;
+            height: 50px;
             color: white;
+            text-align: center;
             font-weight: 600;
             word-wrap: break-word;
         }
@@ -271,14 +238,13 @@
 
         /* Text box */
         .item:nth-child(1) {
-            flex-grow: 1;
+            flex-grow: 10;
             line-height: 50px;
             background: #1d1d1d;
             border-radius: 25px;
-            margin: -20px
         }
 
-        /*            .item:nth-child(1) p {
+            .item:nth-child(1) p {
                 margin-left: 25px;
                 margin-right: 25px;
                 text-align: center;
@@ -292,19 +258,25 @@
             margin: -15px 0px 5px 0px;
             animation: end-marker-flash 1s linear infinite;
             animation-duration: 1.5s;
-        }*/
+        }
 
         .item #text_target {
             font-size: 30px;
-            min-width: 420px;
-            display: block;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
             user-select: none;
         }
 
         .item #text_target_userName {
             font-size: 30px;
-            min-width: 420px;
-            display: block;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
             user-select: none;
         }
 
@@ -312,110 +284,32 @@
             display: inline-block;
             width: 50px;
             height: 56px;
-            padding-left: 15px;
+            padding-left: 20px;
             background-position-x: center;
             background-repeat: no-repeat;
             background-image: url(alertImages/DefaultAlerts/bits.png);
         }
 
         #alertTextBoxPosition {
-            /*            display: inline-block;*/
-            /*            min-width: 400px;
-            max-width: 400px;*/
+            display: inline-block;
+            min-width: 400px;
+            max-width: 400px;
             position: absolute;
-            margin-left: 65px;
-            text-align: center;
+            margin-left:50px;
+            text-align:center;
         }
-
         /*#endregion  zelda Alert box ending*/
 
-
-        #donationUI {
-            display: inline-flex;
-            position: absolute;
-            height: 45px;
-            z-index: 1;
-            /*change botoom to 40 for testing*/
-            bottom: 0px;
-            left: 0;
-            color: white;
-            background-color: gray;
-        }
-
-        .html5-progress-bar {
-            width: 1920px;
-            background-image: linear-gradient(#3E3E3F 50%, #1C1C1C 50%);
-        }
-
-        .html5-progress-bar progress {
-            padding-left: 10px;
-            display: flex;
-            width: auto;
-            height: 100%;
-            border-radius: 9px;
-        }
-
-        .html5-progress-bar progress::-webkit-progress-bar {
-            border-radius: 9px;
-        }
-
-        .html5-progress-bar progress::-webkit-progress-value {
-            /*
-                    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#23d10d), color-stop(100%,#a5c956));
-                    background: -webkit-linear-gradient(top, #cdeb8e 0%,#a5c956 100%);
-                    */
-
-            background: linear-gradient(to bottom, #cdeb8e 0%, #23d10d 100%);
-            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#cdeb8e', endColorstr='#a5c956', GradientType=0);
-            border-radius: 9px;
-        }
-
-        .goaldetais {
-            width: 460px;
-            font-size: 28px;
-            padding-left: 55px;
-            padding-top: 2px;
-            padding-bottom: 2px;
-            float: left;
-            color: white;
-        }
-
-        .progressText:before {
-            content: attr(data-text);
-            position: absolute;
-            padding-top: 8px;
-            left: 514px;
-            right: 0;
-        }
-
-        .progressText {
-            text-align: center;
-            font-size: 25px;
-            padding-top: 6px;
-        }
     </style>
 </head>
 
-<audio id="audio-source-kroko-1" src="ZeldaTextBox/kroko.wav" preload="auto" volume="0.0"></audio>
-<audio id="audio-source-kroko-2" src="ZeldaTextBox/kroko.wav" preload="auto" volume="0.0"></audio>
-<audio id="audio-source-kroko-3" src="ZeldaTextBox/kroko.wav" preload="auto" volume="0.0"></audio>
-
-<audio id="audio-source-banjo-1" src="ZeldaTextBox/banjoo.wav" preload="auto" volume="0.0"></audio>
-<audio id="audio-source-banjo-2" src="ZeldaTextBox/banjoo.wav" preload="auto" volume="0.0"></audio>
-<audio id="audio-source-banjo-3" src="ZeldaTextBox/banjoo.wav" preload="auto" volume="0.0"></audio>
-
-<audio id="audio-source-maulwurf-1" src="ZeldaTextBox/maulwurf1.wav" preload="auto" volume="0.0"></audio>
-<audio id="audio-source-maulwurf-2" src="ZeldaTextBox/maulwurf2.wav" preload="auto" volume="0.0"></audio>
-<audio id="audio-source-maulwurf-3" src="ZeldaTextBox/maulwurf2.wav" preload="auto" volume="0.0"></audio>
-
-<audio id="audio-source-normal-1" src="ZeldaTextBox/BlipV1.wav" preload="auto" volume="0.0"></audio>
-<audio id="audio-source-normal-2" src="ZeldaTextBox/BlipV1.wav" preload="auto" volume="0.0"></audio>
-<audio id="audio-source-normal-3" src="ZeldaTextBox/BlipV1.wav" preload="auto" volume="0.0"></audio>
-
-<audio id="drinkWaterAudio" src="audio/drinkWaterAudio.mp3"></audio>
-
 
 <body>
+
+    <audio id="drinkWaterAuio">
+        <source src="audio/drinkWaterAudio.mp3" type="audio/mpeg">
+    </audio>
+
 
     <div id="MainFrame" style="width:1900px;height:1060px;display:block;">
 
@@ -423,17 +317,12 @@
 
         </span>
 
-        <!-- test js functions -->
-
-        <!--<button onclick="createZeldaTextBox('Thanks for the Followasdasda sdasd asd asdasd asdasd awqwe 123 ','Username')"> Activate</button>
-        <button onclick="createZeldaTextBox('Thanks asd asdasd awqwe 123 ','Username')"> Activate</button>
-        <button onclick="testTheZeldaBox2()">go</button>
-        <button onclick="changePositionZelda('Bot')"> Bot</button>
-        <button onclick="changePositionZelda('Left')"> LeftBot</button>
-        <button onclick="changeUIDesign('smash')"> LeftBot</button>
-        <button onclick="testTheZeldaBox()">go</button>
-        <button onclick="Init_Donationbar('xx', 140, 1, '--')">go</button>-->
-
+        <!--
+            <button onclick="createZeldaTextBox('Thanks for the Follow ','Username')"> Activate</button>
+            <button onclick="changePositionZelda('Bot')"> Bot</button>
+            <button onclick="changePositionZelda('Left')"> LeftBot</button>
+            <button onclick="changePositionZelda('Left')"> LeftBot</button>
+        -->
 
 
         <div class="wrapper">
@@ -443,8 +332,9 @@
                     <span id="iconBesideBox"></span>
                     <span id="alertTextBoxPosition">
 
+
                         <span id="text_target"></span>
-                        <!--<br />-->
+                        <br />
                         <span id="text_target_userName"></span>
 
                     </span>
@@ -452,20 +342,12 @@
                 </span>
             </span>
 
-
+            <!--
+            <button onclick="testTheZeldaBox()">go</button>
+            <button onclick="testTheZeldaBox2()">go</button>
+            -->
 
         </div>
-
-        <span id="donationUI">
-            <span class="html5-progress-bar">
-                <span class="progress-bar-wrapper">
-                    <span class="goaldetais"> Jackbox Party 7: <span style="float:right">31 days</span></span>
-                    <span class="progressText" data-text="0% 0/10€">
-                        <progress id="progressbar" value="1" max="100"></progress>
-                    </span>
-                </span>
-            </span>
-        </span>
 
         <span id="AlertUI">
             <span id="follow">
@@ -476,8 +358,6 @@
                 </span>
                 <span id="followPrefix">Follow: </span>
                 <span id="followName"></span>
-                <span id="followGoal"></span>
-                <!-- <img id="followEndImage" />-->
             </span>
             <span id="sub">
                 <span id="subIcon">
@@ -487,8 +367,6 @@
                 </span>
                 <span id="subPrefix">Sub: </span>
                 <span id="subName"></span>
-                <span id="subGoal"></span>
-                <!-- <img id="subEndImage" />-->
             </span>
             <span id="bits">
                 <span id="bitsIcon">
@@ -498,10 +376,6 @@
                 </span>
                 <span id="bitsPrefix">Bits: </span>
                 <span id="bitsName"></span>
-                <img id="bitsImage" height="29" width="29" src="img/clearGreenShiny36x36.png"
-                    style="margin-top:7px;margin-left:-3px; position:absolute;" />
-                <span id="bitsGoal"></span>
-                <img id="bitsEndImage" />
             </span>
             <span id="donation">
                 <span id="donationIcon">
@@ -511,8 +385,6 @@
                 </span>
                 <span id="donationPrefix">Donation: </span>
                 <span id="donationName"></span>
-                <span id="donationGoal"></span>
-                <img id="donationEndImage" />
             </span>
         </span>
 
@@ -531,7 +403,6 @@
 
         function webSocketEvent(eventName, varList) {
 
-            //#region Alert Event: Follow/Sub/Bits/Donation/Host/Raid
             if (eventName === "Alerts_showFollowEvent") {
 
                 sliceUsername(varList.userName);
@@ -603,39 +474,11 @@
 
                 initAlerts(varList.followName, varList.subName, varList.subAmount, varList.bitsName, varList.bitsAmount, varList.donationName, varList.donationAmount);
             }
-            //#endregion AutoComplete JS
 
-
-            //#region Change UI
-            else if (eventName === "Alerts_changeUIDesign") {
-
-                changeUIDesign(varList.game)
-            }
             else if (eventName === "Alerts_ChangeUI_Position") {
 
-                changeUIPosition(varList.UIPosition)
+                changeUIPosition(varList.newPosition)
             }
-
-            else if (eventName === "Alerts_ToggleUI_Visibility") {
-
-                toggleUIvisibilit(varList.UIvisibility)
-            }
-
-            else if (eventName === "Alerts_ToggleDonationUI_Visibility") {
-
-                toggleUIDonationvisibility(varList.donationBarvisibility)
-            }
-
-            else if (eventName === "Init_Donationbar") {
-
-                Init_Donationbar(varList.artikel, varList.neededAmount, varList.bereitsGespendet, varList.endDate)
-            }
-
-            else if (eventName === "donationBarSlide") {
-
-                donationBarSlide(varList.slideStatus)
-            }
-            //#endregion AutoComplete JS
 
             else if (eventName === "ChannelPoints_Redemption") {
 
@@ -644,9 +487,7 @@
 
                 if (varList.redemtionTitle == "Drink Water") {
 
-                    var audio = document.getElementById('drinkWaterAudio');
-                    audio.volume = 0.2;
-                    audio.play();
+                    document.getElementById('drinkWaterAuio').play();
                 }
             }
 
@@ -654,9 +495,6 @@
 
                 updateGameIcons(varList.currentGame)
             }
-
-
-
         }
 
         function sliceUsername(userName) {
@@ -664,12 +502,14 @@
             if (userName > 18) {
                 varList.userName = userName.slice(0, 18);
             }
+
         }
 
         function testTheZeldaBox() {
 
             toggleAlertBox("ChannelPoints/water56x56.png");
             createZeldaTextBox('Thanks for the Follow ', 'Username')
+
         }
 
         /*
@@ -686,51 +526,50 @@
             if (pos == "Bot") {
 
                 document.getElementById('dialogue-box').style = 'left:unset;right:0;top:unset;bot:0;width: 470px;';
+
             }
             else {
 
                 document.getElementById('AlertUI').style = 'left:unset;right:0;top:unset;bot:0;width: 470px;';
                 document.getElementById('follow').style = 'padding-left:unset';
             }
+
         }
 
-        function toggleUIvisibilit(visibility) {
+        //this will be the dynamic UI fading
+        function fadeInAndOutUIDisplay() {
 
-            document.getElementById('AlertUI').style.visibility = visibility;
-        }
-
-        function toggleUIDonationvisibility(visibility) {
-
-            document.getElementById('donationUI').style.visibility = visibility;
-        }
-
-        function Init_Donationbar(artikel, neededAmount, bereitsGespendet, endDate) {
+            //if a new alert happens slide in
+            //if game is in loading / menu show perma
+            //else hide
+            //loop and check position
 
 
-            currentProgress = Math.ceil(bereitsGespendet / neededAmount);
-            document.getElementsByClassName('goaldetais')[0].innerHTML = artikel;
-            document.querySelector('.progressText').setAttribute('data-text', bereitsGespendet + '/' + neededAmount + '€');
-            document.getElementById('progressbar').value = currentProgress;
-        }
+            document.getElementById('AlertUI').style.transition.delay = sleepArray[100];
+            document.getElementById('AlertUI').style.transition = 'all ' + transitionTimeArray[5] + 's ease-in-out';
+            document.getElementById('AlertUI').style.transform = 'translateY(360px)';
 
-        function donationBarSlide(slideStatus) {
+            //document.getElementById('AlertUI').style = 'height:' + heightArray[50] + 'px; width:' + widthtArray[50] + 'px;background-size: contain; background-repeat: no-repeat;float: left;';
 
-            if (slideStatus == "slideOut") {
 
-                document.getElementById('donationUI').style.transition = 'all 2s ease-in-out';
-                document.getElementById('donationUI').style.transform = 'translateY(45px)';
-            }
 
-            else if (slideStatus == "slideIn") {
+            sleep(15000).then(() => {
 
-                document.getElementById('donationUI').style.transition = 'all 2s ease-in-out';
-                document.getElementById('donationUI').style.transform = 'translateY(0px)';
-            }
+
+                document.getElementById('rang').style.transition = 'all 7s ease-in-out';
+                document.getElementById('rang').style.transform = 'translateY(-360px)';
+
+
+            });
+
+
         }
 
         function toggleAlertBox(ImagePath) {
 
             document.getElementById('iconBesideBox').style.backgroundImage = 'url(alertImages/' + ImagePath + ')';
+
+
 
             document.getElementsByClassName("dialogue-box")[0].style.visibility = 'Visible';
 
@@ -740,133 +579,34 @@
 
         }
 
-        function changeUIPosition(UIPosition) {
+        function changeUIPosition(newPosition) {
 
-            if (UIPosition == "botright") {
-                document.getElementById('AlertUI').style = 'left:unset;right:0;top:unset;bot:0;width: 470px;  display:unset';
+            if (newPosition == "BotRight") {
+                document.getElementById('AlertUI').style = 'left:unset;right:0;top:unset;bot:0;width: 470px;';
                 document.getElementById('follow').style = 'padding-left:unset';
             }
-            else if (UIPosition == "botleft") {
-                document.getElementById('AlertUI').style = 'left:0;right:unset;top:unset;bot:0;width: 470px;  display:unset';
-                document.getElementById('follow').style = 'padding-left:0px;';
-            }
-            else if (UIPosition == "topleft") {
-                document.getElementById('AlertUI').style = 'left:0; right:unset; top:0; bot:unset; width: 470px; display:unset';
+            else if (newPosition == "BotLeft") {
+                document.getElementById('AlertUI').style = 'left:0;right:unset;top:unset;bot:0;width: 470px;';
                 document.getElementById('follow').style = 'padding-left:unset';
+
             }
-            else if (UIPosition == "top") {
-                document.getElementById('AlertUI').style = 'left:unset;right:unset;bot:unset;top:0;width: 470px;height:47px; display:inline-flex ';
+            else if (newPosition == "Top") {
+                document.getElementById('AlertUI').style = 'left:unset;right:unset;bot:unset;top:0;width: unset;';
                 document.getElementById('follow').style = 'padding-left:40px';
-            }
 
-            else if (UIPosition == "bot") {
-                document.getElementById('AlertUI').style = 'left:unset;right:unset;bot:0;top:unset;width: unset;  display:inline-flex ';
+            }
+            else if (newPosition == "TopLeft") {
+                document.getElementById('AlertUI').style = 'left:0;right:unset;top:0;bot:unset;width: 470px;';
+                document.getElementById('follow').style = 'padding-left:unset';
+
+            }
+            else if (newPosition == "Bot") {
+                document.getElementById('AlertUI').style = 'left:unset;right:unset;bot:0;top:unset;width: unset;';
                 document.getElementById('follow').style = 'padding-left:40px';
             }
             else {
-                document.getElementById('AlertUI').style = 'left:unset;right:unset;bot:unset;top:0;width: 470px;height:47px; display:inline-flex ';
+                document.getElementById('AlertUI').style = 'left:unset;right:unset;bot:unset;top:0;width: unset;';
                 document.getElementById('follow').style = 'padding-left:40px';
-            }
-
-        }
-
-        function changeUIDesign(game) {
-
-            if (game == "smash") {
-
-
-                document.getElementById('follow').style.backgroundImage = "none";
-                document.getElementById('followPrefix').innerHTML = "";
-                //document.getElementById('followName').innerHTML = "Test";
-                document.getElementById('followName').style.color = "White";
-                document.getElementById('followName').style.fontSize = "28px";
-                document.getElementById('followName').style.fontWeight = "lighter";
-                document.getElementById('followName').style.fontStyle = "italic";
-                document.getElementById('followGoal').innerHTML = "0/10 Today";
-
-
-                document.getElementById('sub').style.backgroundImage = "none";
-                document.getElementById('subPrefix').innerHTML = "";
-                //document.getElementById('subName').innerHTML = "Test";
-                document.getElementById('subName').style.color = "White";
-                document.getElementById('subName').style.fontSize = "28px";
-                document.getElementById('subName').style.fontWeight = "lighter";
-                document.getElementById('subName').style.fontStyle = "italic";
-                //document.getElementById('subGoal').innerHTML = "0/10 Today";
-
-
-                document.getElementById('bits').style.backgroundImage = "none";
-                document.getElementById('bitsPrefix').innerHTML = "";
-                //document.getElementById('bitsName').innerHTML = "Test";
-                document.getElementById('bitsName').style.color = "White";
-                document.getElementById('bitsName').style.fontSize = "28px";
-                document.getElementById('bitsName').style.fontWeight = "lighter";
-                document.getElementById('bitsName').style.fontStyle = "italic";
-                //document.getElementById('bitsGoal').innerHTML = "0/10 Today";
-
-
-                document.getElementById('donation').style.backgroundImage = "none";
-                document.getElementById('donationPrefix').innerHTML = "";
-                //document.getElementById('donationName').innerHTML = "Test";
-                document.getElementById('donationName').style.color = "White";
-                document.getElementById('donationName').style.fontSize = "28px";
-                document.getElementById('donationName').style.fontWeight = "lighter";
-                document.getElementById('donationName').style.fontStyle = "italic";
-                //document.getElementById('donationGoal').innerHTML = "0/10 Today";
-
-
-                /* Only for Bits and Dono
-                document.getElementById("followEndImage").src = "img/bit2.5mil-1.png";
-                document.getElementById("followEndImage").width = 33;
-                document.getElementById("followEndImage").height = 33;
-                document.getElementById("followEndImage").style.cssFloat  = "right";
-                */
-
-            }
-
-            else {
-
-
-
-                document.getElementById('follow').style.backgroundImage = "linear-gradient(#3E3E3F 50%, #1C1C1C 50%)";
-                document.getElementById('followPrefix').innerHTML = "Follow: ";
-                //document.getElementById('followName').innerHTML = "Test";
-                document.getElementById('followName').style.color = "red";
-                document.getElementById('followName').style.fontSize = "28px";
-                document.getElementById('followName').style.fontWeight = "lighter";
-                document.getElementById('followName').style.fontStyle = "italic";
-                document.getElementById('followGoal').innerHTML = "0/10 Today";
-
-
-                document.getElementById('sub').style.backgroundImage = "linear-gradient(#3E3E3F 50%, #1C1C1C 50%)";
-                document.getElementById('subPrefix').innerHTML = "Sub: ";
-                //document.getElementById('subName').innerHTML = "Test";
-                document.getElementById('subName').style.color = "red";
-                document.getElementById('subName').style.fontSize = "28px";
-                document.getElementById('subName').style.fontWeight = "lighter";
-                document.getElementById('subName').style.fontStyle = "italic";
-                //document.getElementById('subGoal').innerHTML = "0/10 Today";
-
-
-                document.getElementById('bits').style.backgroundImage = "linear-gradient(#3E3E3F 50%, #1C1C1C 50%)";
-                document.getElementById('bitsPrefix').innerHTML = "Bits: ";
-                //document.getElementById('bitsName').innerHTML = "Test";
-                document.getElementById('bitsName').style.color = "red";
-                document.getElementById('bitsName').style.fontSize = "28px";
-                document.getElementById('bitsName').style.fontWeight = "lighter";
-                document.getElementById('bitsName').style.fontStyle = "italic";
-                //document.getElementById('bitsGoal').innerHTML = "0/10 Today";
-
-
-                document.getElementById('donation').style.backgroundImage = "linear-gradient(#3E3E3F 50%, #1C1C1C 50%)";
-                document.getElementById('donationPrefix').innerHTML = "Donation: ";
-                //document.getElementById('donationName').innerHTML = "Test";
-                document.getElementById('donationName').style.color = "red";
-                document.getElementById('donationName').style.fontSize = "28px";
-                document.getElementById('donationName').style.fontWeight = "lighter";
-                document.getElementById('donationName').style.fontStyle = "italic";
-                //document.getElementById('donationGoal').innerHTML = "0/10 Today";
-
             }
 
         }
@@ -879,13 +619,12 @@
             subNameSpan.innerHTML = subName + " " + subAmount + "x";
 
             bitsNameSpan = document.getElementById('bitsName');
-            bitsNameSpan.innerHTML = bitsName + " " + bitsAmount;
+            bitsNameSpan.innerHTML = + bitsAmount + " " + bitsName;
 
             donationNameSpan = document.getElementById('donationName');
-            donationNameSpan.innerHTML = donationName + " " + donationAmount;
+            donationNameSpan.innerHTML = donationAmount + " " + donationName;
         }
 
-        //#region update AlertBar with new infos
         function updateFollow(followerUsername) {
 
             followNameSpan = document.getElementById('followName');
@@ -896,7 +635,7 @@
         function updateSub(subUsername, subAmount) {
 
             subNameSpan = document.getElementById('subName');
-            subNameSpan.innerHTML = subUsername + " x" + subAmount;
+            subNameSpan.innerHTML = subUsername + " " + subAmount + "x";
 
         }
 
@@ -913,7 +652,6 @@
             followNameSpan.innerHTML = donationUserName + " " + donationAmount + "€";;
 
         }
-        //#endregion
 
         function showDonation() {
 
@@ -1016,3 +754,4 @@
 
 
 </body>
+</html >
